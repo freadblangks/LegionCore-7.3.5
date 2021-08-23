@@ -45,10 +45,14 @@ We will not provide further assistance if those files are not available anymore.
 
 ## Reporting issues
 
-Issues can be reported via the [Github issue tracker](https://github.com/dufernst/LegionCore-7.3.5/issues).
+Issues can be reported via the [Github issue tracker](https://github.com/SmokeRover/LegionCore-7.3.5/issues).
 
 Please take the time to review existing issues before submitting your own to
 prevent duplicates.
+
+
+When reporting quest issues please put the quest name in the title and provide its QuestID or a link to its wowhead entry where possible.
+
 
 In addition, thoroughly read through the [issue tracker guide](https://community.trinitycore.org/topic/37-the-trinitycore-issuetracker-and-you/) to ensure
 your report contains the required information. Incorrect or poorly formed

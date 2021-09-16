@@ -1,4 +1,13 @@
 #include "deadmines.h"
+#include "ObjectMgr.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "SpellScript.h"
+#include "SpellAuraEffects.h"
+#include "Player.h"
+#include "CreatureAIImpl.h"
+#include "InstanceScript.h"
+#include "MotionMaster.h"
 
 enum Spells
 {
@@ -168,7 +177,7 @@ class boss_captain_cookie : public CreatureScript
                 _JustDied();
 
                 if (IsHeroic())
-                    me->SummonCreature(NPC_NOTE_FROM_VANESSA, notePos);
+                    me->SummonCreature(NPC_NOTE_FROM_VANESSA, notePos[1]);
             }
 
             void UpdateAI(uint32 diff) override
@@ -189,7 +198,7 @@ class boss_captain_cookie : public CreatureScript
                             me->GetMotionMaster()->MovePoint(POINT_MOVE, movePos);
                             break;
                         case EVENT_CAULDRON_1:
-                            me->CastSpell(centershipPos.GetPositionX(), centershipPos.GetPositionY(), centershipPos.GetPositionZ(), SPELL_CAULDRON, true);
+                            me->CastSpell(centershipPos[1].GetPositionX(), centershipPos[1].GetPositionY(), centershipPos[1].GetPositionZ(), SPELL_CAULDRON, true);
                             events.RescheduleEvent(EVENT_CAULDRON_2, 2000);
                             break;
                         case EVENT_CAULDRON_2:

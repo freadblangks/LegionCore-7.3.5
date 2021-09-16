@@ -331,6 +331,9 @@ void ScriptMgr::Unload()
     SCR_CLEAR(GroupScript);
     SCR_CLEAR(EventObjectScript);
     SCR_CLEAR(WorldStateScript);
+    SCR_CLEAR(UnitScript);
+    SCR_CLEAR(AllMapScript);
+    SCR_CLEAR(AllCreatureScript);
 
     #undef SCR_CLEAR
 
@@ -500,6 +503,11 @@ void ScriptMgr::OnShutdownCancel()
     FOREACH_SCRIPT(WorldScript)->OnShutdownCancel();
 }
 
+void ScriptMgr::SetInitialWorldSettings()
+{
+    FOREACH_SCRIPT(WorldScript)->SetInitialWorldSettings();
+}
+
 void ScriptMgr::OnHonorCalculation(float& honor, uint8 level, float multiplier)
 {
     FOREACH_SCRIPT(FormulaScript)->OnHonorCalculation(honor, level, multiplier);
@@ -630,6 +638,8 @@ void ScriptMgr::OnPlayerEnterMap(Map* map, Player* player)
     ASSERT(map);
     ASSERT(player);
 
+    FOREACH_SCRIPT(AllMapScript)->OnPlayerEnterAll(map, player);
+
     FOREACH_SCRIPT(PlayerScript)->OnMapChanged(player);
 
     SCR_MAP_BGN(WorldMapScript, map, itr, end, entry, IsWorldMap);
@@ -649,6 +659,8 @@ void ScriptMgr::OnPlayerLeaveMap(Map* map, Player* player)
 {
     ASSERT(map);
     ASSERT(player);
+
+    FOREACH_SCRIPT(AllMapScript)->OnPlayerLeaveAll(map, player);
 
     SCR_MAP_BGN(WorldMapScript, map, itr, end, entry, IsWorldMap);
         itr->second->OnPlayerLeave(map, player);
@@ -828,12 +840,74 @@ CreatureAI* ScriptMgr::GetCreatureAI(Creature* creature)
     return nullptr;
 }
 
+// DLegion EDIT
+// Unit
+void ScriptMgr::OnHeal(Unit * healer, Unit * reciever, uint32 & gain)
+{
+    FOREACH_SCRIPT(UnitScript)->OnHeal(healer, reciever, gain);
+    //FOREACH_SCRIPT(PlayerScript)->OnHeal(healer, reciever, gain);
+}
+
+void ScriptMgr::OnDamage(Unit* attacker, Unit* victim, uint32& damage)
+{
+    FOREACH_SCRIPT(UnitScript)->OnDamage(attacker, victim, damage);
+    //FOREACH_SCRIPT(PlayerScript)->OnDamage(attacker, victim, damage);
+}
+
+void ScriptMgr::ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage)
+{
+    FOREACH_SCRIPT(UnitScript)->ModifyPeriodicDamageAurasTick(target, attacker, damage);
+    //FOREACH_SCRIPT(PlayerScript)->ModifyPeriodicDamageAurasTick(target, attacker, damage);
+}
+
+void ScriptMgr::ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage)
+{
+    FOREACH_SCRIPT(UnitScript)->ModifyMeleeDamage(target, attacker, damage);
+    //FOREACH_SCRIPT(PlayerScript)->ModifyMeleeDamage(target, attacker, damage);
+}
+
+void ScriptMgr::ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo)
+{
+    FOREACH_SCRIPT(UnitScript)->ModifySpellDamageTaken(target, attacker, damage, spellInfo);
+    //FOREACH_SCRIPT(PlayerScript)->ModifySpellDamageTaken(target, attacker, damage, spellInfo);
+}
+void ScriptMgr::ModifyHealRecieved(Unit* target, Unit* attacker, uint32& damage)
+{
+    FOREACH_SCRIPT(UnitScript)->ModifyHealRecieved(target, attacker, damage);
+}
+// END Unit
+//DLegion EDIT
+AllMapScript::AllMapScript(const char* name) : ScriptObject(name)
+{
+    ScriptRegistry<AllMapScript>::AddScript(this);
+}
+
+AllCreatureScript::AllCreatureScript(const char* name) : ScriptObject(name)
+{
+    ScriptRegistry<AllCreatureScript>::AddScript(this);
+}
+
 GameObjectAI* ScriptMgr::GetGameObjectAI(GameObject* gameobject)
 {
     ASSERT(gameobject);
 
     GET_SCRIPT_RET(GameObjectScript, gameobject->GetScriptId(), tmpscript, NULL);
     return tmpscript->GetAI(gameobject);
+}
+
+//DLegion EDIT
+void ScriptMgr::OnCreatureUpdate(Creature* creature, uint32 diff)
+{
+    ASSERT(creature);
+
+    FOREACH_SCRIPT(AllCreatureScript)->OnAllCreatureUpdate(creature, diff);
+
+    GET_SCRIPT(CreatureScript, creature->GetScriptId(), tmpscript);
+    tmpscript->OnUpdate(creature, diff);
+}
+void ScriptMgr::Creature_SelectLevel(const CreatureTemplate* cinfo, Creature* creature)
+{
+    FOREACH_SCRIPT(AllCreatureScript)->Creature_SelectLevel(cinfo, creature);
 }
 
 bool ScriptMgr::OnGossipHello(Player* player, GameObject* go)
@@ -1542,6 +1616,13 @@ CreatureScript::CreatureScript(std::string name) : ScriptObject(name)
     ScriptRegistry<CreatureScript>::AddScript(this);
 }
 
+//DLegion EDIT
+UnitScript::UnitScript(char const* name, bool addToScripts) : ScriptObject(name)
+{
+    ScriptRegistry<UnitScript>::AddScript(this);
+}
+
+
 GameObjectScript::GameObjectScript(std::string name) : ScriptObject(name)
 {
     ScriptRegistry<GameObjectScript>::AddScript(this);
@@ -1672,6 +1753,12 @@ template class ScriptRegistry<BattlePayProductScript>;
 template class ScriptRegistry<CommandScript>;
 template class ScriptRegistry<ConditionScript>;
 template class ScriptRegistry<CreatureScript>;
+//DLegion EDIT
+template class ScriptRegistry<UnitScript>;
+template class ScriptRegistry<AllMapScript>;
+template class ScriptRegistry<AllCreatureScript>;
+
+
 template class ScriptRegistry<DynamicObjectScript>;
 template class ScriptRegistry<EventObjectScript>;
 template class ScriptRegistry<FormulaScript>;

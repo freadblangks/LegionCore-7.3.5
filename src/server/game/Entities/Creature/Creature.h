@@ -172,6 +172,7 @@ struct CreatureTemplate
     float dmg_multiplier = 1.0f;
     float HoverHeight = 1.0f;
     float ModArmor = 1.0f;
+    float ModHealth = 1.0f;
     float ModManaExtra = 1.0f;                             // Added in 4.x, this value is usually 2 for a small group of creatures with double mana
     float scale = 1.0f;
     float speed_fly = 1.0f;
@@ -403,7 +404,8 @@ enum InhabitTypeValues
     INHABIT_GROUND = 1,
     INHABIT_WATER  = 2,
     INHABIT_AIR    = 4,
-    INHABIT_ANYWHERE = INHABIT_GROUND | INHABIT_WATER | INHABIT_AIR
+    INHABIT_ROOT = 8,
+    INHABIT_ANYWHERE = INHABIT_GROUND | INHABIT_WATER | INHABIT_AIR | INHABIT_ROOT
 };
 
 // Enums used by StringTextData::Type (CreatureEventAI)

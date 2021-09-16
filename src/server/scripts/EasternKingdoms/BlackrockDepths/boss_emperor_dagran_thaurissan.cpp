@@ -15,7 +15,12 @@
  * You should have received a copy of the GNU General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include "ObjectMgr.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "SpellScript.h"
+#include "SpellAuraEffects.h"
+#include "MoveSplineInit.h"
 #include "blackrock_depths.h"
 
 enum Yells
@@ -30,6 +35,12 @@ enum Spells
     SPELL_AVATAROFFLAME                                    = 15636
 };
 
+enum Events
+{
+    EVENT_HAND_OF_THAURISSAN = 1,
+    EVENT_AVATAR_OF_FLAME,
+};
+
 class boss_emperor_dagran_thaurissan : public CreatureScript
 {
 public:
@@ -40,28 +51,26 @@ public:
         return new boss_draganthaurissanAI (creature);
     }
 
-    struct boss_draganthaurissanAI : public ScriptedAI
+    struct boss_draganthaurissanAI : public BossAI
     {
-        boss_draganthaurissanAI(Creature* creature) : ScriptedAI(creature)
+        boss_draganthaurissanAI(Creature* creature) : BossAI(creature, DATA_EMPEROR)
         {
             instance = me->GetInstanceScript();
         }
 
         InstanceScript* instance;
-        uint32 HandOfThaurissan_Timer;
-        uint32 AvatarOfFlame_Timer;
-        //uint32 Counter;
 
         void Reset() override
         {
-            HandOfThaurissan_Timer = 4000;
-            AvatarOfFlame_Timer = 25000;
-            //Counter= 0;
+            _Reset();
+            events.Reset();
         }
 
         void EnterCombat(Unit* /*who*/) override
         {
             Talk(SAY_AGGRO);
+            events.ScheduleEvent(EVENT_HAND_OF_THAURISSAN, 6000);
+            events.ScheduleEvent(EVENT_AVATAR_OF_FLAME, 18000);
             me->CallForHelp(VISIBLE_RANGE);
         }
 
@@ -88,35 +97,29 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (HandOfThaurissan_Timer <= diff)
+            events.Update(diff);
+
+            if (me->HasUnitState(UNIT_STATE_CASTING))
+                return;
+
+            while (uint32 eventId = events.ExecuteEvent())
             {
-                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                    DoCast(target, SPELL_HANDOFTHAURISSAN);
-
-                //3 Hands of Thaurissan will be casted
-                //if (Counter < 3)
-                //{
-                //    HandOfThaurissan_Timer = 1000;
-                //    ++Counter;
-                //}
-                //else
-                //{
-                    HandOfThaurissan_Timer = 5000;
-                    //Counter = 0;
-                //}
+                switch (eventId)
+                {
+                case EVENT_HAND_OF_THAURISSAN:
+                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                    {
+                        DoCast(target, SPELL_HANDOFTHAURISSAN);
+                    }
+                    events.ScheduleEvent(EVENT_HAND_OF_THAURISSAN, 15000);
+                    break;
+                case EVENT_AVATAR_OF_FLAME:
+                    DoCast(me->getVictim(), SPELL_AVATAROFFLAME);
+                    events.RescheduleEvent(EVENT_HAND_OF_THAURISSAN, 6000);
+                    events.ScheduleEvent(EVENT_AVATAR_OF_FLAME, 18000);
+                    break;
+                }
             }
-            else
-                HandOfThaurissan_Timer -= diff;
-
-            //AvatarOfFlame_Timer
-            if (AvatarOfFlame_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_AVATAROFFLAME);
-                AvatarOfFlame_Timer = 18000;
-            }
-            else
-                AvatarOfFlame_Timer -= diff;
-
             DoMeleeAttackIfReady();
         }
     };

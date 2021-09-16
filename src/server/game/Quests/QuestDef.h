@@ -536,6 +536,8 @@ class Quest
         uint32 SourceItemIdCount    = 0;
         uint32 SpecialFlags         = 0; // custom flags, not sniffed/WDB
         std::string RewardMailTitle;
+
+        static uint32 RoundXPValue(uint32 xp);
 };
 
 typedef std::map<int32/*idx*/, int32/*data*/> QuestStatusDatas;

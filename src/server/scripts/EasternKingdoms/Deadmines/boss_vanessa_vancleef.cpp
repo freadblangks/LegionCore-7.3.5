@@ -1,6 +1,19 @@
+#include "ScriptMgr.h"
 #include "deadmines.h"
-#include "LFGMgr.h"
+#include "InstanceScript.h"
+#include "GridNotifiers.h"
+#include "MotionMaster.h"
+#include "MovementTypedefs.h"
+#include "MoveSplineInit.h"
+#include "PassiveAI.h"
+#include "Player.h"
 #include "Group.h"
+#include "ScriptedCreature.h"
+#include "SpellAuraEffects.h"
+#include "ObjectAccessor.h"
+#include "MotionMaster.h"
+#include "SpellScript.h"
+#include "LFGMgr.h"
 
 enum ScriptedTexts
 {
@@ -266,7 +279,7 @@ class npc_vanessa_vancleef_a_note_from_vanessa : public CreatureScript
             if (instance->GetData(DATA_VANESSA_EVENT) != NOT_STARTED)
                 return true;
 
-            pCreature->SummonCreature(NPC_VANESSA_SITTING, vanessaPos);
+            pCreature->SummonCreature(NPC_VANESSA_SITTING, vanessaPos[1]);
             instance->SetData(DATA_VANESSA_EVENT, IN_PROGRESS);
 
             pCreature->RemoveFlag(UNIT_FIELD_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -343,7 +356,7 @@ class npc_vanessa_vancleef_vanessa_sitting : public CreatureScript
                             events.RescheduleEvent(EVENT_INTRO_6, 5000);
                             break;
                         case EVENT_INTRO_6:
-                            me->GetMotionMaster()->MoveJump(centershipPos.GetPositionX(), centershipPos.GetPositionY(), centershipPos.GetPositionZ(), 5.f, 10.f);
+                            me->GetMotionMaster()->MoveJump(centershipPos[1].GetPositionX(), centershipPos[1].GetPositionY(), centershipPos[1].GetPositionZ(), 5.f, 10.f);
                             events.RescheduleEvent(EVENT_INTRO_7, 5000);
                             break;
                         case EVENT_INTRO_7:

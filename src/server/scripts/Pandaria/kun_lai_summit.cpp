@@ -1,6 +1,7 @@
 #include "ScriptedEscortAI.h"
 #include "SpellAuraEffects.h"
 #include "SpellScript.h"
+#include <AI/ScriptedAI/ScriptedGossip.h>
 
 enum eNessosSpells
 {
@@ -276,121 +277,154 @@ class mob_mogujia_soul_caller : public CreatureScript
         };
 };
 
-// 66138
-struct npc_master_cheng_q31840 : public ScriptedAI
+
+/*class npc_master_cheng_q31840_gossip : public CreatureScript
 {
-    npc_master_cheng_q31840(Creature* creature) : ScriptedAI(creature) {}
+    pubic npc_master_cheng_q31840_gossip() : CreatureScript
+};*/
 
-    bool challengeDone = false;
-    uint32 timer;
+// 66138
+class npc_master_cheng_q31840 : public CreatureScript
+{
+public:
+    npc_master_cheng_q31840() : CreatureScript("npc_master_cheng_q31840") {    }
 
-    void IsSummonedBy(Unit* summoner) override
+
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
     {
-        me->SetLevel(summoner->getLevel());
-        me->AddDelayedEvent(2000, [this]() -> void
+        if (action == 1)
         {
-            Talk(1);
-            me->SetWalk(true);
-            me->GetMotionMaster()->MovePoint(1, 3943.22f, 1836.45f, 904.33f);
-        });
+            player->KilledMonsterCredit(66138);
+            player->CLOSE_GOSSIP_MENU();
+            //creature->SummonCreature(66138);
+        }
+        return true;
     }
 
-    void MovementInform(uint32 type, uint32 id) override
+    CreatureAI* GetAI(Creature* creature) const
     {
-        if (type != POINT_MOTION_TYPE)
-            return;
+        return new npc_master_cheng_q31840AI(creature);
+    }
 
-        if (id == 1)
+    struct npc_master_cheng_q31840AI : public ScriptedAI
+    {
+    public:
+        npc_master_cheng_q31840AI(Creature* creature) : ScriptedAI(creature) {}
+
+        bool challengeDone = false;
+        uint32 timer = 0;
+
+        
+        void IsSummonedBy(Unit* summoner) override
         {
-            if (auto owner = me->GetAnyOwner())
+            me->SetLevel(summoner->getLevel());
+            me->AddDelayedEvent(2000, [this]() -> void
+                {
+                    Talk(1);
+                    me->SetWalk(true);
+                    me->GetMotionMaster()->MovePoint(1, 3943.22f, 1836.45f, 904.33f);
+                });
+        }
+
+        void MovementInform(uint32 type, uint32 id) override
+        {
+            if (type != POINT_MOTION_TYPE)
+                return;
+
+
+            if (id == 1)
             {
-                me->SetHomePosition(me->GetPosition());
-                me->SetFacingToObject(owner);
-                me->AddDelayedEvent(1000, [this]() -> void
+                if (auto owner = me->GetAnyOwner())
                 {
-                    Talk(2);
-                });
-                me->AddDelayedEvent(8000, [this]() -> void
-                {
-                    me->HandleEmoteCommand(2);
-                });
-                me->AddDelayedEvent(10000, [this]() -> void
-                {
-                    me->setFaction(14);
-                });
+                    me->SetHomePosition(me->GetPosition());
+                    me->SetFacingToObject(owner);
+                    me->AddDelayedEvent(1000, [this]() -> void
+                        {
+                            Talk(2);
+                        });
+                    me->AddDelayedEvent(8000, [this]() -> void
+                        {
+                            me->HandleEmoteCommand(2);
+                        });
+                    me->AddDelayedEvent(10000, [this]() -> void
+                        {
+                            me->setFaction(14);
+                        });
+                }
             }
         }
-    }
 
-    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType dmgType) override
-    {
-        if (damage >= me->GetHealth())
+        void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType dmgType) override
         {
-            damage = 0;
-            if (!challengeDone)
+            if (damage >= me->GetHealth())
             {
-                challengeDone = true;
-                me->StopAttack();
-                if (auto unit = me->GetAnyOwner())
+                damage = 0;
+                if (!challengeDone)
                 {
-                    if (auto plr = unit->ToPlayer())
+                    challengeDone = true;
+                    me->StopAttack();
+                    if (auto unit = me->GetAnyOwner())
                     {
-                        Talk(4);
-                        me->setFaction(35);
-                        me->HandleEmoteCommand(2);
-                        plr->KilledMonsterCredit(me->GetEntry());
-                        me->DespawnOrUnsummon(6000);
+                        if (auto plr = unit->ToPlayer())
+                        {
+                            Talk(4);
+                            me->setFaction(35);
+                            me->HandleEmoteCommand(2);
+                            plr->KilledMonsterCredit(me->GetEntry());
+                            me->DespawnOrUnsummon(6000);
+                        }
                     }
                 }
             }
         }
-    }
 
-    void OnEnterCombat(Player* player, Unit* /*target*/)
-    {
-        timer = urand(3000, 6000);
-    }
-
-    void Reset() override
-    {
-        timer = 0;
-    }
-
-    void UpdateAI(uint32 diff) override
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (timer <= diff)
+        void OnEnterCombat(Player* player, Unit* /*target*/)
         {
-            if (me->GetEntry() == 66138)
-            {
-                Talk(3);
-                DoCast(me, 130073, true);
-            }
-            if (me->GetEntry() == 65899)
-            {
-                Talk(3);
-                DoCast(129700);
-            }
-            if (me->GetEntry() == 66073)
-            {
-                Talk(3);
-                DoCast(129952);
-            }
-            if (me->GetEntry() == 65977)
-            {
-                Talk(3);
-                DoCast(131743);
-            }
-            timer = urand(15000, 17000);
+            timer = urand(3000, 6000);
         }
-        else
-            timer -= diff;
 
-        DoMeleeAttackIfReady();
-    }
+        void Reset() override
+        {
+            timer = 0;
+        }
+
+        void UpdateAI(uint32 diff) override
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (timer <= diff)
+            {
+                if (me->GetEntry() == 66138)
+                {
+                    Talk(3);
+                    DoCast(me, 130073, true);
+                }
+                if (me->GetEntry() == 65899)
+                {
+                    Talk(3);
+                    DoCast(129700);
+                }
+                if (me->GetEntry() == 66073)
+                {
+                    Talk(3);
+                    DoCast(129952);
+                }
+                if (me->GetEntry() == 65977)
+                {
+                    Talk(3);
+                    DoCast(131743);
+                }
+                timer = urand(15000, 17000);
+            }
+            else
+                timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
+
 
 // 130283
 class spell_monk_exp_buff : public SpellScriptLoader
@@ -469,5 +503,5 @@ void AddSC_kun_lai_summit()
     new mob_ski_thik();
     new mob_mogujia_soul_caller();
     new spell_monk_exp_buff();
-    RegisterCreatureAI(npc_master_cheng_q31840);
+    new npc_master_cheng_q31840();
 }

@@ -283,14 +283,12 @@ uint32 Quest::XPValue(Player* player) const
             diffFactor = 10;
 
         uint32 xp = diffFactor * xpentry->Difficulty[RewardXPDifficulty] * RewardXPMultiplier / 10 * multiplier;
-        if (xp <= 100)
-            xp = 5 * ((xp + 2) / 5);
-        else if (xp <= 500)
-            xp = 10 * ((xp + 5) / 10);
-        else if (xp <= 1000)
-            xp = 25 * ((xp + 12) / 25);
-        else
-            xp = 50 * ((xp + 25) / 50);
+
+        if (sWorld->getIntConfig(CONFIG_MIN_QUEST_SCALED_XP_RATIO))
+        {
+            uint32 minScaledXP = RoundXPValue(xpentry->Difficulty[RewardXPDifficulty] * RewardXPMultiplier) * sWorld->getIntConfig(CONFIG_MIN_QUEST_SCALED_XP_RATIO) / 100;
+            xp = std::max(minScaledXP, xp);
+        }
 
         return xp;
     }
@@ -406,4 +404,17 @@ bool Quest::IsAllowedInRaid(Difficulty difficulty) const
         return true;
 
     return sWorld->getBoolConfig(CONFIG_QUEST_IGNORE_RAID);
+}
+
+uint32 Quest::RoundXPValue(uint32 xp)
+{
+    if (xp <= 100)
+        xp = 5 * ((xp + 2) / 5);
+    else if (xp <= 500)
+        xp = 10 * ((xp + 5) / 10);
+    else if (xp <= 1000)
+        xp = 25 * ((xp + 12) / 25);
+    else
+        xp = 50 * ((xp + 25) / 50);
+    return xp;
 }

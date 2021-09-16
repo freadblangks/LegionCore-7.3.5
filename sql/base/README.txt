@@ -1,0 +1,1 @@
+Remember to apply the update SQL patches

@@ -26,6 +26,10 @@ void AddSC_battleground_shado_pan();
 //customs
 void AddSC_CustomStartups();
 
+//DLegion EDIT
+void AddSC_solocraft();
+void AddSC_AutoBalance();
+
 //battlepay
 void AddSC_BattlePay_Services();
 
@@ -198,6 +202,9 @@ void AddSC_boss_ptheradras();
 void AddSC_instance_maraudon();
 void AddSC_boss_onyxia();                    //Onyxia's Lair
 void AddSC_instance_onyxias_lair();
+
+void AddSC_instance_ragefire_chasm();        //Ragefire Chasm
+
 void AddSC_boss_amnennar_the_coldbringer();  //Razorfen Downs
 void AddSC_razorfen_downs();
 void AddSC_instance_razorfen_downs();
@@ -1480,6 +1487,7 @@ void AddKalimdorScripts()
     AddSC_instance_maraudon();
     AddSC_boss_onyxia();                    //Onyxia's Lair
     AddSC_instance_onyxias_lair();
+    AddSC_instance_ragefire_chasm();        //Ragefire Chasm
     AddSC_boss_amnennar_the_coldbringer();  //Razorfen Downs
     AddSC_razorfen_downs();
     AddSC_instance_razorfen_downs();
@@ -2605,5 +2613,7 @@ void AddCustomScripts()
 {
 #ifdef SCRIPTS
     AddSC_CustomStartups();
+    AddSC_solocraft();
+    AddSC_AutoBalance();
 #endif
 }

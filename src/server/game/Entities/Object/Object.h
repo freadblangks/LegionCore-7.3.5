@@ -364,6 +364,8 @@ class Object
         Map* GetMap() const { return m_currMap; }
         Map* FindMap() const { return m_currMap; }
         //used to check all object's GetMap() calls when object is not in world!
+        //DLegion EDIT
+        DataMap CustomData;
 
         void SetDelete() { m_delete = true; }
         void SetPreDelete() { m_preDelete = true; }

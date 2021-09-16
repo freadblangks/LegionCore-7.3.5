@@ -1,5 +1,17 @@
+#include "ScriptMgr.h"
+#include "CreatureAI.h"
 #include "deadmines.h"
+#include "GameObject.h"
+#include "InstanceScript.h"
+#include "Map.h"
+#include "MotionMaster.h"
+#include "TemporarySummon.h"
+#include "VehicleDefines.h"
+#include "WorldPacket.h"
+#include "Player.h"
+#include "CreatureAIImpl.h"
 #include "Packets/MiscPackets.h"
+#include "Creature.h"
 
 #define MAX_ENCOUNTER 6
 
@@ -11,6 +23,26 @@ static const DoorData doordata[] =
     {GO_FOUNDRY_DOOR,   DATA_FOEREAPER, DOOR_TYPE_PASSAGE,    BOUNDARY_NONE},
     {GO_HEAVY_DOOR_2,   DATA_FOEREAPER, DOOR_TYPE_ROOM,       BOUNDARY_NONE},
     {0, 0, DOOR_TYPE_ROOM, BOUNDARY_NONE},
+};
+
+ObjectData const creatureData[] =
+{
+    { NPC_GLUBTOK,                     DATA_GLUBTOK                        },
+    { NPC_HELIX_GEARBREAKER,           DATA_HELIX              },
+    { NPC_FOE_REAPER_5000,             DATA_FOEREAPER                },
+    { NPC_ADMIRAL_RIPSNARL,            DATA_ADMIRAL               },
+    { NPC_CAPTAIN_COOKIE,              DATA_CAPTAIN                 },
+    { NPC_VANESSA_VANCLEEF,           DATA_VANESSA              },
+    { NPC_LUMBERING_OAF,                DATA_OAF                  },
+    /*{NPC_FOE_REAPER_TARGETING_BUNNY,   DATA_FOE_REAPER_BUNNY},
+    { NPC_PROTOTYPE_REAPER,             DATA_PROTOTYPE_REAPER               },
+    { NPC_VANESSAS_TRAP_BUNNY,          DATA_VANESSAS_TRAP_BUNNY            },
+    { NPC_VANESSA_ANCHOR_BUNNY_JMF,     DATA_VANESSA_ANCHOR_BUNNY           },
+    { NPC_VANESSA_VANCLEEF_NIGHTMARE,   DATA_VANESSA_VAN_CLEEF_NIGHTMARE    },
+    { NPC_EMME_HARRINGTON,              DATA_EMME_HARRINGTON                },
+    { NPC_ERIK_HARRINGTON,              DATA_ERIK_HARRINGTON                },
+    { NPC_CALISSA_HARRINGTON,           DATA_CALISSA_HARRINGTON             },*/
+    { 0,                                0                                   } // END
 };
 
 class instance_deadmines : public InstanceMapScript
@@ -72,7 +104,12 @@ class instance_deadmines : public InstanceMapScript
                         uiHelixGUID = pCreature->GetGUID();
                         break;
                     case NPC_LUMBERING_OAF:
-                        uiOafGUID = pCreature->GetGUID();
+                        if (pCreature->isDead() && GetBossState(DATA_HELIX) != DONE)
+                            pCreature->Respawn();
+                        break;
+                    case NPC_STICKY_BOMB:
+                        if (Creature* helix = GetCreature(DATA_HELIX))
+                            helix->AI()->JustSummoned(pCreature);
                         break;
                     case NPC_FOE_REAPER_5000:
                         uiFoereaperGUID = pCreature->GetGUID();

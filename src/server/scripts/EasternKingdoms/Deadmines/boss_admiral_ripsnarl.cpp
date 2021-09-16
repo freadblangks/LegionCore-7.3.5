@@ -1,4 +1,14 @@
 #include "deadmines.h"
+#include "InstanceScript.h"
+#include "ObjectAccessor.h"
+#include "MotionMaster.h"
+#include "GameEventMgr.h"
+#include "ObjectMgr.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "SpellScript.h"
+#include "SpellAuraEffects.h"
+#include "Player.h"
 
 enum ScriptTexts
 {
@@ -238,7 +248,7 @@ class boss_admiral_ripsnarl : public CreatureScript
                 {
                     stage = 3;
                     EnterSpecialPhase();
-                    me->SummonCreature(NPC_DUMMY_2, centershipPos);
+                    me->SummonCreature(NPC_DUMMY_2, centershipPos[1]);
                     return;
                 }
                 else if (IsHeroic() && me->HealthBelowPct(10) && stage == 3)

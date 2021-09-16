@@ -1,3 +1,5 @@
+#include "ScriptMgr.h"
+#include "InstanceScript.h"
 #include "shadowfang_keep.h"
 
 DoorData const doorData[] =

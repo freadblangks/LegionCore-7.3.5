@@ -1858,6 +1858,7 @@ void Creature::SelectLevel(const CreatureTemplate* cInfo)
     }
     else
         GenerateScaleLevelStat(cInfo);
+    sScriptMgr->Creature_SelectLevel(cInfo, this);
 }
 
 void Creature::GenerateScaleLevelStat(const CreatureTemplate* cInfo)

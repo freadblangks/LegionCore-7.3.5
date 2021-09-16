@@ -406,6 +406,59 @@ public:
     }
 };
 
+
+// DLegion EDIT
+// Destroying Soul Harvester - 97382
+class spell_legion_q38819 : public SpellScriptLoader
+{
+public:
+    spell_legion_q38819() : SpellScriptLoader("spell_legion_q38819") { }
+
+    class spell_legion_q38819_SpellScript : public SpellScript
+    {
+        PrepareSpellScript(spell_legion_q38819_SpellScript);
+
+        enum data
+        {
+            QUEST = 38819,
+            //NPC_CONV = 581
+        };
+
+        void HandleScriptEffect(SpellEffIndex effIndex)
+        {
+            PreventHitDefaultEffect(EFFECT_0);
+            if (Unit* caster = GetCaster())
+            {
+                Player* player = caster->ToPlayer();
+                if (!player)
+                    return;
+
+                if (Unit* target = GetHitUnit())
+                {
+                    target->AddToHideList(caster->GetGUID());
+                    target->DestroyForPlayer(player);
+                    player->KilledMonsterCredit(target->GetEntry());
+
+
+                    //Conversation* conversation = new Conversation;
+                    //if (!conversation->CreateConversation(sObjectMgr->GetGenerator<HighGuid::Conversation>()->Generate(), NPC_CONV, player, NULL, *player))
+                    //    delete conversation;
+                }
+            }
+        }
+
+        void Register() override
+        {
+            OnEffectHitTarget += SpellEffectFn(spell_legion_q38819_SpellScript::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_DUMMY);
+        }
+    };
+
+    SpellScript* GetSpellScript() const override
+    {
+        return new spell_legion_q38819_SpellScript();
+    }
+};
+
 //94410
 class npc_q40378 : public CreatureScript
 {
@@ -2815,6 +2868,7 @@ void AddSC_Mardum()
     new spell_legion_197505_197598();
     new spell_legion_197523();
     new spell_legion_208121();
+    new spell_legion_q38819();
     new npc_q40378();
     new conversation_announcer();
     new npc_q39049();

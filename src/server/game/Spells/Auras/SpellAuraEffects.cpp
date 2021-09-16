@@ -7847,6 +7847,10 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster, Spell
 
     // ignore non positive values (can be result apply spellmods to aura damage
     uint32 damage = std::max(GetAmount(), 0.f);
+
+    // Script Hook For HandlePeriodicDamageAurasTick -- Allow scripts to change the Damage pre class mitigation calculations
+    sScriptMgr->ModifyPeriodicDamageAurasTick(target, caster, damage);
+
     uint32 damageBeforeHit = 0;
 
     float crit_chance = 0.0f;

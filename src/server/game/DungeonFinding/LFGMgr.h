@@ -306,6 +306,8 @@ struct LFGDungeonData
     uint8 expansion;
     uint8 minlevel;
     uint8 maxlevel;
+    //DLegion EDIT
+    uint8 targetlevel;
     uint8 difficulty;
     uint8 internalType;
     bool seasonal;

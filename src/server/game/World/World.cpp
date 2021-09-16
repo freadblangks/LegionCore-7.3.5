@@ -938,6 +938,28 @@ void World::LoadConfigSettings(bool reload)
         m_int_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] = 105;
     }
 
+    m_int_configs[CONFIG_MIN_QUEST_SCALED_XP_RATIO] = sConfigMgr->GetIntDefault("MinQuestScaledXPRatio", 0);
+    if (m_int_configs[CONFIG_MIN_QUEST_SCALED_XP_RATIO] > 100)
+    {
+        TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "MinQuestScaledXPRatio (%i) must be in range 0..100. Set to 0.", m_int_configs[CONFIG_MIN_QUEST_SCALED_XP_RATIO]);
+        m_int_configs[CONFIG_MIN_QUEST_SCALED_XP_RATIO] = 0;
+    }
+
+    m_int_configs[CONFIG_MIN_CREATURE_SCALED_XP_RATIO] = sConfigMgr->GetIntDefault("MinCreatureScaledXPRatio", 0);
+    if (m_int_configs[CONFIG_MIN_CREATURE_SCALED_XP_RATIO] > 100)
+    {
+        TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "MinCreatureScaledXPRatio (%i) must be in range 0..100. Set to 0.", m_int_configs[CONFIG_MIN_CREATURE_SCALED_XP_RATIO]);
+        m_int_configs[CONFIG_MIN_CREATURE_SCALED_XP_RATIO] = 0;
+    }
+
+    m_int_configs[CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO] = sConfigMgr->GetIntDefault("MinDiscoveredScaledXPRatio", 0);
+    if (m_int_configs[CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO] > 100)
+    {
+        TC_LOG_ERROR(LOG_FILTER_SERVER_LOADING, "MinDiscoveredScaledXPRatio (%i) must be in range 0..100. Set to 0.", m_int_configs[CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO]);
+        m_int_configs[CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO] = 0;
+    }
+
+
     m_int_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE] = sConfigMgr->GetIntDefault("RecruitAFriend.MaxDifference", 5);
     m_bool_configs[CONFIG_ALL_TAXI_PATHS] = sConfigMgr->GetBoolDefault("AllFlightPaths", false);
     m_bool_configs[CONFIG_INSTANT_TAXI] = sConfigMgr->GetBoolDefault("InstantFlightPaths", false);

@@ -20,6 +20,7 @@
 #include "ScriptedEscortAI.h"
 #include "Vehicle.h"
 #include "CharmInfo.h"
+#include "SpellScript.h"
 
 //Phase 1
 /*######
@@ -3071,6 +3072,183 @@ public:
     };
 };
 
+
+//DLegion EDIT Save the children
+class spell_gilneas_save_the_children : public SpellScriptLoader
+{
+public:
+    spell_gilneas_save_the_children() : SpellScriptLoader("spell_gilneas_save_the_children") {  }
+
+    class spell_gilneas_quest_save_the_children_SpellScript : public SpellScript
+    {
+        PrepareSpellScript(spell_gilneas_quest_save_the_children_SpellScript);
+
+        enum SaveTheChildren
+        {
+            SPELL_GILNEAS_QUEST_SAVE_JAMES = 68596,
+            SPELL_GILNEAS_QUEST_SAVE_CYNTHIA = 68597,
+            SPELL_GILNEAS_QUEST_SAVE_ASHLEY = 68598,
+
+            NPC_CYNTHIA = 36287,
+            NPC_ASHLEY = 36288,
+            NPC_JAMES = 36289,
+
+            SAY_CHILD_RESCUED = 0,
+            EVENT_TALK_RESCUED = 1,
+            EVENT_RUN_TO_BASEMENT = 2,
+            EVENT_CRY = 3,
+
+            POINT_BASEMENT_1 = 1,
+            POINT_BASEMENT_2 = 2,
+        };
+
+        void HandleDummy(SpellEffIndex effIndex)
+        {
+            if (Unit* caster = GetCaster())
+            {
+                if (Player* player = caster->ToPlayer())
+                {
+                    Unit* target = GetHitUnit();
+                    player->Talk(GetSpellInfo()->GetEffect(effIndex)->BasePoints, CHAT_MSG_SAY, 0.0f, target);
+                    player->KilledMonsterCredit(target->GetEntry());
+                }
+            }
+        }
+
+        void Register() override
+        {
+            if (m_scriptSpellId == SPELL_GILNEAS_QUEST_SAVE_JAMES)
+                OnEffectHitTarget += SpellEffectFn(spell_gilneas_quest_save_the_children_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            else
+                OnEffectHitTarget += SpellEffectFn(spell_gilneas_quest_save_the_children_SpellScript::HandleDummy, EFFECT_1, SPELL_EFFECT_DUMMY);
+        }
+    };
+    SpellScript* GetSpellScript() const override
+    {
+        return new spell_gilneas_quest_save_the_children_SpellScript();
+    }
+};
+
+/*
+class npc_gilneas_save_the_children : public CreatureScript
+{
+public:
+    npc_gilneas_save_the_children() : CreatureScript("npc_gilneas_save_the_children") { }
+    Position const JamesEscapePos = {-1913.021f, 2558.333f, 1.511007f};
+
+    Position const AshleyEscapePos[] =
+    {
+        { -1923.283f, 2552.308f, 12.73581f }, // Ashley Point 1
+        { -1920.023f, 2558.055f, 7.076692f }  // Ashley Point 2
+    };
+
+    Position const CynthiaEscapePos[] =
+    {
+        { -1969.23f,  2517.465f, 2.580818f }, // Cynthia Point 1
+        { -1947.472f, 2515.521f, 2.318746f }, // Cynthia Point 2
+        { -1926.536f, 2519.312f, 2.246772f }  // Cynthia Point 3
+    };
+
+    struct npc_gilneas_save_the_childrenAI : public ScriptedAI
+    {
+        npc_gilneas_save_the_childrenAI(Creature* creature) : ScriptedAI(creature)
+        {
+            Initialize();
+        }
+
+        void Initialize()
+        {
+            _playerGUID = ObjectGuid::Empty;
+        }
+
+        void Reset() override
+        {
+            Initialize();
+            if (me->GetEntry() == NPC_CYNTHIA)
+                _events.ScheduleEvent(EVENT_CRY, Seconds(1));
+        }
+
+        void SpellHit(Unit* caster, SpellInfo const* spell) override
+        {
+            switch (spell->Id)
+            {
+            case SPELL_GILNEAS_QUEST_SAVE_JAMES:
+            case SPELL_GILNEAS_QUEST_SAVE_CYNTHIA:
+            case SPELL_GILNEAS_QUEST_SAVE_ASHLEY:
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                _playerGUID = caster->GetGUID();
+                _events.ScheduleEvent(EVENT_TALK_RESCUED, Seconds(2) + Milliseconds(500));
+                _events.CancelEvent(EVENT_CRY);
+                break;
+            default:
+                break;
+            }
+        }
+
+        void MovementInform(uint32 type, uint32 id) override
+        {
+            if (type != POINT_MOTION_TYPE && type != EFFECT_MOTION_TYPE)
+                return;
+
+            switch (id)
+            {
+            case POINT_BASEMENT_1:
+                if (me->GetEntry() == NPC_ASHLEY)
+                    me->GetMotionMaster()->MovePoint(0, AshleyEscapePos[1], true);
+                else
+                    me->GetMotionMaster()->MovePoint(POINT_BASEMENT_2, CynthiaEscapePos[1], true);
+                break;
+            case POINT_BASEMENT_2:
+                me->GetMotionMaster()->MovePoint(0, CynthiaEscapePos[2], true);
+                break;
+            default:
+                break;
+            }
+        }
+
+        void UpdateAI(uint32 diff) override
+        {
+            _events.Update(diff);
+
+            while (uint32 eventId = _events.ExecuteEvent())
+            {
+                switch (eventId)
+                {
+                case EVENT_TALK_RESCUED:
+                    Talk(SAY_CHILD_RESCUED, ObjectAccessor::GetPlayer(*me, _playerGUID));
+                    _events.ScheduleEvent(EVENT_RUN_TO_BASEMENT, me->GetEntry() == NPC_JAMES ? Seconds(3) + Milliseconds(600) : Seconds(2) + Milliseconds(300));
+                    break;
+                case EVENT_RUN_TO_BASEMENT:
+                    switch (me->GetEntry())
+                    {
+                    case NPC_JAMES:
+                        me->GetMotionMaster()->MovePoint(0, JamesEscapePos, true);
+                        me->DespawnOrUnsummon(Seconds(5) + Milliseconds(200));
+                        break;
+                    case NPC_ASHLEY:
+                        me->GetMotionMaster()->MovePoint(POINT_BASEMENT_1, AshleyEscapePos[0], true);
+                        me->DespawnOrUnsummon(Seconds(3) + Milliseconds(800));
+                        break;
+                    case NPC_CYNTHIA:
+                        me->GetMotionMaster()->MovePoint(POINT_BASEMENT_1, CynthiaEscapePos[0], true);
+                        me->DespawnOrUnsummon(Seconds(8) + Milliseconds(500));
+                        break;
+                    default:
+                        break;
+                    }
+                    break;
+                case EVENT_CRY:
+                    me->HandleEmoteCommand(EMOTE_ONESHOT_CRY);
+                    _events.Repeat(Seconds(1), Seconds(1) + Milliseconds(500));
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+    };
+};*/
+
 void AddSC_gilneas()
 {
     new npc_gilneas_city_guard_phase1();
@@ -3112,4 +3290,6 @@ void AddSC_gilneas()
     new npc_bloodfang_stalker_c1();
     new npc_gilnean_crow();
     new npc_captured_riding_bat();
+    new spell_gilneas_save_the_children();
+    //RegisterCreatureAI(npc_gilneas_save_the_children);
 }

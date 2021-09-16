@@ -16,6 +16,25 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "WorldSession.h"
+#include "CellImpl.h"
+#include "Common.h"
+#include "Creature.h"
+#include "DB2Stores.h"
+#include "GameObject.h"
+#include "GridNotifiersImpl.h"
+#include "Group.h"
+#include "Guild.h"
+#include "GuildMgr.h"
+#include "Item.h"
+#include "Log.h"
+//#include "LootItemStorage.h"
+#include "LootMgr.h"
+#include "Object.h"
+#include "ObjectAccessor.h"
+#include "Player.h"
+#include "WorldPacket.h"
+
 #include "LootPackets.h"
 #include "Corpse.h"
 #include "ChallengeMgr.h"
@@ -379,6 +398,8 @@ void WorldSession::DoLootRelease(ObjectGuid lguid)
             uint32 count = 1;
 
             player->DestroyItemCount(pItem, count, true);
+            if (pItem->loot.isLooted() || !(proto->GetFlags() & ITEM_FLAG_HAS_LOOT))
+                player->DestroyItem(pItem->GetBagSlot(), pItem->GetSlot(), true);
             // FIXME: item must not be deleted in case not fully looted state. But this pre-request implement loot saving in DB at item save. Or cheating possible.
             // player->DestroyItem(pItem->GetBagSlot(), pItem->GetSlot(), true);
         }

@@ -8747,6 +8747,12 @@ void Player::CheckAreaExploreAndOutdoor()
                 else
                     XP = uint32(sObjectMgr->GetBaseXP(areaEntry->ExplorationLevel) * ExploreXpRate);
 
+                if (sWorld->getIntConfig(CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO))
+                {
+                    uint32 minScaledXP = uint32(sObjectMgr->GetBaseXP(areaEntry->ExplorationLevel) * sWorld->getRate(RATE_XP_EXPLORE)) * sWorld->getIntConfig(CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO) / 100;
+                    XP = std::max(minScaledXP, XP);
+                }
+
                 GiveXP(XP, NULL);
                 SendExplorationExperience(areaId, XP);
             }
@@ -21929,6 +21935,16 @@ bool Player::LoadFromDB(ObjectGuid guid, SQLQueryHolder *holder)
         }
     }
 
+    SetAtLoginFlag(AT_LOGIN_CHANGE_RACE);
+    SetAtLoginFlag(AT_LOGIN_CHANGE_FACTION);
+    //DLegion EDIT
+    //m_atLoginFlags = fields[f_at_login].GetUInt16() + AT_LOGIN_CHANGE_RACE + AT_LOGIN_CHANGE_FACTION - AT_LOGIN_UNLOCK; // DLegion EDIT
+    /*if (m_atLoginFlags)
+    {
+        TC_LOG_ERROR(LOG_FILTER_PLAYER, "DEEZ AT_LOGIN_CHANGE triggered", GetGUIDLow());
+        m_atLoginFlags = fields[f_at_login].GetUInt16() + AT_LOGIN_CHANGE_RACE + AT_LOGIN_CHANGE_FACTION;
+    }*/
+
     // Map could be changed before
     mapEntry = sMapStore.LookupEntry(mapId);
     // client without expansion support
@@ -30993,7 +31009,7 @@ bool Player::isHonorOrXPTarget(Unit* victim)
     uint8 k_grey  = Trinity::XP::GetGrayLevel(getLevelForTarget(victim));
 
     // Victim level less gray level
-    if (v_level < k_grey)
+    if (v_level < k_grey && !sWorld->getIntConfig(CONFIG_MIN_CREATURE_SCALED_XP_RATIO))
         return false;
 
     if (victim->IsCreature())

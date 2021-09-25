@@ -18,15 +18,20 @@
 
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
+#include "blackrock_depths.h"
 
 enum Spells
 {
-    SPELL_HEAL                                             = 10917,
-    SPELL_RENEW                                            = 10929,
-    SPELL_SHIELD                                           = 10901,
-    SPELL_MINDBLAST                                        = 10947,
-    SPELL_SHADOWWORDPAIN                                   = 10894,
-    SPELL_SMITE                                            = 10934
+    SPELL_HEAL                                             = 15586,
+    SPELL_RENEW                                            = 8362,
+    SPELL_MINDBLAST                                        = 15587,
+};
+
+enum Events
+{
+    EVENT_HEAL = 1,
+    EVENT_RENEW,
+    EVENT_MINDBLAST,
 };
 
 class boss_moira_bronzebeard : public CreatureScript
@@ -39,24 +44,22 @@ public:
         return new boss_moira_bronzebeardAI (creature);
     }
 
-    struct boss_moira_bronzebeardAI : public ScriptedAI
+    struct boss_moira_bronzebeardAI : public BossAI
     {
-        boss_moira_bronzebeardAI(Creature* creature) : ScriptedAI(creature) {}
-
-        uint32 Heal_Timer;
-        uint32 MindBlast_Timer;
-        uint32 ShadowWordPain_Timer;
-        uint32 Smite_Timer;
+        boss_moira_bronzebeardAI(Creature* creature) : BossAI(creature, DATA_MOIRA) {}
 
         void Reset()
         {
-            Heal_Timer = 12000;                                 //These times are probably wrong
-            MindBlast_Timer = 16000;
-            ShadowWordPain_Timer = 2000;
-            Smite_Timer = 8000;
+            _Reset();
+            events.Reset();
         }
 
-        void EnterCombat(Unit* /*who*/) {}
+        void EnterCombat(Unit* /*who*/) 
+        {
+            events.ScheduleEvent(EVENT_MINDBLAST, 16000); // Probably incorrect timing. Winged it
+            events.ScheduleEvent(EVENT_HEAL, 12000);
+            events.ScheduleEvent(EVENT_RENEW, 18000);
+        }
 
         void UpdateAI(uint32 diff)
         {
@@ -64,26 +67,39 @@ public:
             if (!UpdateVictim())
                 return;
 
-            //MindBlast_Timer
-            if (MindBlast_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_MINDBLAST);
-                MindBlast_Timer = 14000;
-            } else MindBlast_Timer -= diff;
 
-            //ShadowWordPain_Timer
-            if (ShadowWordPain_Timer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_SHADOWWORDPAIN);
-                ShadowWordPain_Timer = 18000;
-            } else ShadowWordPain_Timer -= diff;
+            events.Update(diff);
 
-            //Smite_Timer
-            if (Smite_Timer <= diff)
+            if (me->HasUnitState(UNIT_STATE_CASTING))
+                return;
+
+            while (uint32 eventId = events.ExecuteEvent())
             {
-                DoCast(me->getVictim(), SPELL_SMITE);
-                Smite_Timer = 10000;
-            } else Smite_Timer -= diff;
+                switch (eventId)
+                {
+                case EVENT_MINDBLAST:
+                    DoCast(me->getVictim(), SPELL_MINDBLAST);
+                    events.ScheduleEvent(EVENT_MINDBLAST, 14000);
+                    //TC_LOG_ERROR(LOG_FILTER_TSCR, "moira EVENT_MINDBLAST");
+                    break;
+                case EVENT_HEAL:
+                    if (Creature* dagran = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_EMPEROR)))
+                    {
+                        DoCast(dagran, SPELL_HEAL);
+                        events.ScheduleEvent(EVENT_HEAL, 12000);
+                    }
+                    //TC_LOG_ERROR(LOG_FILTER_TSCR, "moira EVENT_HEAL");
+                    break;
+                case EVENT_RENEW:
+                    if (Creature* dagran = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_EMPEROR)))
+                    {
+                        DoCast(dagran, SPELL_RENEW);
+                        events.ScheduleEvent(EVENT_RENEW, 18000);
+                    }
+                    //TC_LOG_ERROR(LOG_FILTER_TSCR, "moira EVENT_RENEW");
+                    break;
+                }
+            }
         }
     };
 };

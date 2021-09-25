@@ -151,6 +151,9 @@ class WorldScript : public ScriptObject
 
         // Called when the world is actually shut down.
         virtual void OnShutdown() { }
+
+        // Called at End of SetInitialWorldSettings.
+        virtual void SetInitialWorldSettings() { }
 };
 
 class FormulaScript : public ScriptObject
@@ -197,6 +200,22 @@ public:
     virtual bool CanShow(WorldSession* /*session*/, Battlepay::Product const& /*product*/) { return true; }
     virtual bool CanBuy(WorldSession* /*session*/, Battlepay::Product const& /*product*/, std::string& /*reason*/) { return true; }
     virtual std::string GetCustomData(Battlepay::Product const& /*product*/) { return ""; }
+};
+
+//DLegion EDIT
+class AllMapScript : public ScriptObject
+{
+protected:
+
+    AllMapScript(const char* name);
+
+public:
+
+    // Called when a player enters any Map
+    virtual void OnPlayerEnterAll(Map* /*map*/, Player* /*player*/) { }
+
+    // Called when a player leave any Map
+    virtual void OnPlayerLeaveAll(Map* /*map*/, Player* /*player*/) { }
 };
 
 template<class TMap>
@@ -342,6 +361,50 @@ CreatureAI* GetAIForInstance(Creature* creature, const char *Name)
                 return new AI(creature);
     return nullptr;
 }
+
+//DLegion EDIT
+class AllCreatureScript : public ScriptObject
+{
+protected:
+
+    AllCreatureScript(const char* name);
+
+public:
+
+    // Called from End of Creature Update.
+    virtual void OnAllCreatureUpdate(Creature* /*creature*/, uint32 /*diff*/) { }
+
+    // Called from End of Creature SelectLevel.
+    virtual void Creature_SelectLevel(const CreatureTemplate* /*cinfo*/, Creature* /*creature*/) { }
+};
+
+
+//DLegion EDIT
+class UnitScript : public ScriptObject
+{
+protected:
+
+    UnitScript(char const* name, bool addToScripts = true);
+
+public:
+    // Called when a unit deals healing to another unit
+    virtual void OnHeal(Unit* /*healer*/, Unit* /*reciever*/, uint32& /*gain*/) { }
+
+    // Called when a unit deals damage to another unit
+    virtual void OnDamage(Unit* /*attacker*/, Unit* /*victim*/, uint32& /*damage*/) { }
+
+    // Called when DoT's Tick Damage is being Dealt
+    virtual void ModifyPeriodicDamageAurasTick(Unit* /*target*/, Unit* /*attacker*/, uint32& /*damage*/) { }
+
+    // Called when Melee Damage is being Dealt
+    virtual void ModifyMeleeDamage(Unit* /*target*/, Unit* /*attacker*/, uint32& /*damage*/) { }
+
+    // Called when Spell Damage is being Dealt
+    virtual void ModifySpellDamageTaken(Unit* /*target*/, Unit* /*attacker*/, float& /*damage*/, SpellInfo const* /*spellInfo*/) { }
+
+    // Called when Heal is Recieved
+    virtual void ModifyHealRecieved(Unit* /*target*/, Unit* /*attacker*/, uint32& /*damage*/) { }
+};
 
 class GameObjectScript : public ScriptObject, public UpdatableScript<GameObject>
 {
@@ -907,6 +970,7 @@ class ScriptMgr
         void OnShutdownCancel();
         void OnStartup();
         void OnShutdown();
+        void SetInitialWorldSettings();
 
         /* FormulaScript */
         void OnHonorCalculation(float& honor, uint8 level, float multiplier);
@@ -916,6 +980,11 @@ class ScriptMgr
         void OnBaseGainCalculation(uint32& gain, uint8 playerLevel, uint8 mobLevel);
         void OnGainCalculation(uint32& gain, Player* player, Unit* unit);
         void OnGroupRateCalculation(float& rate, uint32 count, bool isRaid);
+
+        public: /* AllScript */
+
+        void OnPlayerEnterMapAll(Map* map, Player* player);
+        void OnPlayerLeaveMapAll(Map* map, Player* player);
 
         /* MapScript */
         void OnCreateMap(Map* map);
@@ -946,6 +1015,22 @@ class ScriptMgr
         bool OnQuestReward(Player* player, Creature* creature, Quest const* quest, uint32 opt);
         uint32 GetDialogStatus(Player* player, Creature* creature);
         CreatureAI* GetCreatureAI(Creature* creature);
+
+        void OnCreatureUpdate(Creature* creature, uint32 diff);
+           
+        /* AllCreatureScript */
+        void OnAllCreatureUpdate(Creature* creature, uint32 diff);
+        void Creature_SelectLevel(const CreatureTemplate* cinfo, Creature* creature);
+
+        /* UnitScript */
+
+        void OnHeal(Unit* healer, Unit* reciever, uint32& gain);
+        void OnDamage(Unit* attacker, Unit* victim, uint32& damage);
+        void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage);
+        void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage);
+        void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo);
+        void ModifyHealRecieved(Unit* target, Unit* attacker, uint32& addHealth);
+
 
         /* GameObjectScript */
         bool OnDummyEffect(Unit* caster, uint32 spellId, SpellEffIndex effIndex, GameObject* target);

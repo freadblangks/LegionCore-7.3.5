@@ -34,6 +34,7 @@
 #include "FunctionProcessor.h"
 #include "World.h"
 #include "ThreadPoolMap.hpp"
+#include "DataMap.h"
 
 #include <cds/container/feldman_hashset_hp.h>
 #include "HashFuctor.h"
@@ -642,6 +643,9 @@ class Map
         std::map<uint32, std::vector<WorldObject*>> i_objectUpdater[2][2];
         std::set<WorldObject*> i_objectTest;
         void VisitNearbyCellsOf(WorldObject* obj);
+
+        //DLegion EDIT
+        DataMap CustomData;
 
         std::set<Scenario*> m_scenarios;
 

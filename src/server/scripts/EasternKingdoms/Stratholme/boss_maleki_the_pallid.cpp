@@ -70,6 +70,13 @@ public:
         {
             if (instance)
                 instance->SetData(TYPE_PALLID, IN_PROGRESS);
+            if (auto unit = me->GetAnyOwner())
+            {
+                if (auto plr = unit->ToPlayer())
+                {
+                    plr->KilledMonsterCredit(10415); // Ash'ari Crystal
+                }
+            }
         }
 
         void UpdateAI(uint32 diff)

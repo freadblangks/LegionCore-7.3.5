@@ -1615,24 +1615,6 @@ void Player::Update(uint32 p_time)
             uint32 newzone, newarea;
             GetZoneAndAreaId(newzone, newarea);
 
-            //! HardCore. Alliance
-            if (newzone == 6719 && !m_taxi.GetTaxiSource())
-            {
-                if (Garrison* garr = GetGarrisonPtr())
-                {
-                    if (garr->GetGarrisonMapID() != -1)
-                    {
-                        Map* newMap = sMapMgr->CreateMap(garr->GetGarrisonMapID(), this);
-                        if (newMap && newMap->CanEnter(this))
-                        {
-                            uint32 const garArea = newMap->GetAreaId(GetPositionX(), GetPositionY(), GetPositionZ());
-                            if (m_areaId != garArea)
-                                newarea = garArea;
-                        }
-                    }
-                }
-            }
-
             if (m_zoneId != newzone)
                 UpdateZone(newzone, newarea);                // also update area
             else
@@ -35953,7 +35935,7 @@ bool Player::IsForbiddenMapForLevel(uint32 mapid, uint32 zone)
         case 1220: //Legion: Broken Isles
         {
             //Allied Races start loc
-            if (m_areaId == 7999 || m_areaId == 9502)
+            if (GetAreaId() == 7999 || GetAreaId() == 9502)
                 return false;
 
             minLevel = 98;

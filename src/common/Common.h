@@ -82,7 +82,8 @@
 #define vsnprintf _vsnprintf
 #define finite(X) _finite(X)
 #define llabs _abs64
-
+#undef snprintf
+#undef GetMessage
 #else
 
 #define stricmp strcasecmp

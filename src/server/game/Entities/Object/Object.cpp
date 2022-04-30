@@ -3941,7 +3941,7 @@ bool WorldObject::InSamePhaseId(std::set<uint32> const& phase) const
         return true;
 
     //- speed up case.
-    if (phase.empty() || m_phaseId.empty() && !IsPlayer())
+    if (phase.empty() && m_phaseId.empty())
         return true;
 
     //! speed up case. should be done in any way. 

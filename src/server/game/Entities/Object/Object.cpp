@@ -3940,10 +3940,6 @@ bool WorldObject::InSamePhaseId(std::set<uint32> const& phase, bool otherIsPlaye
     if (IgnorePhaseId())
         return true;
 
-
-    //- speed up case.
-    if (phase.empty() && m_phaseId.empty())
-
     if (IsPlayer() && otherIsPlayer)
         return true;
 

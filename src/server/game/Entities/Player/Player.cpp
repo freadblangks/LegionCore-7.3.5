@@ -8546,7 +8546,8 @@ bool Player::UpdatePosition(float x, float y, float z, float orientation, bool t
     //    mover->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_TURNING);
     //AURA_INTERRUPT_FLAG_JUMP not sure
 
-    SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POSITION);
+    if (GetGroup())
+        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POSITION);
 
     if (GetTrader() && !IsWithinDistInMap(GetTrader(), INTERACTION_DISTANCE))
         GetSession()->SendCancelTrade();
@@ -10144,7 +10145,7 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
         m_areaId = 0;
         m_zoneForce = false;
     }
-
+    
     AddDelayedEvent(100, [this]() -> void
     {
         GetPhaseMgr().AddUpdateFlag(PHASE_UPDATE_FLAG_ZONE_UPDATE);
@@ -10187,12 +10188,7 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
 
     // group update
     if (GetGroup())
-    {
-        //SetGroupUpdateFlag(GROUP_UPDATE_FULL);
-        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_ZONE);
-        if (Pet* pet = GetPet())
-            pet->SetGroupUpdateFlag(GROUP_UPDATE_PET_FULL);
-    }
+        SetGroupUpdateFlag(GROUP_UPDATE_FULL);
 
     if (newZone != (m_zoneId ? m_zoneId : m_oldZoneId))
         UpdateAreaQuestTasks(newZone, m_zoneId ? m_zoneId : m_oldZoneId);
@@ -26437,7 +26433,9 @@ void Player::RemovePet(Pet* pet, bool isDelete)
     if (pet->isControlled())
     {
         SendRemoveControlBar();
-        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
+
+        if (GetGroup())
+            SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
     }
 
     WorldPackets::PetPackets::PetDismissSound packet;
@@ -38976,8 +38974,7 @@ uint32 Player::GetGroupUpdateFlag() const
 
 void Player::SetGroupUpdateFlag(uint32 flag)
 {
-    return; // Need find bugs with update it
-    if (GetGroup()) m_groupUpdateMask |= flag;
+    m_groupUpdateMask |= flag;
 }
 
 void Player::RemoveGroupUpdateFlag(uint32 flag)

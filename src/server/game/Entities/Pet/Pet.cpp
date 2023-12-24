@@ -335,7 +335,8 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
 
     TC_LOG_DEBUG(LOG_FILTER_PETS, "New Pet has guid %u", GetGUIDLow());
 
-    SetGroupUpdateFlag(GROUP_UPDATE_PET_FULL);
+    if (owner->GetGroup())
+        owner->SetGroupUpdateFlag(GROUP_UPDATE_PET_FULL);
 
     owner->SendTalentsInfoData(true);
 

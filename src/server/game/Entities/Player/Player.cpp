@@ -10188,12 +10188,7 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
 
     // group update
     if (GetGroup())
-    {
-        //SetGroupUpdateFlag(GROUP_UPDATE_FULL);
-        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_ZONE);
-        if (Pet* pet = GetPet())
-            pet->SetGroupUpdateFlag(GROUP_UPDATE_PET_FULL);
-    }
+        SetGroupUpdateFlag(GROUP_UPDATE_FULL);
 
     if (newZone != (m_zoneId ? m_zoneId : m_oldZoneId))
         UpdateAreaQuestTasks(newZone, m_zoneId ? m_zoneId : m_oldZoneId);

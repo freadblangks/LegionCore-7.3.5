@@ -1,6 +1,7 @@
 -- Fix loot chance for the following quest items
 
 -- These should all be 100%
+-- 884 = Ghoul Rib
 -- 981 = Bernice's Necklace
 -- 1006 = Brass Collar
 -- 1946 = Mary's Looking Glass
@@ -10,7 +11,7 @@
 
 -- 60792 = Pristine Flight Feather (bump from 35% to 50%)
 
-DELETE FROM `creature_loot_template` WHERE `item` IN (981,1006,1946,1968,2713,59522,60792);
+DELETE FROM `creature_loot_template` WHERE `item` IN (884,981,1006,1946,1968,2713,59522,60792);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
 (327, 981, -100, 0, 0, 1, 1, 0),
 (330, 1006, -100, 0, 0, 1, 1, 0),
@@ -18,7 +19,13 @@ INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `l
 (300, 1968, -100, 0, 0, 1, 1, 0),
 (1225, 2713, -100, 0, 0, 1, 1, 0),
 (703, 59522, -100, 0, 0, 1, 1, 0),
-(44628, 60792, -50, 0, 0, 1, 1, 0);
+(44628, 60792, -50, 0, 0, 1, 1, 0),
+(1270, 884, -40, 0, 0, 1, 1, 0),
+(948, 884, -40, 0, 0, 1, 1, 0),
+(604, 884, -40, 0, 0, 1, 1, 0),
+(570, 884, -40, 0, 0, 1, 1, 0),
+(210, 884, -40, 0, 0, 1, 1, 0),
+(3, 884, -40, 0, 0, 1, 1, 0);
 
 -- Fix broken "Rescue the Survivors!" quest (can't heal the Draenei Survivor, wrong faction and NPC flag)
 DELETE FROM `creature_template` WHERE `entry` = 16483;
@@ -33,3 +40,11 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 DELETE FROM `gameobject_template` WHERE `entry` = 205089;
 INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data8`, `Data9`, `Data10`, `Data11`, `Data12`, `Data13`, `Data14`, `Data15`, `Data16`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`, `Data24`, `Data25`, `Data26`, `Data27`, `Data28`, `Data29`, `Data30`, `Data31`, `Data32`, `unkInt32`, `AIName`, `ScriptName`, `WorldEffectID`, `StateWorldEffectID`, `SpellVisualID`, `SpellStateVisualID`, `SpellStateAnimID`, `SpellStateAnimKitID`, `MaxVisible`, `IgnoreDynLos`, `MinGold`, `MaxGold`, `VerifiedBuild`) VALUES
 (205089, 3, 7918, 'Stabthistle Seed', '', 'Collecting', '', 0, 4, 0.5, 60737, 0, 0, 0, 0, 0, 43, 205089, 0, 1, 0, 0, 0, 0, 27025, 0, 0, 0, 0, 0, 19676, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+
+-- Fix bad quest POI points
+
+-- Mistmantle's Revenge
+DELETE FROM `quest_poi_points` WHERE `QuestID` = 26674;
+INSERT INTO `quest_poi_points` (`QuestID`, `Idx1`, `Idx2`, `X`, `Y`, `VerifiedBuild`) VALUES
+(26674, 0, 0, -10372, -1252, 22908),
+(26674, 1, 0, -10382, -1246, 26124);  -- Adjusted this one (OLD: 26674, 1, 0, -10512, -1301, 22908)

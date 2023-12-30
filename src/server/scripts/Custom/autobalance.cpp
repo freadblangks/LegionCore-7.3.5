@@ -611,7 +611,7 @@ public:
 
         // health
         uint64 oldHealth = creature->GetHealth();
-        float healthMult = globalRate * healthMultiplier * playerMultiplier;
+        float healthMult = globalRate * healthMultiplier * (playerMultiplier / 4);
         uint64 health = healthMult * oldHealth;
         uint64 maxHealth = healthMult * creature->GetMaxHealth();
 

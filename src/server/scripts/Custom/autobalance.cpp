@@ -207,7 +207,12 @@ public:
                 uint32 maxPlayerCount = ((InstanceMap*)sMapMgr->FindMap(map->GetId(), map->GetInstanceId()))->GetMaxPlayers();
                 uint32 currentPlayerCount = map->GetPlayersCountExceptGMs();
                 ChatHandler(player->GetSession()).PSendSysMessage("Normal XP of %u was reduced to %u.", amount, (int)((float)currentPlayerCount / (float)maxPlayerCount));
-                amount *= ((float)currentPlayerCount / (float)maxPlayerCount);
+
+                float xpMult = ((float)currentPlayerCount / (float)maxPlayerCount);
+
+                TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "XP for player %s reduced from %u to %u (%.3f multiplier) for killing %s.", player->GetName(), amount, round(amount * xpMult), xpMult, victim->GetName());
+
+                amount *= xpMult;
             }
         }
     }

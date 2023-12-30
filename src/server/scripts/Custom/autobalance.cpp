@@ -206,13 +206,13 @@ public:
                 // Ensure that the players always get the same XP, even when entering the dungeon alone
                 uint32 maxPlayerCount = ((InstanceMap*)sMapMgr->FindMap(map->GetId(), map->GetInstanceId()))->GetMaxPlayers();
                 uint32 currentPlayerCount = map->GetPlayersCountExceptGMs();
-                ChatHandler(player->GetSession()).PSendSysMessage("Normal XP of %u was reduced to %u.", amount, (int)((float)currentPlayerCount / (float)maxPlayerCount));
 
-                float xpMult = ((float)currentPlayerCount / (float)maxPlayerCount);
+                float xpMult = (float)currentPlayerCount / (float)maxPlayerCount;
+                uint32 newAmount = static_cast<int>(amount * xpMult);
 
-                TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "XP for player %s reduced from %u to %u (%.3f multiplier) for killing %s.", player->GetName(), amount, round(amount * xpMult), xpMult, victim->GetName());
+                TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "XP for player %s reduced from %u to %u (%.3f multiplier) for killing %s.", player->GetName(), amount, newAmount, xpMult, victim->GetName());
 
-                amount *= xpMult;
+                amount = newAmount;
             }
         }
     }
@@ -616,7 +616,7 @@ public:
 
         // health
         uint64 oldHealth = creature->GetHealth();
-        float healthMult = globalRate * healthMultiplier * (playerMultiplier / 4);
+        float healthMult = globalRate * healthMultiplier * (playerMultiplier / 5);
         uint64 health = healthMult * oldHealth;
         uint64 maxHealth = healthMult * creature->GetMaxHealth();
 

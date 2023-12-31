@@ -7,6 +7,9 @@
 -- 1946 = Mary's Looking Glass
 -- 1968 = Ogre's Monocle
 -- 2713 = Ol' Sooty's Head
+-- 3616 = Mind's Eye
+-- 3876 = Fang of Bhag'thera
+-- 3877 = Talon of Tethis
 -- 3879 = Paw of Sin'Dall
 -- 4106 = Tumbled Crystal
 -- 22934 = Lasher Sample
@@ -15,11 +18,12 @@
 -- 60207 = Widow Venom Sac
 -- 60213 = Crystal Spine Basilisk Blood
 -- 60263 = Whispering Blue Stone
+-- 60274 = Sea Salt
 -- 60334 = Black Bear Brain
 
 -- 60792 = Pristine Flight Feather (bump from 35% to 50%)
 
-DELETE FROM `creature_loot_template` WHERE `item` IN (884,981,1006,1946,1968,2713,3879,4106,22934,58179,59522,60207,60263,60334,60792);
+DELETE FROM `creature_loot_template` WHERE `item` IN (884,981,1006,1946,1968,2713,3616,3876,3877,3879,4106,22934,58179,59522,60207,60263,60274,60334,60792);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
 (1270, 884, -40, 0, 0, 1, 1, 0),
 (948, 884, -40, 0, 0, 1, 1, 0),
@@ -32,6 +36,9 @@ INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `l
 (511, 1946, -100, 0, 0, 1, 1, 0),
 (300, 1968, -100, 0, 0, 1, 1, 0),
 (1225, 2713, -100, 0, 0, 1, 1, 0),
+(818, 3616, -100, 0, 0, 1, 1, 0),
+(728, 3876, -100, 0, 0, 1, 1, 0),
+(730, 3877, -100, 0, 0, 1, 1, 0),
 (729, 3879, -100, 0, 0, 1, 1, 0),
 (4260, 4106, -75, 0, 0, 1, 1, 0),
 (1096, 4106, -75, 0, 0, 1, 1, 0),
@@ -50,6 +57,11 @@ INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `l
 (942, 60263, -75, 0, 0, 1, 1, 0),
 (941, 60263, -75, 0, 0, 1, 1, 0),
 (939, 60263, -75, 0, 0, 1, 1, 0),
+(4461, 60274, -75, 0, 0, 1, 1, 0),
+(4460, 60274, -75, 0, 0, 1, 1, 0),
+(4459, 60274, -75, 0, 0, 1, 1, 0),
+(4458, 60274, -75, 0, 0, 1, 1, 0),
+(4457, 60274, -75, 0, 0, 1, 1, 0),
 (44016, 60334, -90, 0, 0, 1, 1, 0),
 (44628, 60792, -50, 0, 0, 1, 1, 0);
 

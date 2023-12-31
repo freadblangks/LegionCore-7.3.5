@@ -1,6 +1,6 @@
 -- Fix loot chance for the following quest items
 
--- These should all be 100%
+-- Most of these should be 100%
 -- 884 = Ghoul Rib
 -- 981 = Bernice's Necklace
 -- 1006 = Brass Collar
@@ -20,10 +20,9 @@
 -- 60263 = Whispering Blue Stone
 -- 60274 = Sea Salt
 -- 60334 = Black Bear Brain
-
 -- 60792 = Pristine Flight Feather (bump from 35% to 50%)
 
-DELETE FROM `creature_loot_template` WHERE `item` IN (884,981,1006,1946,1968,2713,3616,3876,3877,3879,4106,22934,58179,59522,60207,60263,60274,60334,60792);
+DELETE FROM `creature_loot_template` WHERE `item` IN (884,981,1006,1946,1968,2713,3616,3876,3877,3879,4106,22934,58179,59522,60207,60213,60263,60274,60334,60792);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
 (1270, 884, -40, 0, 0, 1, 1, 0),
 (948, 884, -40, 0, 0, 1, 1, 0),

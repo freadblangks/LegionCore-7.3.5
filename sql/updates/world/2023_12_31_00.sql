@@ -7,7 +7,10 @@
 -- 1946 = Mary's Looking Glass
 -- 1968 = Ogre's Monocle
 -- 2713 = Ol' Sooty's Head
+-- 3879 = Paw of Sin'Dall
+-- 4106 = Tumbled Crystal
 -- 22934 = Lasher Sample
+-- 58179 = Gan'zulah's Body
 -- 59522 = Key of Ilgalar
 -- 60207 = Widow Venom Sac
 -- 60213 = Crystal Spine Basilisk Blood
@@ -16,7 +19,7 @@
 
 -- 60792 = Pristine Flight Feather (bump from 35% to 50%)
 
-DELETE FROM `creature_loot_template` WHERE `item` IN (884,981,1006,1946,1968,2713,22934,59522,60207,60263, 60334,60792);
+DELETE FROM `creature_loot_template` WHERE `item` IN (884,981,1006,1946,1968,2713,3879,4106,22934,58179,59522,60207,60263,60334,60792);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
 (1270, 884, -40, 0, 0, 1, 1, 0),
 (948, 884, -40, 0, 0, 1, 1, 0),
@@ -29,7 +32,11 @@ INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `l
 (511, 1946, -100, 0, 0, 1, 1, 0),
 (300, 1968, -100, 0, 0, 1, 1, 0),
 (1225, 2713, -100, 0, 0, 1, 1, 0),
+(729, 3879, -100, 0, 0, 1, 1, 0),
+(4260, 4106, -75, 0, 0, 1, 1, 0),
+(1096, 4106, -75, 0, 0, 1, 1, 0),
 (16517, 22934, -100, 0, 0, 1, 1, 0),
+(1061, 58179, -100, 0, 0, 1, 1, 0),
 (703, 59522, -100, 0, 0, 1, 1, 0),
 (930, 60207, -100, 0, 0, 1, 1, 0),
 (45582, 60207, -100, 0, 0, 1, 1, 0),

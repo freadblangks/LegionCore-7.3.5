@@ -29940,7 +29940,7 @@ void Player::SendUpdateToOutOfRangeGroupMembers()
         group->UpdatePlayerOutOfRange(this);
 
     m_groupUpdateMask = GROUP_UPDATE_FLAG_NONE;
-
+    
     if (Pet* pet = GetPet())
         pet->ResetGroupUpdateFlag();
 }

@@ -16953,12 +16953,15 @@ void Unit::SetHealth(uint64 val, uint32 spellId)
             player->SendSpectatorAddonMsgToBG(msg);
         }
 
-        player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_HP);
+        // group update
+        if (player->GetGroup())
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_HP);
     }
     else if (Creature* creature = ToCreature())
     {
         if (Pet* pet = creature->ToPet())
         {
+            // group update
             if (pet->isControlled())
             {
                 Unit* owner = GetOwner();
@@ -27366,11 +27369,14 @@ void Unit::SetLevel(uint8 lvl)
 {
     SetUInt32Value(UNIT_FIELD_LEVEL, lvl);
 
-    if (IsPlayer())
-        ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_LEVEL);
+    if (Player* player = ToPlayer())
+    {
+        // group update
+        if (player->GetGroup())
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_LEVEL);
 
-    if (IsPlayer())
-        sWorld->UpdateCharacterInfoLevel(ToPlayer()->GetGUIDLow(), lvl);
+        sWorld->UpdateCharacterInfoLevel(GetGUIDLow(), lvl);
+    }
 }
 
 void Unit::SetEffectiveLevel(uint8 lvl)

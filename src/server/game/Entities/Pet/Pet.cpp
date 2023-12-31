@@ -340,6 +340,8 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
 
     owner->SendTalentsInfoData(true);
 
+    SetGroupUpdateFlag(GROUP_UPDATE_PET_FULL);
+
     if (getPetType() == HUNTER_PET)
     {
         PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PET_DECLINED_NAME);
@@ -2188,12 +2190,10 @@ void Pet::ProhibitSpellSchool(SpellSchoolMask idSchoolMask, uint32 unTimeMs)
 
 void Pet::SetGroupUpdateFlag(uint32 flag)
 {
-    return;
-
     Player* player = GetOwner()->ToPlayer();
     if (!player)
         return;
-
+    
     if (player->GetGroup())
     {
         m_groupUpdateMask |= flag;
@@ -2203,7 +2203,6 @@ void Pet::SetGroupUpdateFlag(uint32 flag)
 
 void Pet::ResetGroupUpdateFlag()
 {
-    return;
     m_groupUpdateMask = GROUP_UPDATE_FLAG_PET_NONE;
 
     if (Player* player = GetOwner()->ToPlayer())

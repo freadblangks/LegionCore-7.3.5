@@ -128,10 +128,6 @@ class Pet : public Guardian
         void CheckSpecialization();
         void ProhibitSpellSchool(SpellSchoolMask idSchoolMask, uint32 unTimeMs) override;
         
-        uint32 GetGroupUpdateFlag() const { return m_groupUpdateMask; }
-        void SetGroupUpdateFlag(uint32 flag);
-        void ResetGroupUpdateFlag();
-
     protected:
         int32   m_duration;                                 // time until unsummon (used mostly for summoned guardians and not used for controlled pets)
         uint32  m_specialization;

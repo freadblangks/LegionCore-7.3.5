@@ -663,7 +663,7 @@ class WorldObject : public Object, public WorldLocation
         bool isActiveObject() const { return m_isActive; }
         void setActive(bool isActiveObject);
         void SetWorldObject(bool apply);
-        void SetTratsport(Transport* transport, Unit* owner = nullptr);
+        void SetTransportWithOwner(Transport* transport, Unit* owner = nullptr);
 
         Position GetPosition() const override;
         void GetPosition(float& x, float& y, Transport* transport = nullptr) const override;

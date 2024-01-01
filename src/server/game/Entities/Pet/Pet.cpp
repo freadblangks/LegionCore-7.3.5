@@ -219,7 +219,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
     CreatureTemplate const* cinfo = GetCreatureTemplate();
     if (cinfo->Type == CREATURE_TYPE_CRITTER)
     {
-        SetTratsport(owner->GetTransport());
+        SetTransportWithOwner(owner->GetTransport());
         map->AddToMap(this->ToCreature());
         return true;
     }
@@ -291,7 +291,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
         SetPower(getPowerType(), savedmana > uint32(GetMaxPower(getPowerType())) ? GetMaxPower(getPowerType()) : savedmana);
     }
 
-    SetTratsport(owner->GetTransport());
+    SetTransportWithOwner(owner->GetTransport());
 
     owner->SetMinion(this, true);
     map->AddToMap(this->ToCreature());
@@ -336,7 +336,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
     TC_LOG_DEBUG(LOG_FILTER_PETS, "New Pet has guid %u", GetGUIDLow());
 
     if (owner->GetGroup())
-        owner->SetGroupUpdateFlag(GROUP_UPDATE_PET_FULL);
+        owner->SetGroupUpdateFlag(GROUP_UPDATE_PET);
 
     owner->SendTalentsInfoData(true);
 
@@ -2184,30 +2184,6 @@ void Pet::ProhibitSpellSchool(SpellSchoolMask idSchoolMask, uint32 unTimeMs)
     if (GetOwner())
         if (auto owner = GetOwner()->ToPlayer())
             owner->SendDirectMessage(cooldowns.Write());
-}
-
-void Pet::SetGroupUpdateFlag(uint32 flag)
-{
-    return;
-
-    Player* player = GetOwner()->ToPlayer();
-    if (!player)
-        return;
-
-    if (player->GetGroup())
-    {
-        m_groupUpdateMask |= flag;
-        player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
-    }
-}
-
-void Pet::ResetGroupUpdateFlag()
-{
-    return;
-    m_groupUpdateMask = GROUP_UPDATE_FLAG_PET_NONE;
-
-    if (Player* player = GetOwner()->ToPlayer())
-        player->RemoveGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
 }
 
 bool Pet::isControlled() const

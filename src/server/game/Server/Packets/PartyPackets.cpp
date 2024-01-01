@@ -144,14 +144,20 @@ WorldPacket const* WorldPackets::Party::PartyMemberStats::Write()
     return &_worldPacket;
 }
 
-void WorldPackets::Party::PartyMemberStatseUpdate::Initialize(Player* player)
+void WorldPackets::Party::PartyMemberStateUpdate::Initialize(Player* player)
 {
     uint32 mask = player->GetGroupUpdateFlag();
+
     if (mask == GROUP_UPDATE_FLAG_NONE)
         return;
 
+    // if update power type, update current/max power also
     if (mask & GROUP_UPDATE_FLAG_POWER_TYPE)
         mask |= GROUP_UPDATE_FLAG_CUR_POWER | GROUP_UPDATE_FLAG_MAX_POWER;
+
+    // same for pets
+    if (mask & GROUP_UPDATE_FLAG_PET_POWER_TYPE)
+        mask |= (GROUP_UPDATE_FLAG_PET_CUR_POWER | GROUP_UPDATE_FLAG_PET_MAX_POWER);
 
     ForEnemy = false;
     FullUpdate = false;
@@ -325,57 +331,50 @@ void WorldPackets::Party::PartyMemberStatseUpdate::Initialize(Player* player)
         }
     }
 
-    if (mask & GROUP_UPDATE_FLAG_PET)
+    if (Pet* pet = player->GetPet())
     {
-        if (Pet* pet = player->GetPet())
+        MemberState.PetStats = boost::in_place();
+
+        if (mask & GROUP_UPDATE_FLAG_PET_GUID) //! @TODO
+            MemberState.PetStats->GUID = pet->GetGUID();
+
+        if (mask & GROUP_UPDATE_FLAG_PET_NAME)
+            MemberState.PetStats->Name = pet->GetName();
+
+        if (mask & GROUP_UPDATE_FLAG_PET_MODEL_ID)
+            MemberState.PetStats->ModelId = pet->GetDisplayId();
+
+        if (mask & GROUP_UPDATE_FLAG_PET_CUR_HP)
+            MemberState.PetStats->CurrentHealth = pet->GetHealth();
+
+        if (mask & GROUP_UPDATE_FLAG_PET_MAX_HP)
+            MemberState.PetStats->MaxHealth = pet->GetMaxHealth();
+
+        if (mask & GROUP_UPDATE_FLAG_PET_AURAS)
         {
-            uint32 const petMask = pet->GetGroupUpdateFlag();
-            if (petMask == GROUP_UPDATE_FLAG_PET_NONE)
-                return;
-
-            MemberState.PetStats = boost::in_place();
-
-            if (petMask & GROUP_UPDATE_FLAG_PET_GUID) //! @TODO
-                MemberState.PetStats->GUID = pet->GetGUID();
-
-            if (petMask & GROUP_UPDATE_FLAG_PET_NAME)
-                MemberState.PetStats->Name = pet->GetName();
-
-            if (petMask & GROUP_UPDATE_FLAG_PET_MODEL_ID)
-                MemberState.PetStats->ModelId = pet->GetDisplayId();
-
-            if (petMask & GROUP_UPDATE_FLAG_PET_CUR_HP)
-                MemberState.PetStats->CurrentHealth = pet->GetHealth();
-
-            if (petMask & GROUP_UPDATE_FLAG_PET_MAX_HP)
-                MemberState.PetStats->MaxHealth = pet->GetMaxHealth();
-
-            if (petMask & GROUP_UPDATE_FLAG_PET_AURAS)
+            Unit::VisibleAuraContainer const visibleAuras = pet->GetVisibleAuras();
+            for (AuraApplication const* aurApp : visibleAuras)
             {
-                Unit::VisibleAuraContainer const visibleAuras = pet->GetVisibleAuras();
-                for (AuraApplication const* aurApp : visibleAuras)
+                if (!aurApp || !aurApp->GetBase())
+                    continue;
+                GroupAura aura;
+
+                aura.SpellId = aurApp->GetBase()->GetId();
+                aura.EffectMask = aurApp->GetEffectMask();
+                aura.Scalings = aurApp->GetFlags(); // ??
+
+                if (aurApp->GetFlags() & AFLAG_SCALABLE)
                 {
-                    if (!aurApp || !aurApp->GetBase())
-                        continue;
-                    GroupAura aura;
-
-                    aura.SpellId = aurApp->GetBase()->GetId();
-                    aura.EffectMask = aurApp->GetEffectMask();
-                    aura.Scalings = aurApp->GetFlags(); // ??
-
-                    if (aurApp->GetFlags() & AFLAG_SCALABLE)
+                    for (uint32 e = 0; e < MAX_SPELL_EFFECTS; ++e)
                     {
-                        for (uint32 e = 0; e < MAX_SPELL_EFFECTS; ++e)
-                        {
-                            float scale = 0.0f;
-                            if (AuraEffect const* eff = aurApp->GetBase()->GetEffect(e))
-                                scale = eff->GetAmount();
-                            aura.EffectScales.push_back(scale);
-                        }
+                        float scale = 0.0f;
+                        if (AuraEffect const* eff = aurApp->GetBase()->GetEffect(e))
+                            scale = eff->GetAmount();
+                        aura.EffectScales.push_back(scale);
                     }
-
-                    MemberState.PetStats->AuraList.push_back(aura);
                 }
+
+                MemberState.PetStats->AuraList.push_back(aura);
             }
         }
     }
@@ -475,7 +474,7 @@ ByteBuffer& operator<<(ByteBuffer& data, WorldPackets::Party::PartyMemberState c
     return data;
 }
 
-WorldPacket const* WorldPackets::Party::PartyMemberStatseUpdate::Write()
+WorldPacket const* WorldPackets::Party::PartyMemberStateUpdate::Write()
 {
     _worldPacket.WriteBit(ForEnemy);
     _worldPacket.WriteBit(FullUpdate);

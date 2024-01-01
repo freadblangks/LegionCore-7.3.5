@@ -1796,7 +1796,14 @@ void Player::Update(uint32 p_time)
     UpdateHomebindTime(p_time);
 
     // group update
-    SendUpdateToOutOfRangeGroupMembers();
+    // Avoid spam of SMSG_PARTY_MEMBER_STAT
+    if (m_groupUpdateDelay < p_time)
+    {
+        SendUpdateToOutOfRangeGroupMembers();
+        m_groupUpdateDelay = 5000;
+    }
+    else
+        m_groupUpdateDelay -= p_time;
 
     if (GetSession()->IsWardenModuleFailed())
     {
@@ -26360,7 +26367,7 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
         return NULL;
     }
 
-    pet->SetTratsport(GetTransport());
+    pet->SetTransportWithOwner(GetTransport());
     pet->SetCreatorGUID(GetGUID());
     pet->SetUInt32Value(UNIT_FIELD_FACTION_TEMPLATE, getFaction());
     pet->SetUInt32Value(UNIT_FIELD_NPC_FLAGS, 0);
@@ -26435,7 +26442,7 @@ void Player::RemovePet(Pet* pet, bool isDelete)
         SendRemoveControlBar();
 
         if (GetGroup())
-            SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
+            SetGroupUpdateFlag(GROUP_UPDATE_PET);
     }
 
     WorldPackets::PetPackets::PetDismissSound packet;
@@ -29933,9 +29940,6 @@ void Player::SendUpdateToOutOfRangeGroupMembers()
         group->UpdatePlayerOutOfRange(this);
 
     m_groupUpdateMask = GROUP_UPDATE_FLAG_NONE;
-
-    if (Pet* pet = GetPet())
-        pet->ResetGroupUpdateFlag();
 }
 
 void Player::SendTransferAborted(uint32 mapID, TransferAbortReason reason, uint8 arg)
@@ -37517,7 +37521,7 @@ void Player::SummonBattlePet(ObjectGuid journalID)
         return;
     }
 
-    currentPet->SetTratsport(GetTransport());
+    currentPet->SetTransportWithOwner(GetTransport());
     currentPet->SetHomePosition(l_Position);
     currentPet->SetTempSummonType(TEMPSUMMON_MANUAL_DESPAWN);
     currentPet->InitStats(0);
@@ -38965,21 +38969,6 @@ void SpellInQueue::Clear()
     RecoveryCategory = 0;
     delete CastData;
     CastData = nullptr;
-}
-
-uint32 Player::GetGroupUpdateFlag() const
-{
-    return m_groupUpdateMask;
-}
-
-void Player::SetGroupUpdateFlag(uint32 flag)
-{
-    m_groupUpdateMask |= flag;
-}
-
-void Player::RemoveGroupUpdateFlag(uint32 flag)
-{
-    m_groupUpdateMask &= ~flag;
 }
 
 PlayerDynamicFieldArenaCooldowns::PlayerDynamicFieldArenaCooldowns(uint32 spellId, uint32 castTime, uint32 endTime) :

@@ -2018,7 +2018,7 @@ void Player::InnEnter(time_t time, uint32 mapid, float x, float y, float z)
 bool Player::ToggleAFK()
 {
     ToggleFlag(PLAYER_FIELD_PLAYER_FLAGS, PLAYER_FLAGS_AFK);
-    SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
+    SetGroupUpdateFlag(GROUP_UPDATE_STATUS);
 
     bool state = HasFlag(PLAYER_FIELD_PLAYER_FLAGS, PLAYER_FLAGS_AFK);
 
@@ -2032,7 +2032,7 @@ bool Player::ToggleAFK()
 bool Player::ToggleDND()
 {
     ToggleFlag(PLAYER_FIELD_PLAYER_FLAGS, PLAYER_FLAGS_DND);
-    SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
+    SetGroupUpdateFlag(GROUP_UPDATE_STATUS);
 
     return HasFlag(PLAYER_FIELD_PLAYER_FLAGS, PLAYER_FLAGS_DND);
 }
@@ -3394,7 +3394,7 @@ void Player::SetGameMaster(bool on)
         }
 
         RemoveByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_FFA_PVP);
-        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
+        SetGroupUpdateFlag(GROUP_UPDATE_STATUS);
         ResetContestedPvP();
 
         getHostileRefManager().setOnlineOfflineState(false);
@@ -3420,7 +3420,7 @@ void Player::SetGameMaster(bool on)
         if (sWorld->IsFFAPvPRealm())
         {
             SetByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_FFA_PVP);
-            SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
+            SetGroupUpdateFlag(GROUP_UPDATE_STATUS);
         }
 
         // restore FFA PvP area state, remove not allowed for GM mounts
@@ -8554,7 +8554,7 @@ bool Player::UpdatePosition(float x, float y, float z, float orientation, bool t
     //AURA_INTERRUPT_FLAG_JUMP not sure
 
     if (GetGroup())
-        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POSITION);
+        SetGroupUpdateFlag(GROUP_UPDATE_POSITION);
 
     if (GetTrader() && !IsWithinDistInMap(GetTrader(), INTERACTION_DISTANCE))
         GetSession()->SendCancelTrade();
@@ -26367,7 +26367,7 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
         return NULL;
     }
 
-    pet->SetTratsport(GetTransport());
+    pet->SetTransportWithOwner(GetTransport());
     pet->SetCreatorGUID(GetGUID());
     pet->SetUInt32Value(UNIT_FIELD_FACTION_TEMPLATE, getFaction());
     pet->SetUInt32Value(UNIT_FIELD_NPC_FLAGS, 0);
@@ -26442,7 +26442,7 @@ void Player::RemovePet(Pet* pet, bool isDelete)
         SendRemoveControlBar();
 
         if (GetGroup())
-            SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
+            SetGroupUpdateFlag(GROUP_UPDATE_PET);
     }
 
     WorldPackets::PetPackets::PetDismissSound packet;
@@ -28416,7 +28416,7 @@ void Player::UpdatePvPState(bool onlyFFA)
         if (!IsFFAPvP())
         {
             SetByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_FFA_PVP);
-            SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
+            SetGroupUpdateFlag(GROUP_UPDATE_STATUS);
             for (ControlList::iterator itr = m_Controlled.begin(); itr != m_Controlled.end(); ++itr)
                 if(Unit* unit = ObjectAccessor::GetUnit(*this, *itr))
                     unit->SetByteValue(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_FFA_PVP);
@@ -28425,7 +28425,7 @@ void Player::UpdatePvPState(bool onlyFFA)
     else if (IsFFAPvP())
     {
         RemoveByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_FFA_PVP);
-        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
+        SetGroupUpdateFlag(GROUP_UPDATE_STATUS);
         for (ControlList::iterator itr = m_Controlled.begin(); itr != m_Controlled.end(); ++itr)
             if(Unit* unit = ObjectAccessor::GetUnit(*this, *itr))
                 unit->RemoveByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_FFA_PVP);
@@ -29620,7 +29620,7 @@ void Player::SetPartyType(GroupCategory category, uint8 type)
     value |= uint8(uint8(type) << (category * 4));
     SetByteValue(PLAYER_FIELD_BYTES_3, PLAYER_BYTES_3_OFFSET_PARTY_TYPE, value);
     
-    SetGroupUpdateFlag(GROUP_UPDATE_FLAG_OTHER_PARTY);
+    SetGroupUpdateFlag(GROUP_UPDATE_OTHER_PARTY);
 }
 
 void Player::ResetGroupUpdateSequenceIfNeeded(Group const* group)
@@ -29933,16 +29933,13 @@ void Player::SendSpellChargeData()
 
 void Player::SendUpdateToOutOfRangeGroupMembers()
 {
-    if (m_groupUpdateMask == GROUP_UPDATE_FLAG_NONE)
+    if (m_groupUpdateMask == GROUP_UPDATE_NONE)
         return;
 
     if (Group* group = GetGroup())
         group->UpdatePlayerOutOfRange(this);
 
-    m_groupUpdateMask = GROUP_UPDATE_FLAG_NONE;
-    
-    if (Pet* pet = GetPet())
-        pet->ResetGroupUpdateFlag();
+    m_groupUpdateMask = GROUP_UPDATE_NONE;
 }
 
 void Player::SendTransferAborted(uint32 mapID, TransferAbortReason reason, uint8 arg)
@@ -33920,7 +33917,7 @@ void Player::ActivateTalentGroup(ChrSpecializationEntry const* spec)
     activeGlyphs.IsFullUpdate = true;
     SendDirectMessage(activeGlyphs.Write());
 
-    SetGroupUpdateFlag(GROUP_UPDATE_FLAG_SPECIALIZATION_ID);
+    SetGroupUpdateFlag(GROUP_UPDATE_SPECIALIZATION_ID);
 
     AddDelayedEvent(500, [this]() -> void
     {
@@ -37524,7 +37521,7 @@ void Player::SummonBattlePet(ObjectGuid journalID)
         return;
     }
 
-    currentPet->SetTratsport(GetTransport());
+    currentPet->SetTransportWithOwner(GetTransport());
     currentPet->SetHomePosition(l_Position);
     currentPet->SetTempSummonType(TEMPSUMMON_MANUAL_DESPAWN);
     currentPet->InitStats(0);
@@ -38972,21 +38969,6 @@ void SpellInQueue::Clear()
     RecoveryCategory = 0;
     delete CastData;
     CastData = nullptr;
-}
-
-uint32 Player::GetGroupUpdateFlag() const
-{
-    return m_groupUpdateMask;
-}
-
-void Player::SetGroupUpdateFlag(uint32 flag)
-{
-    m_groupUpdateMask |= flag;
-}
-
-void Player::RemoveGroupUpdateFlag(uint32 flag)
-{
-    m_groupUpdateMask &= ~flag;
 }
 
 PlayerDynamicFieldArenaCooldowns::PlayerDynamicFieldArenaCooldowns(uint32 spellId, uint32 castTime, uint32 endTime) :

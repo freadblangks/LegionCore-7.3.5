@@ -18696,7 +18696,7 @@ void Unit::SetDisplayId(uint32 modelId, bool resize /* = false */)
             return;
         Unit* owner = GetOwner();
         if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
-            pet->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MODEL_ID);
+            owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MODEL_ID);
     }
 }
 
@@ -19124,10 +19124,7 @@ void Unit::UpdateAuraForGroup()
         {
             Unit* owner = GetOwner();
             if (owner && (owner->GetTypeId() == TYPEID_PLAYER) && owner->ToPlayer()->GetGroup())
-            {
                 owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_AURAS);
-                pet->SetAuraUpdateMaskForRaid(slot);
-            }
         }
     }
 }

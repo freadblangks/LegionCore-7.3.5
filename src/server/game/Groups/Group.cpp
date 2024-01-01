@@ -1830,7 +1830,7 @@ void Group::UpdatePlayerOutOfRange(Player* player)
     if (!player || !player->IsInWorld() || !player->CanContact())
         return;
 
-    WorldPackets::Party::PartyMemberStatseUpdate packet;
+    WorldPackets::Party::PartyMemberStateUpdate packet;
     packet.Initialize(player);
 
     auto p = packet.Write();

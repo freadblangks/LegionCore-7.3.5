@@ -11125,7 +11125,7 @@ void Unit::setPowerType(Powers fieldPower)
     if (IsPlayer())
     {
         if (ToPlayer()->GetGroup())
-            ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_POWER_TYPE);
+            ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POWER_TYPE);
     }
     else if (Pet* pet = ToCreature()->ToPet())
     {
@@ -11133,7 +11133,7 @@ void Unit::setPowerType(Powers fieldPower)
         {
             Unit* owner = GetOwner();
             if (owner && (owner->GetTypeId() == TYPEID_PLAYER) && owner->ToPlayer()->GetGroup())
-                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_PET_POWER_TYPE);
+                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_POWER_TYPE);
         }
     }
 
@@ -16967,7 +16967,7 @@ void Unit::SetHealth(uint64 val, uint32 spellId)
         }
 
         if (player->GetGroup())
-            player->SetGroupUpdateFlag(GROUP_UPDATE_CUR_HP);
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_HP);
     }
     else if (Pet* pet = ToCreature()->ToPet())
     {
@@ -16996,7 +16996,7 @@ void Unit::SetHealth(uint64 val, uint32 spellId)
                     }
 
                     if (player->GetGroup())
-                        player->SetGroupUpdateFlag(GROUP_UPDATE_PET_CUR_HP);
+                        player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_CUR_HP);
                 }
         }
     }
@@ -17023,7 +17023,7 @@ void Unit::SetMaxHealth(uint64 val)
         }
 
         if (player->GetGroup())
-            player->SetGroupUpdateFlag(GROUP_UPDATE_MAX_HP);
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_MAX_HP);
     }
     else if (Pet* pet = ToCreature()->ToPet())
     {
@@ -17041,7 +17041,7 @@ void Unit::SetMaxHealth(uint64 val)
                     }
 
                     if (player->GetGroup())
-                        player->SetGroupUpdateFlag(GROUP_UPDATE_PET_MAX_HP);
+                        player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MAX_HP);
                 }
         }
     }
@@ -17249,7 +17249,7 @@ void Unit::SetPower(Powers power, int32 val, bool send)
 
 
         if (player->GetGroup())
-            player->SetGroupUpdateFlag(GROUP_UPDATE_CUR_POWER);
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_CUR_POWER);
     }
     else if (Pet* pet = ToCreature()->ToPet())
     {
@@ -17258,7 +17258,7 @@ void Unit::SetPower(Powers power, int32 val, bool send)
             Unit* owner = GetOwner();
             if (owner && owner->IsPlayer() && owner->ToPlayer()->GetGroup())
             {
-                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_PET_CUR_POWER);
+                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_CUR_POWER);
             }
         }
     }
@@ -17290,7 +17290,7 @@ void Unit::SetMaxPower(Powers power, int32 val)
         }
 
         if (player->GetGroup())
-            player->SetGroupUpdateFlag(GROUP_UPDATE_MAX_POWER);
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_MAX_POWER);
     }
     else if (Pet* pet = ToCreature()->ToPet())
     {
@@ -17298,7 +17298,7 @@ void Unit::SetMaxPower(Powers power, int32 val)
         {
             Unit* owner = GetOwner();
             if (owner && (owner->GetTypeId() == TYPEID_PLAYER) && owner->ToPlayer()->GetGroup())
-                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_PET_MAX_POWER);
+                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MAX_POWER);
         }
     }
 }
@@ -18696,7 +18696,7 @@ void Unit::SetDisplayId(uint32 modelId, bool resize /* = false */)
             return;
         Unit* owner = GetOwner();
         if (owner && (owner->IsPlayer()) && owner->ToPlayer()->GetGroup())
-            pet->SetGroupUpdateFlag(GROUP_UPDATE_PET_MODEL_ID);
+            pet->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_MODEL_ID);
     }
 }
 
@@ -19116,7 +19116,7 @@ uint32 Unit::GetCastingTimeForBonus(SpellInfo const* spellProto, DamageEffectTyp
 void Unit::UpdateAuraForGroup()
 {
     if (Player* player = ToPlayer())
-        player->SetGroupUpdateFlag(GROUP_UPDATE_AURAS);
+        player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_AURAS);
     else if (IsCreature() && ToCreature()->isPet())
     {
         auto pet = ToPet();
@@ -19125,7 +19125,7 @@ void Unit::UpdateAuraForGroup()
             Unit* owner = GetOwner();
             if (owner && (owner->GetTypeId() == TYPEID_PLAYER) && owner->ToPlayer()->GetGroup())
             {
-                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_PET_AURAS);
+                owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_AURAS);
                 pet->SetAuraUpdateMaskForRaid(slot);
             }
         }
@@ -23076,7 +23076,7 @@ void Unit::SetPvP(bool state)
         RemoveByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PVP_FLAG, UNIT_BYTE2_FLAG_PVP);
 
     if (IsPlayer())
-        ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_STATUS);
+        ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_STATUS);
 }
 
 Aura* Unit::ToggleAura(uint32 spellId, Unit* target)
@@ -27443,7 +27443,7 @@ void Unit::SetLevel(uint8 lvl)
     {
         // group update
         if (player->GetGroup())
-            player->SetGroupUpdateFlag(GROUP_UPDATE_LEVEL);
+            player->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_LEVEL);
 
         sWorld->UpdateCharacterInfoLevel(GetGUIDLow(), lvl);
     }

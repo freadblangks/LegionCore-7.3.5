@@ -623,6 +623,11 @@ public:
         // health
         uint64 oldHealth = creature->GetHealth();
         float healthMult = globalRate * healthMultiplier * playerMultiplier;
+
+        // lower the health by even more when it is a dungeon boss
+        if (creature->IsDungeonBoss())
+            healthMult *= .5f;
+
         uint64 health = healthMult * oldHealth;
         uint64 maxHealth = healthMult * creature->GetMaxHealth();
 

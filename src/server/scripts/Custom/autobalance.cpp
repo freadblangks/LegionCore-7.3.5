@@ -220,9 +220,7 @@ public:
 
 class AutoBalance_UnitScript : public UnitScript {
 public:
-    AutoBalance_UnitScript() : UnitScript("AutoBalance_UnitScript") {
-
-    }
+    AutoBalance_UnitScript() : UnitScript("AutoBalance_UnitScript") { }
 
     //    uint32 DealDamage(Unit *AttackerUnit, Unit *playerVictim, uint32 damage, DamageEffectType /*damagetype*/) {
     //        return _Modifier_DealDamage(playerVictim, AttackerUnit, damage);
@@ -252,9 +250,15 @@ public:
 
     uint32 _Modifier_DealDamage(Unit* target, Unit* attacker, uint32 damage)
     {
-        if (!enabled || !attacker || attacker->GetTypeId() == TYPEID_PLAYER || !attacker->IsInWorld())
+        if (!enabled || !attacker || !attacker->IsInWorld())
         {
             return damage;
+        }
+
+        // Temporary workaround for player damage
+        if (attacker->IsPlayer())
+        {
+            return damage * 5;
         }
 
         float damageMultiplier = attacker->CustomData.GetDefault<AutoBalanceCreatureInfo>("AutoBalanceCreatureInfo")->DamageMultiplier;
@@ -616,7 +620,7 @@ public:
 
         // health
         uint64 oldHealth = creature->GetHealth();
-        float healthMult = globalRate * healthMultiplier * (playerMultiplier / 5);
+        float healthMult = globalRate * healthMultiplier * playerMultiplier;
         uint64 health = healthMult * oldHealth;
         uint64 maxHealth = healthMult * creature->GetMaxHealth();
 

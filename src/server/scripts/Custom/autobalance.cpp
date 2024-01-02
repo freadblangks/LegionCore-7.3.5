@@ -199,6 +199,8 @@ public:
     {
         if (victim && DungeonScaleDownXP)
         {
+            TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Updating original XP amount of %u for player %s killing %s.", amount, player->GetName(), victim->GetName());
+
             Map* map = player->GetMap();
 
             if (map->IsDungeon())
@@ -208,7 +210,7 @@ public:
                 uint32 currentPlayerCount = map->GetPlayersCountExceptGMs();
 
                 float xpMult = (float)currentPlayerCount / (float)maxPlayerCount;
-                uint32 newAmount = static_cast<int>(amount * xpMult);
+                uint32 newAmount = static_cast<uint32>(amount * xpMult);
 
                 TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "XP for player %s reduced from %u to %u (%.3f multiplier) for killing %s.", player->GetName(), amount, newAmount, xpMult, victim->GetName());
 
@@ -243,9 +245,9 @@ public:
         damage = _Modifier_DealDamage(target, attacker, damage);
     }
 
-    void ModifyHealReceived(Unit* target, Unit* attacker, uint32& damage) override
+    void ModifyHealReceived(Unit* target, Unit* attacker, uint32& amount) override
     {
-        damage = _Modifier_DealDamage(target, attacker, damage);
+        amount = _Modifier_DealDamage(target, attacker, amount);
     }
 
     uint32 _Modifier_DealDamage(Unit* target, Unit* attacker, uint32 damage)
@@ -272,7 +274,7 @@ public:
             return damage;
         }
 
-        if ((attacker->isHunterPet() || attacker->isPet() || attacker->isSummon()) && attacker->IsControlledByPlayer())
+        if (attacker->IsControlledByPlayer() && (attacker->isHunterPet() || attacker->isPet() || attacker->isSummon()))
         {
             return damage;
         }

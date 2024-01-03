@@ -340,7 +340,7 @@ class UnitScript : public ScriptObject, public UpdatableScript<Unit>
         virtual void ModifyVehiclePassengerExitPos(Unit* /*passenger*/, Vehicle* /*vehicle*/, Position& /*pos*/) { }
 
         //Auto Balance VAS
-        virtual void ModifyHealReceived(Unit* /*target*/, Unit* /*attacker*/, uint32& /*damage*/) { }
+        virtual void ModifyHealReceived(Unit* /*target*/, Unit* /*attacker*/, uint32& /*amount*/) { }
 };
 
 class CreatureScript : public ScriptObject, public UpdatableScript<Creature>
@@ -387,7 +387,7 @@ class CreatureScript : public ScriptObject, public UpdatableScript<Creature>
         virtual void ModifyVehiclePassengerExitPos(Unit* /*passenger*/, Vehicle* /*vehicle*/, Position& /*pos*/) { }
 
         // Called when heal is received
-        virtual void ModifyHealReceived(Unit* target, Unit* attacker, uint32& damage) { }
+        virtual void ModifyHealReceived(Unit* target, Unit* attacker, uint32& amount) { }
 
         //VAS AutoBalance
         // virtual uint32 DealDamage(Unit* AttackerUnit, Unit *pVictim, uint32 damage, DamageEffectType damagetype) { return damage;}

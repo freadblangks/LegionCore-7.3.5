@@ -2849,13 +2849,6 @@ AutoBalance.LevelEndGameBoost = 1
 AutoBalance.DungeonScaleDownXP = 1
 
 #
-#     AutoBalance.DungeonsOnly
-#        Only apply scaling changes to dungeons and raids
-#        Default:     1 (1 = ON, 0 = OFF)
-
-AutoBalance.DungeonsOnly = 1
-
-#
 #     AutoBalance.PlayerChangeNotify
 #        Set Auto Notifications to all players in Instance that player count has changed.
 #        Default:     1 (1 = ON, 0 = OFF)

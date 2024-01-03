@@ -758,9 +758,9 @@ void ScriptMgr::ModifySpellDamageTaken(Unit* target, Unit* attacker, float& dama
     FOREACH_SCRIPT(UnitScript)->ModifySpellDamageTaken(target, attacker, damage);
 }
 
-void ScriptMgr::ModifyHealReceived(Unit* target, Unit* attacker, uint32& damage)
+void ScriptMgr::ModifyHealReceived(Unit* target, Unit* attacker, uint32& amount)
 {
-    FOREACH_SCRIPT(UnitScript)->ModifyHealReceived(target, attacker, damage);
+    FOREACH_SCRIPT(UnitScript)->ModifyHealReceived(target, attacker, amount);
 }
 
 void ScriptMgr::ModifyVehiclePassengerExitPos(Unit* passenger, Vehicle* vehicle, Position& pos)

@@ -538,8 +538,6 @@ public:
 
         uint32 prevCreateHealth = creature->GetCreateHealth();
 
-        Powers pType = creature->getPowerType();
-
         // armor
         float armorMult = globalRate * armorMultiplier * playerMultiplier;
 
@@ -577,18 +575,30 @@ public:
 
         // other stats
         creature->SetModifierValue(UNIT_MOD_ENERGY, BASE_VALUE, (float)100.0f);
-        creature->SetModifierValue(UNIT_MOD_RAGE, BASE_VALUE, (float)100.0f);
+        //creature->SetModifierValue(UNIT_MOD_RAGE, BASE_VALUE, (float)100.0f);
 
-        if (pType == Powers::POWER_MANA)
-            creature->SetPower(Powers::POWER_MANA, float(mana) / float(prevMaxPower) * float(prevPower));
-        else
-            creature->setPowerType(pType); // fix creatures with different power types
+        switch (creature->getClass())
+        {
+            case CLASS_WARRIOR:
+                creature->setPowerType(POWER_RAGE);
+                //SetMaxPower(POWER_RAGE, GetCreatePowers(POWER_RAGE));
+                //SetPower(POWER_RAGE, GetCreatePowers(POWER_RAGE));
+                break;
+            case CLASS_ROGUE:
+                creature->setPowerType(POWER_ENERGY);
+                creature->SetMaxPower(POWER_ENERGY, creature->GetCreatePowers(POWER_ENERGY));
+                creature->SetPower(POWER_ENERGY, creature->GetCreatePowers(POWER_ENERGY));
+                break;
+            default:
+                creature->setPowerType(POWER_MANA);
+                creature->SetMaxPower(POWER_MANA, mana);
+                creature->SetPower(POWER_MANA, mana);
+                break;
+        }
 
         // update all stats, do NOT use UpdateAllStats() it will break health/damage!
         creature->UpdateAttackPowerAndDamage();
         creature->UpdateAttackPowerAndDamage(true);
-        creature->UpdateMaxPower(pType);
-        creature->UpdateMaxPower(POWER_ALTERNATE);
 
         TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Modification complete for %s.  PlayerMult: %.3f  DamageMult: %.3f  BaseHealth: %u  OldBaseHealth: %u  ArmorMult: %.3f  Armor: %u  prevArmor: %u  SelLvl: %u  HolyResist: %u", creature->GetName(), playerMultiplier, damageMult, health, prevHealth, armorMult, armor, prevArmor, creatureABInfo->selectedLevel, creature->GetResistance(SPELL_SCHOOL_HOLY));
     }

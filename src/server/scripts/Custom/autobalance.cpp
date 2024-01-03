@@ -376,19 +376,6 @@ public:
         InstanceMap* instanceMap = ((InstanceMap*)sMapMgr->FindMap(creature->GetMapId(), creature->GetInstanceId()));
         TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 4 %s.", creature->GetName());
         uint32 maxNumberOfPlayers = instanceMap->GetMaxPlayers();
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 5 %s.", creature->GetName());
-        int forcedNumPlayers = GetForcedNumPlayers(creatureTemplate->Entry);
-
-        if (forcedNumPlayers > 0)
-        {
-            // Force maxNumberOfPlayers to be changed to match the Configuration entries ForcedID2, ForcedID5, ForcedID10, ForcedID20, ForcedID25, ForcedID40
-            maxNumberOfPlayers = forcedNumPlayers;
-        }
-        else if (forcedNumPlayers == 0)
-        {
-            // forcedNumPlayers 0 means that the creature is contained in DisabledID -> no scaling
-            return;
-        }
 
         TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 6 %s.", creature->GetName());
         AutoBalanceCreatureInfo* creatureABInfo = creature->CustomData.GetDefault<AutoBalanceCreatureInfo>("AutoBalanceCreatureInfo");
@@ -431,20 +418,8 @@ public:
             return;
         }
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 12 %s.", creature->GetName());
-        uint8 originalLevel = creatureTemplate->maxlevel;
-        uint8 areaMinLvl, areaMaxLvl;
-        getAreaLevel(creature->GetMap(), creature->GetAreaId(), areaMinLvl, areaMaxLvl);
-
-        // avoid level changing for critters and special creatures (spell summons etc.) in instances
-        if (originalLevel <= 1 && areaMinLvl >= 5)
-        {
-            return;
-        }
-
         TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 13 %s.", creature->GetName());
         creatureABInfo->selectedLevel = creature->getLevel();
-        creatureABInfo->entry = creature->GetEntry();
 
         TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 14 %s level %u.", creature->GetName(), creatureABInfo->selectedLevel);
         //CreatureBaseStats const* origCreatureStats = sObjectMgr->GetCreatureBaseStats(originalLevel, creatureTemplate->unit_class);
@@ -609,7 +584,7 @@ public:
         TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 17 %s.", creature->GetName());
         // lower the health by even more when it is a dungeon boss
         if (creature->IsDungeonBoss())
-            healthMult *= .5f;
+            healthMult *= 0.5f;
 
         TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 18 %s.", creature->GetName());
         uint64 health = healthMult * oldHealth;

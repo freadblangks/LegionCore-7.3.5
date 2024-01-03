@@ -100,35 +100,6 @@ void LoadForcedCreatureIdsFromString(std::string creatureIds, int forcedPlayerCo
     }
 }
 
-int GetForcedNumPlayers(int creatureId) {
-    // Don't want the forcedCreatureIds map to blowup to a massive empty array
-    if (forcedCreatureIds.find(creatureId) == forcedCreatureIds.end())
-    {
-        return -1;
-    }
-    return forcedCreatureIds[creatureId];
-}
-
-void getAreaLevel(Map* map, uint8 areaid, uint8& min, uint8& max) {
-    LFGDungeonsEntry const* dungeon = sLFGMgr->GetLFGDungeon(map->GetId(), map->GetMapDifficulty()->DifficultyID)->dbc;
-
-    if (dungeon && (map->IsDungeon() || map->IsRaid()))
-    {
-        min = dungeon->MinLevel;
-        max = dungeon->TargetLevel ? dungeon->TargetLevel : dungeon->MaxLevel;
-    }
-
-    if (!min && !max)
-    {
-        AreaTableEntry const* areaEntry = sAreaTableStore.LookupEntry(areaid);
-        if (areaEntry && areaEntry->ExplorationLevel > 0)
-        {
-            min = areaEntry->ExplorationLevel;
-            max = areaEntry->ExplorationLevel;
-        }
-    }
-}
-
 class AutoBalance_WorldScript : public WorldScript
 {
 public:

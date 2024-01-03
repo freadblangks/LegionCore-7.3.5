@@ -560,51 +560,78 @@ public:
         
         float playerMultiplier = (float)curCount / (float)instanceMap->GetMaxPlayers();
 
-        // health
-        uint64 oldHealth = creature->GetHealth();
-        float healthMult = globalRate * healthMultiplier * playerMultiplier;
+        uint32 prevMaxHealth = creature->GetMaxHealth();
+        uint32 prevMaxPower = creature->GetMaxPower(Powers::POWER_MANA);
+        uint32 prevHealth = creature->GetHealth();
+        uint32 prevPower = creature->GetPower(Powers::POWER_MANA);
 
-        // lower the health by even more when it is a dungeon boss
-        if (creature->IsDungeonBoss())
-            healthMult *= 0.5f;
+        uint32 prevPlayerDamageRequired = creature->GetPlayerDamageReq();
+        uint32 prevCreateHealth = creature->GetCreateHealth();
 
-        uint64 health = healthMult * oldHealth;
-        uint64 maxHealth = healthMult * creature->GetMaxHealth();
-
-        creature->SetCreateHealth(health);
-        creature->SetMaxHealth(maxHealth);
-        creature->SetHealth(health);
-        creature->SetModifierValue(UNIT_MOD_HEALTH, BASE_VALUE, static_cast<float>(health));
-
-        creature->UpdateMaxHealth();
+        Powers pType = creature->getPowerType();
 
         // armor
-        uint32 oldArmor = creature->GetArmor();
         float armorMult = globalRate * armorMultiplier * playerMultiplier;
-        uint32 armor = armorMult * oldArmor;
-        
+
+        uint32 prevArmor = creature->GetArmor();
+        uint32 armor = round(armorMult * (float)prevArmor);
+
         creature->SetArmor(armor);
         creature->SetModifierValue(UNIT_MOD_ARMOR, BASE_VALUE, static_cast<float>(armor));
 
-        creature->UpdateArmor();
+        // health
+        float healthMult = globalRate * healthMultiplier * playerMultiplier;
 
-        //creature->SetPower(creature->getPowerType(), (int32)((float)creature->GetPower(creature->getPowerType())* damageMult));
-        //creature->SetMaxPower(creature->getPowerType(), (int32)((float)creature->GetMaxPower(creature->getPowerType())* damageMult));
-        //creature->SetCreateMana(scaledMana);
+        uint64 health = round(healthMult * (float)prevHealth);
+        uint64 maxHealth = round(healthMult * float(creature->GetMaxHealth()));
 
-        // resistances
-        for (int8 i = SPELL_SCHOOL_HOLY; i < MAX_SPELL_SCHOOL; ++i)
-        {
-            //creature->SetResistance((SpellSchools)i, 0);
-            //creature->SetResistance((SpellSchools)i, int32(creature->GetTotalAuraModValue(UnitMods(UNIT_MOD_RESISTANCE_START + i)) * playerMultiplier));
-        }
-        //creature->SetModifierValue(UNIT_MOD_RESISTANCE_HOLY, BASE_VALUE, static_cast<float>(0));
+        creature->SetCreateHealth(health);
+        creature->SetMaxHealth(maxHealth);
+        creature->ResetPlayerDamageReq();
+        creature->SetModifierValue(UNIT_MOD_HEALTH, BASE_VALUE, static_cast<float>(health));
+
+        creature->SetHealth(float(health) / float(prevMaxHealth) * float(prevHealth));
+
+        // mana
+        float manaMult = globalRate * manaMultiplier * playerMultiplier;
+
+        uint64 mana = round(manaMult * float(creature->GetCreateMana()));
+
+        creature->SetCreateMana(mana);
+        creature->SetMaxPower(Powers::POWER_MANA, mana);
+        creature->SetModifierValue(UNIT_MOD_MANA, BASE_VALUE, static_cast<float>(mana));
 
         // damage (this is used above to modify the damage dealt later)
         float damageMult = globalRate * damageMultiplier * playerMultiplier;
         creatureABInfo->DamageMultiplier = damageMult;
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Modification complete for %s.  PlayerMult: %.3f  DamageMult: %.3f  BaseHealth: %u  OldBaseHealth: %u  ArmorMult: %.3f  Armor: %u  OldArmor: %u  SelLvl: %u  HolyResist: %u", creature->GetName(), playerMultiplier, damageMult, health, oldHealth, armorMult, armor, oldArmor, creatureABInfo->selectedLevel, creature->GetResistance(SPELL_SCHOOL_HOLY));
+        // other stats
+        creature->SetModifierValue(UNIT_MOD_ENERGY, BASE_VALUE, (float)100.0f);
+        creature->SetModifierValue(UNIT_MOD_RAGE, BASE_VALUE, (float)100.0f);
+
+        if (pType == Powers::POWER_MANA)
+            creature->SetPower(Powers::POWER_MANA, float(mana) / float(prevMaxPower) * float(prevPower));
+        else
+            creature->setPowerType(pType); // fix creatures with different power types
+
+        uint32 playerDamageRequired = creature->GetPlayerDamageReq();
+        if (prevPlayerDamageRequired == 0)
+        {
+            // If already reached damage threshold for loot, drop to zero again
+            creature->LowerPlayerDamageReq(playerDamageRequired);
+        }
+        else
+        {
+            // Scale the damage requirements similar to creature HP scaling
+            uint32 scaledPlayerDmgReq = float(prevPlayerDamageRequired) * float(health) / float(prevCreateHealth);
+            // Do some math
+            creature->LowerPlayerDamageReq(playerDamageRequired - scaledPlayerDmgReq);
+        }
+
+        // update all stats
+        creature->UpdateAllStats();
+
+        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Modification complete for %s.  PlayerMult: %.3f  DamageMult: %.3f  BaseHealth: %u  OldBaseHealth: %u  ArmorMult: %.3f  Armor: %u  prevArmor: %u  SelLvl: %u  HolyResist: %u", creature->GetName(), playerMultiplier, damageMult, health, prevHealth, armorMult, armor, prevArmor, creatureABInfo->selectedLevel, creature->GetResistance(SPELL_SCHOOL_HOLY));
     }
 };
 

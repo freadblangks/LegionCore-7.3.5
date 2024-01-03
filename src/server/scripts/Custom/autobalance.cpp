@@ -368,39 +368,32 @@ public:
         {
             return;
         }
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 1 %s.", creature->GetName());
+
         AutoBalanceMapInfo* mapABInfo = creature->GetMap()->CustomData.GetDefault<AutoBalanceMapInfo>("AutoBalanceMapInfo");
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 2 %s.", creature->GetName());
+
         CreatureTemplate const* creatureTemplate = creature->GetCreatureTemplate();
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 3 %s.", creature->GetName());
         InstanceMap* instanceMap = ((InstanceMap*)sMapMgr->FindMap(creature->GetMapId(), creature->GetInstanceId()));
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 4 %s.", creature->GetName());
         uint32 maxNumberOfPlayers = instanceMap->GetMaxPlayers();
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 6 %s.", creature->GetName());
         AutoBalanceCreatureInfo* creatureABInfo = creature->CustomData.GetDefault<AutoBalanceCreatureInfo>("AutoBalanceCreatureInfo");
         // force resetting selected level.
         // this is also a "workaround" to fix bug of not recalculated
         // attributes when UpdateEntry has been used.
         // TODO: It's better and faster to implement a core hook
         // in that position and force a recalculation then
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 7 %s.", creature->GetName());
         if ((creatureABInfo->entry != 0 && creatureABInfo->entry != creature->GetEntry()) || resetSelLevel)
         {
             // force a recalculation
             creatureABInfo->selectedLevel = 0;
         }
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 8 %s.", creature->GetName());
         if (!creature->isAlive())
         {
             return;
         }
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 9 %s.", creature->GetName());
         uint32 curCount = mapABInfo->playerCount + PlayerCountDifficultyOffset;
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 10 %s.", creature->GetName());
         // already scaled
         if (creatureABInfo->selectedLevel > 0)
         {
@@ -410,7 +403,6 @@ public:
             }
         }
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 11 %s.", creature->GetName());
         creatureABInfo->instancePlayerCount = curCount;
         // no players in map, do not modify attributes
         if (!creatureABInfo->instancePlayerCount)
@@ -418,10 +410,8 @@ public:
             return;
         }
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 13 %s.", creature->GetName());
         creatureABInfo->selectedLevel = creature->getLevel();
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 14 %s level %u.", creature->GetName(), creatureABInfo->selectedLevel);
         //CreatureBaseStats const* origCreatureStats = sObjectMgr->GetCreatureBaseStats(originalLevel, creatureTemplate->unit_class);
         //CreatureBaseStats const* creatureStats = sObjectMgr->GetCreatureBaseStats(creatureABInfo->selectedLevel, creatureTemplate->unit_class);
 
@@ -572,44 +562,35 @@ public:
         //    // fix creatures with different power types
         //    creature->setPowerType(pType);
         //}
-
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 15 %s.", creature->GetName());
+        
         float playerMultiplier = (float)curCount / (float)instanceMap->GetMaxPlayers();
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 16 %s.", creature->GetName());
         // health
         uint64 oldHealth = creature->GetHealth();
         float healthMult = globalRate * healthMultiplier * playerMultiplier;
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 17 %s.", creature->GetName());
         // lower the health by even more when it is a dungeon boss
         if (creature->IsDungeonBoss())
             healthMult *= 0.5f;
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 18 %s.", creature->GetName());
         uint64 health = healthMult * oldHealth;
         uint64 maxHealth = healthMult * creature->GetMaxHealth();
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 19 %s.", creature->GetName());
         creature->SetCreateHealth(health);
         creature->SetMaxHealth(maxHealth);
         creature->SetHealth(health);
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 20 %s.", creature->GetName());
         creature->SetModifierValue(UNIT_MOD_HEALTH, BASE_VALUE, static_cast<float>(health));
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 21 %s.", creature->GetName());
         creature->UpdateMaxHealth();
 
         // armor
         uint32 oldArmor = creature->GetArmor();
         float armorMult = globalRate * armorMultiplier * playerMultiplier;
         uint32 armor = armorMult * oldArmor;
-
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 22 %s.", creature->GetName());
+        
         creature->SetArmor(armor);
         creature->SetModifierValue(UNIT_MOD_ARMOR, BASE_VALUE, static_cast<float>(armor));
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 23 %s.", creature->GetName());
         creature->UpdateArmor();
 
         //creature->SetPower(creature->getPowerType(), (int32)((float)creature->GetPower(creature->getPowerType())* damageMult));
@@ -624,12 +605,10 @@ public:
         }
         //creature->SetModifierValue(UNIT_MOD_RESISTANCE_HOLY, BASE_VALUE, static_cast<float>(0));
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 24 %s.", creature->GetName());
         // damage (this is used above to modify the damage dealt later)
         float damageMult = globalRate * damageMultiplier * playerMultiplier;
         creatureABInfo->DamageMultiplier = damageMult;
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG ENTRY 25 %s.", creature->GetName());
         TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Modification complete for %s.  PlayerMult: %.3f  DamageMult: %.3f  BaseHealth: %u  OldBaseHealth: %u  ArmorMult: %.3f  Armor: %u  OldArmor: %u  SelLvl: %u  HolyResist: %u", creature->GetName(), playerMultiplier, damageMult, health, oldHealth, armorMult, armor, oldArmor, creatureABInfo->selectedLevel, creature->GetResistance(SPELL_SCHOOL_HOLY));
     }
 };

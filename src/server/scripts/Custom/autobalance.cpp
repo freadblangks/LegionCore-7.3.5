@@ -369,6 +369,12 @@ public:
             return;
         }
 
+        // avoid stats changing for critters and special creatures (spell summons etc.) in instances
+        if (creature->getLevel() <= 5)
+        {
+            return;
+        }
+
         AutoBalanceMapInfo* mapABInfo = creature->GetMap()->CustomData.GetDefault<AutoBalanceMapInfo>("AutoBalanceMapInfo");
 
         CreatureTemplate const* creatureTemplate = creature->GetCreatureTemplate();

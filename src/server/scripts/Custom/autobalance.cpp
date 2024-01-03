@@ -584,8 +584,11 @@ public:
         else
             creature->setPowerType(pType); // fix creatures with different power types
 
-        // update all stats
-        creature->UpdateAllStats();
+        // update all stats, do NOT use UpdateAllStats() it will break health/damage!
+        creature->UpdateAttackPowerAndDamage();
+        creature->UpdateAttackPowerAndDamage(true);
+        creature->UpdateMaxPower(pType);
+        creature->UpdateMaxPower(POWER_ALTERNATE);
 
         TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Modification complete for %s.  PlayerMult: %.3f  DamageMult: %.3f  BaseHealth: %u  OldBaseHealth: %u  ArmorMult: %.3f  Armor: %u  prevArmor: %u  SelLvl: %u  HolyResist: %u", creature->GetName(), playerMultiplier, damageMult, health, prevHealth, armorMult, armor, prevArmor, creatureABInfo->selectedLevel, creature->GetResistance(SPELL_SCHOOL_HOLY));
     }

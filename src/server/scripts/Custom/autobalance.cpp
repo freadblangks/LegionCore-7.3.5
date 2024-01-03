@@ -235,7 +235,7 @@ public:
             return damage;
         }
 
-        if (attacker->IsControlledByPlayer() && (attacker->isHunterPet() || attacker->isPet() || attacker->isSummon()))
+        if (attacker->IsPlayer() || (attacker->IsControlledByPlayer() && (attacker->isHunterPet() || attacker->isPet() || attacker->isSummon())))
         {
             return damage;
         }

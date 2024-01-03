@@ -1076,12 +1076,12 @@ void Creature::Update(uint32 diff)
             if (GetMap()->Instanceable() && !isPet())
             {
                 if (GetMap()->GetSpawnMode() != GetSpawnMode())
-                    UpdateStat();
+                    //UpdateStat();
                 else if (GetMap()->IsNeedRecalc() && GetMap()->GetPlayersCountExceptGMs() > GetMap()->GetMinPlayer() && GetMap()->GetPlayersCountExceptGMs() != GetPlayerCount()) //For dynamic stats
                 {
                     m_playerCount = GetMap()->GetPlayersCountExceptGMs();
-                    UpdateMaxHealth();
-                    UpdateAttackPowerAndDamage();
+                    //UpdateMaxHealth();
+                    //UpdateAttackPowerAndDamage();
                 }
             }
 

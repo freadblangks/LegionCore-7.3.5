@@ -258,12 +258,6 @@ public:
             return damage;
         }
 
-        // Temporary workaround for player damage
-        if (attacker->IsPlayer() || (attacker->IsControlledByPlayer() && (attacker->isHunterPet() || attacker->isPet() || attacker->isSummon())))
-        {
-            return damage * 5;
-        }
-
         float damageMultiplier = attacker->CustomData.GetDefault<AutoBalanceCreatureInfo>("AutoBalanceCreatureInfo")->DamageMultiplier;
         if (damageMultiplier == 1)
         {

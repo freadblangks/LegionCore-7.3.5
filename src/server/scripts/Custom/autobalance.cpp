@@ -369,8 +369,8 @@ public:
             return;
         }
 
-        // avoid stats changing for critters and special creatures (spell summons etc.) in instances
-        if (creature->getLevel() <= 5)
+        // avoid stats changing for critters and dead creatures
+        if (creature->getLevel() <= 5 || !creature->isAlive())
         {
             return;
         }
@@ -391,11 +391,6 @@ public:
         {
             // force a recalculation
             creatureABInfo->selectedLevel = 0;
-        }
-
-        if (!creature->isAlive())
-        {
-            return;
         }
 
         uint32 curCount = mapABInfo->playerCount + PlayerCountDifficultyOffset;

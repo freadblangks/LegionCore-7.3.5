@@ -9,3 +9,20 @@ INSERT INTO `quest_template` (`ID`, `QuestType`, `QuestLevel`, `QuestMaxScalingL
 DELETE FROM `quest_template_addon` WHERE `ID` = 24527;
 INSERT INTO `quest_template_addon` (`ID`, `MaxLevel`, `AllowableClasses`, `SourceSpellID`, `PrevQuestID`, `NextQuestID`, `ExclusiveGroup`, `RewardMailTemplateID`, `RewardMailDelay`, `RewardMailTitle`, `RequiredSkillID`, `RequiredSkillPoints`, `RequiredMinRepFaction`, `RequiredMaxRepFaction`, `RequiredMinRepValue`, `RequiredMaxRepValue`, `ProvidedItemCount`, `SpecialFlags`) VALUES
 (24527, 0, 64, 0, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 0, 0);
+
+-- Fix loot chance for the following quest items
+
+-- 15785 = Zaeldarr's Head
+
+DELETE FROM `creature_loot_template` WHERE `item` IN (15785);
+INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
+(12250, 15785, -100, 0, 0, 1, 1, 0);
+
+-- Fix quests that should NOT be repeatable!
+-- 27388 = Heroes of Darrowshire
+-- 28755 = Annals of the Silver Hand
+
+DELETE FROM `quest_template_addon` WHERE `id` IN (27388,28755);
+INSERT INTO `quest_template_addon` (`ID`, `MaxLevel`, `AllowableClasses`, `SourceSpellID`, `PrevQuestID`, `NextQuestID`, `ExclusiveGroup`, `RewardMailTemplateID`, `RewardMailDelay`, `RewardMailTitle`, `RequiredSkillID`, `RequiredSkillPoints`, `RequiredMinRepFaction`, `RequiredMaxRepFaction`, `RequiredMinRepValue`, `RequiredMaxRepValue`, `ProvidedItemCount`, `SpecialFlags`) VALUES
+(28755, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 0, 0),
+(27388, 0, 0, 0, 0, 27390, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 0, 0);

@@ -14,13 +14,20 @@ INSERT INTO `quest_template_addon` (`ID`, `MaxLevel`, `AllowableClasses`, `Sourc
 
 -- 13157 = Fetid Skull
 -- 15785 = Zaeldarr's Head
+-- 60983 = Crypt Bile
 -- 60987 = Joseph's Hunting Blade
 -- 62028 = Browman's Wrappings
 
-DELETE FROM `creature_loot_template` WHERE `item` IN (13157,15785,60987,62028);
+DELETE FROM `creature_loot_template` WHERE `item` IN (13157,15785,60983,60987,62028);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
 (8529, 13157, -80, 0, 0, 1, 1, 0),
 (12250, 15785, -100, 0, 0, 1, 1, 0),
+
+(8555, 60983, -85, 0, 0, 1, 1, 0),
+(8556, 60983, -85, 0, 0, 1, 1, 0),
+(8557, 60983, -85, 0, 0, 1, 1, 0),
+(8558, 60983, -85, 0, 0, 1, 1, 0),
+
 (45450, 60987, -100, 0, 0, 1, 1, 0),
 (46167, 62028, -100, 0, 0, 1, 1, 0);
 

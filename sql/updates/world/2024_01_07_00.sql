@@ -12,16 +12,29 @@ INSERT INTO `quest_template_addon` (`ID`, `MaxLevel`, `AllowableClasses`, `Sourc
 
 -- Fix loot chance for the following quest items
 
+-- 9371 = Gordunni Orb
 -- 13157 = Fetid Skull
 -- 15785 = Zaeldarr's Head
+-- 18961 = Zukk'ash Carapace
+-- 54856 = Duneclaw Stinger
 -- 60983 = Crypt Bile
 -- 60987 = Joseph's Hunting Blade
 -- 62028 = Browman's Wrappings
 
-DELETE FROM `creature_loot_template` WHERE `item` IN (13157,15785,60983,60987,62028);
+DELETE FROM `creature_loot_template` WHERE `item` IN (9371,13157,15785,18961,54856,60983,60987,62028);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
+(5239, 9371, -100, 0, 0, 1, 1, 0),
 (8529, 13157, -80, 0, 0, 1, 1, 0),
 (12250, 15785, -100, 0, 0, 1, 1, 0),
+
+(5244, 18961, -100, 0, 0, 1, 1, 0),
+(5245, 18961, -100, 0, 0, 1, 1, 0),
+(5246, 18961, -100, 0, 0, 1, 1, 0),
+(5247, 18961, -100, 0, 0, 1, 1, 0),
+(14661, 18961, -100, 0, 0, 1, 1, 0),
+
+(40656, 54856, -90, 0, 0, 1, 1, 0),
+(40717, 54856, -90, 0, 0, 1, 1, 0),
 
 (8555, 60983, -85, 0, 0, 1, 1, 0),
 (8556, 60983, -85, 0, 0, 1, 1, 0),

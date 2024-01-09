@@ -14,3 +14,11 @@ INSERT INTO `creature_template` (`entry`, `gossip_menu_id`, `minlevel`, `maxleve
 (62178, 0, 1, 1, 0, 1, 0, 0, 100, 0, 188, 1073741824, 0, 1, 0.857143, 1.14286, 1, 1, 2, 0, 0, 1, 2000, 2000, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 1, 1, 0, 0, -1, '', '', 0, 25, 0, 0, 0, 0, 0, '');
 
 DELETE FROM `npc_spellclick_spells` WHERE spell_id IN (1,3)
+
+-- Fix loot chance for the following quest items
+
+-- 3514 = Mor'Ladim's Skull
+
+DELETE FROM `creature_loot_template` WHERE `item` IN (3514);
+INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
+(522, 3514, -100, 0, 0, 1, 1, 0);

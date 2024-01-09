@@ -11,6 +11,7 @@
 -- 3876 = Fang of Bhag'thera
 -- 3877 = Talon of Tethis
 -- 3879 = Paw of Sin'Dall
+-- 3880 = Head of Bangalash
 -- 4106 = Tumbled Crystal
 -- 22934 = Lasher Sample
 -- 58179 = Gan'zulah's Body
@@ -22,7 +23,7 @@
 -- 60334 = Black Bear Brain
 -- 60792 = Pristine Flight Feather (bump from 35% to 50%)
 
-DELETE FROM `creature_loot_template` WHERE `item` IN (884,981,1006,1946,1968,2713,3616,3876,3877,3879,4106,22934,58179,59522,60207,60213,60263,60274,60334,60792);
+DELETE FROM `creature_loot_template` WHERE `item` IN (884,981,1006,1946,1968,2713,3616,3876,3877,3879,3880,4106,22934,58179,59522,60207,60213,60263,60274,60334,60792);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
 (1270, 884, -40, 0, 0, 1, 1, 0),
 (948, 884, -40, 0, 0, 1, 1, 0),
@@ -39,6 +40,7 @@ INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `l
 (728, 3876, -100, 0, 0, 1, 1, 0),
 (730, 3877, -100, 0, 0, 1, 1, 0),
 (729, 3879, -100, 0, 0, 1, 1, 0),
+(731, 3880, -100, 0, 0, 1, 1, 0),
 (4260, 4106, -75, 0, 0, 1, 1, 0),
 (1096, 4106, -75, 0, 0, 1, 1, 0),
 (16517, 22934, -100, 0, 0, 1, 1, 0),
@@ -76,7 +78,7 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 
 DELETE FROM `gameobject_template` WHERE `entry` = 205089;
 INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data8`, `Data9`, `Data10`, `Data11`, `Data12`, `Data13`, `Data14`, `Data15`, `Data16`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`, `Data24`, `Data25`, `Data26`, `Data27`, `Data28`, `Data29`, `Data30`, `Data31`, `Data32`, `unkInt32`, `AIName`, `ScriptName`, `WorldEffectID`, `StateWorldEffectID`, `SpellVisualID`, `SpellStateVisualID`, `SpellStateAnimID`, `SpellStateAnimKitID`, `MaxVisible`, `IgnoreDynLos`, `MinGold`, `MaxGold`, `VerifiedBuild`) VALUES
-(205089, 3, 7918, 'Stabthistle Seed', '', 'Collecting', '', 0, 4, 0.5, 60737, 0, 0, 0, 0, 0, 43, 205089, 0, 1, 0, 0, 0, 0, 27025, 0, 0, 0, 0, 0, 19676, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+(205089, 3, 7918, 'Stabthistle Seed', '', 'Collecting', '', 0, 4, 0.5, 60737, 0, 0, 0, 0, 0, 43, 205089, 0, 1, 0, 0, 0, 0, 27025, 0, 0, 0, 0, 0, 19676, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', '', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26124);
 
 -- Fix bad quest POI point
 

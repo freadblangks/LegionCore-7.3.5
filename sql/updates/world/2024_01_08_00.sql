@@ -1,12 +1,28 @@
 -- Fix loot chance for the following quest items
 
 -- 33085 = Bloodfen Feather
+-- 59057 = Poobah's Tiara
+-- 59058 = Poobah's Scepter
+-- 59059 = Poobah's Slippers
+-- 59060 = Poobah's Diary
 
-DELETE FROM `creature_loot_template` WHERE `item` IN (33085);
+DELETE FROM `creature_loot_template` WHERE `item` IN (33085,59057,59058,59059,59060);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
 (4356, 33085, -33, 0, 0, 1, 1, 0),
 (4357, 33085, -33, 0, 0, 1, 1, 0),
-(23873, 33085, -25, 0, 0, 1, 1, 0);
+(23873, 33085, -25, 0, 0, 1, 1, 0),
+
+(2521, 59057, -50, 0, 0, 1, 1, 0)
+(43417, 59057, -50, 0, 0, 1, 1, 0),
+
+(2521, 59058, -50, 0, 0, 1, 1, 0),
+(43417, 59058, -50, 0, 0, 1, 1, 0),
+
+(2521, 59059, -50, 0, 0, 1, 1, 0),
+(43417, 59059, -50, 0, 0, 1, 1, 0),
+
+(2521, 59060, -50, 0, 0, 1, 1, 0),
+(43417, 59060, -50, 0, 0, 1, 1, 0);
 
 -- Fix quests that should NOT be repeatable!
 

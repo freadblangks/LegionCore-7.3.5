@@ -229,20 +229,28 @@ public:
             return damage;
         }
 
-        float damageMultiplier = attacker->CustomData.GetDefault<AutoBalanceCreatureInfo>("AutoBalanceCreatureInfo")->DamageMultiplier;
-        if (damageMultiplier == 1)
-        {
-            return damage;
-        }
+        float playerCount = attacker->GetMap()->GetPlayerCount();
 
         if (attacker->IsPlayer() || (attacker->IsControlledByPlayer() && (attacker->isHunterPet() || attacker->isPet() || attacker->isSummon())))
         {
-            return damage;
+            // Player
+            if (playerCount == 1)
+                playerCount = 2.5f;
+
+            TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Damage dealt by %s updated for %s from %u to %u.", attacker->GetName(), target->GetName(), damage, (int)(damage * float(playerCount / attacker->GetMap()->GetMapMaxPlayers())));
+
+            return damage * float(attacker->GetMap()->GetMapMaxPlayers() / playerCount);
         }
+        else
+        {
+            // Enemy
+            if (playerCount == 1)
+                playerCount = 0.5f;
 
-        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Damage dealt by %s updated for %s from %u to %u (%.3f multiplier).", attacker->GetName(), target->GetName(), damage, (int)(damage * damageMultiplier), damageMultiplier);
+            TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Damage dealt by %s updated for %s from %u to %u.", attacker->GetName(), target->GetName(), damage, (int)(damage * float(playerCount / attacker->GetMap()->GetMapMaxPlayers())));
 
-        return damage * damageMultiplier;
+            return damage * float(playerCount / attacker->GetMap()->GetMapMaxPlayers());
+        }
     }
 };
 
@@ -324,6 +332,8 @@ public:
 
     void ModifyCreatureAttributes(Creature* creature, bool resetSelLevel = false)
     {
+        return;
+
         if (!enabled || !creature || !creature->GetMap() || !creature->GetMap()->IsDungeon())
         {
             return;

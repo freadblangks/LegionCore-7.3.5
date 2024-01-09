@@ -229,27 +229,27 @@ public:
             return damage;
         }
 
+        int8 maxPlayerCount = attacker->GetMap()->GetMapMaxPlayers();
         float playerCount = attacker->GetMap()->GetPlayerCount();
+
+        if (playerCount == 1)
+            playerCount = 0.5f;
+        else if (playerCount == (maxPlayerCount * .75))
+            playerCount = maxPlayerCount * .85;
 
         if (attacker->IsPlayer() || (attacker->IsControlledByPlayer() && (attacker->isHunterPet() || attacker->isPet() || attacker->isSummon())))
         {
             // Player
-            if (playerCount == 1)
-                playerCount = 2.5f;
+            TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Damage dealt by %s updated for %s from %u to %u.", attacker->GetName(), target->GetName(), damage, (int)(damage * float(maxPlayerCount / playerCount)));
 
-            TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Damage dealt by %s updated for %s from %u to %u.", attacker->GetName(), target->GetName(), damage, (int)(damage * float(playerCount / attacker->GetMap()->GetMapMaxPlayers())));
-
-            return damage * float(attacker->GetMap()->GetMapMaxPlayers() / playerCount);
+            return damage * float(maxPlayerCount / playerCount);
         }
         else
         {
             // Enemy
-            if (playerCount == 1)
-                playerCount = 0.5f;
+            TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Damage dealt by %s updated for %s from %u to %u.", attacker->GetName(), target->GetName(), damage, (int)(damage * float(playerCount / maxPlayerCount)));
 
-            TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Damage dealt by %s updated for %s from %u to %u.", attacker->GetName(), target->GetName(), damage, (int)(damage * float(playerCount / attacker->GetMap()->GetMapMaxPlayers())));
-
-            return damage * float(playerCount / attacker->GetMap()->GetMapMaxPlayers());
+            return damage * float(playerCount / maxPlayerCount);
         }
     }
 };

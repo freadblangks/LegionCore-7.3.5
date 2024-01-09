@@ -1,3 +1,13 @@
+-- Fix loot chance for the following quest items
+
+-- 33085 = Bloodfen Feather
+
+DELETE FROM `creature_loot_template` WHERE `item` IN (33085);
+INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
+(4356, 33085, -33, 0, 0, 1, 1, 0),
+(4357, 33085, -33, 0, 0, 1, 1, 0),
+(23873, 33085, -25, 0, 0, 1, 1, 0);
+
 -- Fix quests that should NOT be repeatable!
 
 -- 2438 = The Emerald Dreamcatcher

@@ -179,7 +179,7 @@ public:
                 if (victim)
                     TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "XP for player %s reduced from %u to %u (%.3f multiplier) for killing %s.", player->GetName(), amount, newAmount, xpMult, victim->GetName());
 
-                amount = uint32(amount * float(map->GetPlayerCount() / map->GetMapMaxPlayers());
+                amount = uint32(amount * float(map->GetPlayerCount() / map->GetMapMaxPlayers()));
             }
         }
     }
@@ -236,7 +236,7 @@ public:
                     playerCount = 0.15f;
             }
         }
-        else if (playerCount == 2 && maxPlayerCount = 5)
+        else if (playerCount == 2 && maxPlayerCount == 5)
             playerCount = 1.5f;
         else if (playerCount == (maxPlayerCount * .75))
             playerCount = maxPlayerCount * .85;

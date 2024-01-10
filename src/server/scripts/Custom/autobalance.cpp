@@ -167,26 +167,19 @@ public:
 
     void OnGiveXP(Player* player, uint32& amount, Unit* victim) override
     {
-        if (DungeonScaleDownXP)
+        if (DungeonScaleDownXP && player)
         {
             Map* map = player->GetMap();
 
-            if (map->IsDungeon() && victim)
+            if (map->IsDungeon())
             {
-                AutoBalanceMapInfo* mapABInfo = map->CustomData.GetDefault<AutoBalanceMapInfo>("AutoBalanceMapInfo");
-
-                TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Updating original XP amount of %u for player %s killing %s.", amount, player->GetName(), victim->GetName());
-
-                // Ensure that the players always get the same XP, even when entering the dungeon alone
-                uint32 maxPlayerCount = ((InstanceMap*)sMapMgr->FindMap(map->GetId(), map->GetInstanceId()))->GetMaxPlayers();
-                uint32 currentPlayerCount = mapABInfo->playerCount;
-
-                float xpMult = (float)currentPlayerCount / (float)maxPlayerCount;
+                float xpMult = float(map->GetPlayerCount() / map->GetMapMaxPlayers());
                 uint32 newAmount = uint32(amount * xpMult);
 
-                TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "XP for player %s reduced from %u to %u (%.3f multiplier) for killing %s.", player->GetName(), amount, newAmount, xpMult, victim->GetName());
+                if (victim)
+                    TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "XP for player %s reduced from %u to %u (%.3f multiplier) for killing %s.", player->GetName(), amount, newAmount, xpMult, victim->GetName());
 
-                amount = newAmount;
+                amount = uint32(amount * float(map->GetPlayerCount() / map->GetMapMaxPlayers());
             }
         }
     }
@@ -266,9 +259,6 @@ public:
             return;
         }
 
-        AutoBalanceMapInfo* mapABInfo = map->CustomData.GetDefault<AutoBalanceMapInfo>("AutoBalanceMapInfo");
-        mapABInfo->playerCount++;
-
         if (PlayerChangeNotify && player)
         {
             Map::PlayerList const& playerList = map->GetPlayers();
@@ -279,8 +269,8 @@ public:
                     if (Player* playerHandle = playerIteration->getSource())
                     {
                         ChatHandler chatHandle = ChatHandler(playerHandle->GetSession());
-                        chatHandle.PSendSysMessage("|cffFF0000 [AutoBalance]|r|cffFF8000 %s entered the Instance %s. Auto setting player count to %u (Player Difficulty Offset = %u) |r",
-                            player->GetName(), map->GetMapName(), mapABInfo->playerCount + PlayerCountDifficultyOffset, PlayerCountDifficultyOffset);
+                        chatHandle.PSendSysMessage("|cffFF0000 [AutoBalance]|r|cffFF8000 %s entered the Instance %s. Auto setting player count to %u |r",
+                            player->GetName(), map->GetMapName(), map->GetPlayerCount());
                     }
                 }
             }
@@ -294,9 +284,6 @@ public:
             return;
         }
 
-        AutoBalanceMapInfo* mapABInfo = map->CustomData.GetDefault<AutoBalanceMapInfo>("AutoBalanceMapInfo");
-        mapABInfo->playerCount--;
-
         if (PlayerChangeNotify && player)
         {
             Map::PlayerList const& playerList = map->GetPlayers();
@@ -307,8 +294,8 @@ public:
                     if (Player* playerHandle = playerIteration->getSource())
                     {
                         ChatHandler chatHandle = ChatHandler(playerHandle->GetSession());
-                        chatHandle.PSendSysMessage("|cffFF0000 [-AutoBalance]|r|cffFF8000 %s left the Instance %s. Auto setting player count to %u (Player Difficulty Offset = %u) |r",
-                            player->GetName(), map->GetMapName(), mapABInfo->playerCount + PlayerCountDifficultyOffset, PlayerCountDifficultyOffset);
+                        chatHandle.PSendSysMessage("|cffFF0000 [-AutoBalance]|r|cffFF8000 %s left the Instance %s. Auto setting player count to %u |r",
+                            player->GetName(), map->GetMapName(), map->GetPlayerCount());
                     }
                 }
             }

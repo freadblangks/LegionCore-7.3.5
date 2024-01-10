@@ -226,7 +226,18 @@ public:
         float playerCount = attacker->GetMap()->GetPlayerCount();
 
         if (playerCount == 1)
-            playerCount = 0.5f;
+        {
+            switch (maxPlayerCount)
+            {
+                case 5:
+                    playerCount = 0.5f;
+                    break;
+                default:
+                    playerCount = 0.15f;
+            }
+        }
+        else if (playerCount == 2 && maxPlayerCount = 5)
+            playerCount = 1.5f;
         else if (playerCount == (maxPlayerCount * .75))
             playerCount = maxPlayerCount * .85;
 

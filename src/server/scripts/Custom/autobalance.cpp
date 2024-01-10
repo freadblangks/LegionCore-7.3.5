@@ -177,7 +177,7 @@ public:
             if (map->IsDungeon())
             {
                 TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 3");
-                float xpMult = float(map->GetPlayerCount() / map->GetMapMaxPlayers());
+                float xpMult = float(map->GetPlayerCount()) / float(map->GetMapMaxPlayers());
                 TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 4 %.3f", xpMult);
                 uint32 newAmount = uint32(amount * xpMult);
                 TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 5 %u", newAmount);
@@ -185,9 +185,8 @@ public:
                 if (victim)
                     TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "XP for player %s reduced from %u to %u (%.3f multiplier) for killing %s.", player->GetName(), amount, newAmount, xpMult, victim->GetName());
 
-
                 TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 6");
-                amount = uint32(amount * float(map->GetPlayerCount() / map->GetMapMaxPlayers()));
+                amount = uint32(amount * xpMult);
             }
         }
     }

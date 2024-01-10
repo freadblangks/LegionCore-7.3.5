@@ -167,18 +167,26 @@ public:
 
     void OnGiveXP(Player* player, uint32& amount, Unit* victim) override
     {
+        TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "Incoming XP of %u for player %s from killing %s.", amount, player->GetName(), victim->GetName());
+
         if (DungeonScaleDownXP && player)
         {
+            TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 1");
             Map* map = player->GetMap();
-
+            TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 2");
             if (map->IsDungeon())
             {
+                TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 3");
                 float xpMult = float(map->GetPlayerCount() / map->GetMapMaxPlayers());
+                TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 4 %.3f", xpMult);
                 uint32 newAmount = uint32(amount * xpMult);
+                TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 5 %u", newAmount);
 
                 if (victim)
                     TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "XP for player %s reduced from %u to %u (%.3f multiplier) for killing %s.", player->GetName(), amount, newAmount, xpMult, victim->GetName());
 
+
+                TC_LOG_INFO(LOG_FILTER_AUTOBALANCE, "DEBUG 6");
                 amount = uint32(amount * float(map->GetPlayerCount() / map->GetMapMaxPlayers()));
             }
         }

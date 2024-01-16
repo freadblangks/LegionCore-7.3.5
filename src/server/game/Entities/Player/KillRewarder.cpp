@@ -266,7 +266,15 @@ void KillRewarder::Reward()
 {
     // 3. Reward killer (and group, if necessary).
     if (_group)
+    {
+        if (!_maxNotGrayMember)
+        {
+            _isFullXP = true;
+            _maxNotGrayMember = _killer;
+        }
+
         _RewardGroup(); // 3.1. If killer is in group, reward group.
+    }
     else
     {
         // 3.2. Reward single killer (not group case).

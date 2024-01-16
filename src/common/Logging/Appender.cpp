@@ -231,8 +231,6 @@ char const* Appender::getLogFilterTypeString(LogFilterType type)
         return "WORLD_QUEST";
     case LOG_FILTER_CHALLENGE:
         return "CHALLENGE";
-    case LOG_FILTER_AUTOBALANCE:
-        return "AUTOBALANCE";
     default:
         break;
     }

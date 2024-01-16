@@ -175,7 +175,7 @@ public:
                 {
                     // the one who's been casted upon before
                     Unit* current = Unit::GetUnit(*portal, BeamTarget[j]);
-                    // temporary store for the best suitable beam receiver
+                    // temporary store for the best suitable beam reciever
                     Unit* target = me;
 
                     if (Map* map = me->GetMap())

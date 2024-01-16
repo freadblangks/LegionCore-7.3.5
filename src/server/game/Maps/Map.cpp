@@ -22,7 +22,6 @@
 #include "BattlegroundMgr.h"
 #include "BrawlersGuild.h"
 #include "CellImpl.h"
-#include "DataMap.h"
 #include "DisableMgr.h"
 #include "DynamicTree.h"
 #include "GridInfo.h"
@@ -536,8 +535,6 @@ void Map::UpdateOutdoorPvPScript()
         OutdoorPvPList = m_parentMap->OutdoorPvPList;
     }
 }
-
-DataMap CustomData;
 
 void Map::LoadMapAndVMap(int gx, int gy)
 {
@@ -1373,10 +1370,6 @@ uint32 Map::GetCurrentDiff() const
 
 void Map::RemovePlayerFromMap(Player* player, bool remove)
 {
-    sScriptMgr->OnPlayerLeaveMap(this, player);
-
-    player->CombatStop();
-
     sOutdoorPvPMgr->HandlePlayerLeaveMap(player->GetGUID(), player->GetCurrentZoneID());
 
     if (InstanceScript* data_s = player->GetInstanceScript())
@@ -1394,6 +1387,7 @@ void Map::RemovePlayerFromMap(Player* player, bool remove)
     {
         player->SetPreDelete();
         DeleteFromWorld(player);
+        sScriptMgr->OnPlayerLeaveMap(this, player);
     }
 }
 

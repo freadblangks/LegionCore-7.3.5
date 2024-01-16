@@ -226,10 +226,10 @@ namespace WorldPackets
             std::vector<MailNextTimeEntry> Next;
         };
 
-        class NotifyReceivedMail : ServerPacket
+        class NotifyRecievedMail : ServerPacket
         {
         public:
-            NotifyReceivedMail() : ServerPacket(SMSG_NOTIFY_RECEIVED_MAIL, 4) { }
+            NotifyRecievedMail() : ServerPacket(SMSG_NOTIFY_RECEIVED_MAIL, 4) { }
 
             WorldPacket const* Write() override;
 

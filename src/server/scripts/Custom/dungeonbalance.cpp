@@ -71,14 +71,14 @@ public:
 
     void OnGiveXP(Player* player, uint32& amount, Unit* victim) override
     {
-        TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Incoming XP of %u for player %s from killing %s.", amount, player->GetName(), victim->GetName());
-
-        if (dungeonScaleDownXP && player)
+        if (dungeonScaleDownXP && player && victim)
         {
             Map* map = player->GetMap();
             
-            if (map->IsDungeon())
+            if (map->IsDungeon() || map->IsRaidOrHeroicDungeon())
             {
+                TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Incoming XP of %u for player %s from killing %s.", amount, player->GetName(), victim->GetName());
+
                 float xpMult = float(map->GetPlayerCount()) / float(map->GetMapMaxPlayers());
                 uint32 newAmount = uint32(amount * xpMult);
                 
@@ -119,39 +119,42 @@ public:
 
     uint32 _Modifier_DealDamage(Unit* target, Unit* attacker, uint32 damage)
     {
-        if (!enabled || !attacker || !attacker->IsInWorld() || !attacker->GetMap()->IsDungeon())
+        if (!enabled || !attacker || !attacker->IsInWorld() || !(attacker->GetMap()->IsDungeon() || attacker->GetMap()->IsRaidOrHeroicDungeon()))
             return damage;
 
         int8 maxPlayerCount = attacker->GetMap()->GetMapMaxPlayers();
         float playerCount = attacker->GetMap()->GetPlayerCount();
 
+        if (maxPlayerCount == 10)
+            maxPlayerCount = 5;
+
         if (playerCount == 1)
         {
             switch (maxPlayerCount)
             {
-                case 5:
-                    playerCount = 0.75f;
-                    break;
-                default:
-                    playerCount = 0.25f;
+            case 5:
+                playerCount = 0.35f;
+                break;
+            default:
+                playerCount = 0.15f;
             }
         }
         else if (playerCount == 2 && maxPlayerCount == 5)
-            playerCount = 1.5f;
+            playerCount = .75f;
         else if (playerCount >= (maxPlayerCount * .75) && playerCount <= (maxPlayerCount * .9))
-            playerCount = maxPlayerCount * .85;
+            playerCount = maxPlayerCount * .9;
 
         if (attacker->IsPlayer() || (attacker->IsControlledByPlayer() && (attacker->isHunterPet() || attacker->isPet() || attacker->isSummon())))
         {
             // Player
-            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u.", attacker->GetName(), target->GetName(), damage, (int)(damage * float(maxPlayerCount / playerCount)));
+            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, (int)(damage * float(maxPlayerCount / playerCount)), playerCount);
 
             return damage * float(maxPlayerCount / playerCount);
         }
         else
         {
             // Enemy
-            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u.", attacker->GetName(), target->GetName(), damage, (int)(damage * float(playerCount / maxPlayerCount)));
+            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, (int)(damage * float(playerCount / maxPlayerCount)), playerCount);
 
             return damage * float(playerCount / maxPlayerCount);
         }
@@ -165,22 +168,19 @@ public:
 
     void OnPlayerEnterAll(Map* map, Player* player)
     {
-        if (!enabled || !map->IsDungeon())
+        if (!enabled || !playerChangeNotify || !map || !player || !(map->IsDungeon() || map->IsRaidOrHeroicDungeon()))
             return;
 
-        if (playerChangeNotify && player)
+        Map::PlayerList const& playerList = map->GetPlayers();
+        if (!playerList.isEmpty())
         {
-            Map::PlayerList const& playerList = map->GetPlayers();
-            if (!playerList.isEmpty())
+            for (Map::PlayerList::const_iterator playerIteration = playerList.begin(); playerIteration != playerList.end(); ++playerIteration)
             {
-                for (Map::PlayerList::const_iterator playerIteration = playerList.begin(); playerIteration != playerList.end(); ++playerIteration)
+                if (Player* playerHandle = playerIteration->getSource())
                 {
-                    if (Player* playerHandle = playerIteration->getSource())
-                    {
-                        ChatHandler chatHandle = ChatHandler(playerHandle->GetSession());
-                        chatHandle.PSendSysMessage("|cffFF0000 [DungeonBalance]|r|cffFF8000 %s entered the Instance %s. Auto setting player count to %u |r",
-                            player->GetName(), map->GetMapName(), map->GetPlayerCount());
-                    }
+                    ChatHandler chatHandle = ChatHandler(playerHandle->GetSession());
+                    chatHandle.PSendSysMessage("|cffFF0000 [DungeonBalance]|r|cffFF8000 %s entered the Instance %s. Auto setting player count to %u |r",
+                        player->GetName(), map->GetMapName(), map->GetPlayerCount());
                 }
             }
         }
@@ -188,22 +188,19 @@ public:
 
     void OnPlayerLeaveAll(Map* map, Player* player)
     {
-        if (!enabled || !map->IsDungeon())
+        if (!enabled || !playerChangeNotify || !player || !(map->IsDungeon() || map->IsRaidOrHeroicDungeon()))
             return;
 
-        if (playerChangeNotify && player)
+        Map::PlayerList const& playerList = map->GetPlayers();
+        if (!playerList.isEmpty())
         {
-            Map::PlayerList const& playerList = map->GetPlayers();
-            if (!playerList.isEmpty())
+            for (Map::PlayerList::const_iterator playerIteration = playerList.begin(); playerIteration != playerList.end(); ++playerIteration)
             {
-                for (Map::PlayerList::const_iterator playerIteration = playerList.begin(); playerIteration != playerList.end(); ++playerIteration)
+                if (Player* playerHandle = playerIteration->getSource())
                 {
-                    if (Player* playerHandle = playerIteration->getSource())
-                    {
-                        ChatHandler chatHandle = ChatHandler(playerHandle->GetSession());
-                        chatHandle.PSendSysMessage("|cffFF0000 [-DungeonBalance]|r|cffFF8000 %s left the Instance %s. Auto setting player count to %u |r",
-                            player->GetName(), map->GetMapName(), map->GetPlayerCount());
-                    }
+                    ChatHandler chatHandle = ChatHandler(playerHandle->GetSession());
+                    chatHandle.PSendSysMessage("|cffFF0000 [-DungeonBalance]|r|cffFF8000 %s left the Instance %s. Auto setting player count to %u |r",
+                        player->GetName(), map->GetMapName(), map->GetPlayerCount());
                 }
             }
         }

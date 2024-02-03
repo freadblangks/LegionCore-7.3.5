@@ -2784,7 +2784,7 @@ AuctionHouseBot.Buyer.Recheck.Interval = 20
 # DUNGEON BALANCE SETTINGS
 #
 #     DungeonBalance.Enable
-#        Enable/Disable the DungeonBalance system
+#        Enable/Disable the DungeonBalance system (applies to dungeons and raids)
 #       Default:     0 - (Disabled)
 #                    1 - (Enabled)
 

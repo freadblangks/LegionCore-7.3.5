@@ -22233,9 +22233,17 @@ void Unit::Kill(Unit* victim, bool durabilityLoss, SpellInfo const* spellProto)
                             unit->SetCombatTimer(0);
             }
             creature->DeleteThreatList();
+
             CreatureTemplate const* cInfo = creature->GetCreatureTemplate();
             if (cInfo && (cInfo->lootid || cInfo->maxgold > 0))
-                creature->SetFlag(OBJECT_FIELD_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+                if (!creature->lootList.empty())
+                    creature->SetFlag(OBJECT_FIELD_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+                else
+                    creature->AllLootRemovedFromCorpse();
+
+            if (cInfo->SkinLootId && LootTemplates_Skinning.HaveLootFor(cInfo->SkinLootId))
+                if (creature->hasLootRecipient())
+                    creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE);
         }
 
         // Call KilledUnit for creatures, this needs to be called after the lootable flag is set

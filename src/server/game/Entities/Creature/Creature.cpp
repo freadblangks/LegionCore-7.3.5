@@ -2526,11 +2526,6 @@ void Creature::setDeathState(DeathState s)
 
         setActive(false);
 
-        if (!isPet() && GetCreatureTemplate()->SkinLootId)
-            if (LootTemplates_Skinning.HaveLootFor(GetCreatureTemplate()->SkinLootId))
-                if (hasLootRecipient())
-                    SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE);
-
         if (HasSearchedAssistance())
         {
             SetNoSearchAssistance(false);

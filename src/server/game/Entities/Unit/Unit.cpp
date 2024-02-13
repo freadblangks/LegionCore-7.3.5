@@ -22238,8 +22238,6 @@ void Unit::Kill(Unit* victim, bool durabilityLoss, SpellInfo const* spellProto)
             if (cInfo && (cInfo->lootid || cInfo->maxgold > 0))
                 if (!creature->lootList.empty())
                     creature->SetFlag(OBJECT_FIELD_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
-                else
-                    creature->AllLootRemovedFromCorpse();
 
             if (cInfo->SkinLootId && LootTemplates_Skinning.HaveLootFor(cInfo->SkinLootId))
                 if (creature->hasLootRecipient())

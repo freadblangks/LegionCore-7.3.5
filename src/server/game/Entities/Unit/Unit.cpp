@@ -22162,7 +22162,7 @@ void Unit::Kill(Unit* victim, bool durabilityLoss, SpellInfo const* spellProto)
                 else
                     creature->AllLootRemovedFromCorpse();
 
-            if (cInfo->SkinLootId && LootTemplates_Skinning.HaveLootFor(cInfo->SkinLootID))
+            if (cInfo->SkinLootId && LootTemplates_Skinning.HaveLootFor(cInfo->SkinLootId))
                 if (creature->hasLootRecipient())
                     creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE);
         }

@@ -1601,7 +1601,7 @@ void WorldObject::SetWorldObject(bool on)
     GetMap()->AddObjectToSwitchList(this, on);
 }
 
-void WorldObject::SetTransportWithOwner(Transport* transport, Unit* owner)
+void WorldObject::SetTratsport(Transport* transport, Unit* owner)
 {
     if (!transport)
     {
@@ -3099,7 +3099,7 @@ GameObject* WorldObject::SummonGameObject(uint32 entry, float x, float y, float 
         return nullptr;
     }
     go->SetPhaseId(GetPhases(), false);
-    go->SetTransportWithOwner(GetTransport());
+    go->SetTratsport(GetTransport());
     go->SetRespawnTime(respawnTime);
 
     /// @TODO comes from GarrBuildingDoodadSet.db2

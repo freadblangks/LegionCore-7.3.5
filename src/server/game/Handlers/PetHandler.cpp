@@ -252,9 +252,7 @@ void WorldSession::HandlePetRename(WorldPackets::PetPackets::PetRename& packet)
 
     pet->SetName(packet.RenameData.NewName);
 
-    Unit* owner = pet->GetOwner();
-    if (owner && (owner->GetTypeId() == TYPEID_PLAYER) && owner->ToPlayer()->GetGroup())
-        owner->ToPlayer()->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_NAME);
+    pet->SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET_NAME);
 
     pet->RemoveByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PET_FLAGS, UNIT_CAN_BE_RENAMED);
 

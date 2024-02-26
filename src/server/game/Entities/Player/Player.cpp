@@ -8553,8 +8553,7 @@ bool Player::UpdatePosition(float x, float y, float z, float orientation, bool t
     //    mover->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_TURNING);
     //AURA_INTERRUPT_FLAG_JUMP not sure
 
-    if (GetGroup())
-        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POSITION);
+    SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POSITION);
 
     if (GetTrader() && !IsWithinDistInMap(GetTrader(), INTERACTION_DISTANCE))
         GetSession()->SendCancelTrade();
@@ -10195,7 +10194,12 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
 
     // group update
     if (GetGroup())
-        SetGroupUpdateFlag(GROUP_UPDATE_FULL);
+    {
+        //SetGroupUpdateFlag(GROUP_UPDATE_FULL);
+        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_ZONE);
+        if (Pet* pet = GetPet())
+            pet->SetGroupUpdateFlag(GROUP_UPDATE_PET_FULL);
+    }
 
     if (newZone != (m_zoneId ? m_zoneId : m_oldZoneId))
         UpdateAreaQuestTasks(newZone, m_zoneId ? m_zoneId : m_oldZoneId);
@@ -26367,7 +26371,7 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
         return NULL;
     }
 
-    pet->SetTransportWithOwner(GetTransport());
+    pet->SetTratsport(GetTransport());
     pet->SetCreatorGUID(GetGUID());
     pet->SetUInt32Value(UNIT_FIELD_FACTION_TEMPLATE, getFaction());
     pet->SetUInt32Value(UNIT_FIELD_NPC_FLAGS, 0);
@@ -26440,9 +26444,7 @@ void Player::RemovePet(Pet* pet, bool isDelete)
     if (pet->isControlled())
     {
         SendRemoveControlBar();
-
-        if (GetGroup())
-            SetGroupUpdateFlag(GROUP_UPDATE_PET);
+        SetGroupUpdateFlag(GROUP_UPDATE_FLAG_PET);
     }
 
     WorldPackets::PetPackets::PetDismissSound packet;
@@ -29940,6 +29942,9 @@ void Player::SendUpdateToOutOfRangeGroupMembers()
         group->UpdatePlayerOutOfRange(this);
 
     m_groupUpdateMask = GROUP_UPDATE_FLAG_NONE;
+
+    if (Pet* pet = GetPet())
+        pet->ResetGroupUpdateFlag();
 }
 
 void Player::SendTransferAborted(uint32 mapID, TransferAbortReason reason, uint8 arg)
@@ -37521,7 +37526,7 @@ void Player::SummonBattlePet(ObjectGuid journalID)
         return;
     }
 
-    currentPet->SetTransportWithOwner(GetTransport());
+    currentPet->SetTratsport(GetTransport());
     currentPet->SetHomePosition(l_Position);
     currentPet->SetTempSummonType(TEMPSUMMON_MANUAL_DESPAWN);
     currentPet->InitStats(0);
@@ -38969,6 +38974,22 @@ void SpellInQueue::Clear()
     RecoveryCategory = 0;
     delete CastData;
     CastData = nullptr;
+}
+
+uint32 Player::GetGroupUpdateFlag() const
+{
+    return m_groupUpdateMask;
+}
+
+void Player::SetGroupUpdateFlag(uint32 flag)
+{
+    return; // Need find bugs with update it
+    if (GetGroup()) m_groupUpdateMask |= flag;
+}
+
+void Player::RemoveGroupUpdateFlag(uint32 flag)
+{
+    m_groupUpdateMask &= ~flag;
 }
 
 PlayerDynamicFieldArenaCooldowns::PlayerDynamicFieldArenaCooldowns(uint32 spellId, uint32 castTime, uint32 endTime) :

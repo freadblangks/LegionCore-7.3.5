@@ -27441,6 +27441,52 @@ uint8 Unit::getLevelForTarget(WorldObject const* target) const
     return uint8(level);
 }
 
+uint8 Unit::getLevelForXPReward(uint8 playerLevel, WorldObject const* target) const
+{
+    Unit const* unit = target ? target->ToUnit() : nullptr;
+    Creature const* creature = ToCreature();
+    CreatureTemplate const* cInfo = creature->GetCreatureTemplate();
+    if (!unit || !creature)
+        return GetEffectiveLevel();
+
+    int32 level = GetEffectiveLevel();
+    int32 levelMin = creature->ScaleLevelMin;
+    int32 levelMax = creature->ScaleLevelMax;
+
+    if (levelMin == 0)
+        levelMin = cInfo->minlevel;
+
+    if (levelMax == 0)
+        levelMax = cInfo->maxlevel;
+
+    if (levelMin && levelMax)
+    {
+        if (levelMin <= playerLevel && playerLevel <= levelMax)
+        {
+            level = playerLevel;
+            if (creature->isWorldBoss())
+                level += 1;
+        }
+        else if (levelMin >= playerLevel)
+        {
+            level = levelMin;
+            if (creature->isWorldBoss())
+                level += 1;
+        }
+        else if (levelMax <= playerLevel)
+            level = levelMax;
+    }
+
+    if (CreatureTemplate const* cInfo = creature->GetCreatureTemplate())
+        level += cInfo->ScaleLevelDelta;
+
+    if (level < 1)
+        return 1;
+    if (level > 123)
+        return 123;
+    return uint8(level);
+}
+
 uint64 Unit::GetHealth(Unit* victim) const
 {
     Creature const* creature = ToCreature();

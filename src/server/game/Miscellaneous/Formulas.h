@@ -163,7 +163,7 @@ namespace Trinity
                 gain = 0;
             else
             {
-                gain = BaseGain(player->getLevel(), u->getLevelForTarget(player));
+                gain = BaseGain(player->getLevel(), u->getLevelForXPReward(player->getLevel(), player));
 
                 if (gain != 0 && u->IsCreature() && creature->isElite())
                 {

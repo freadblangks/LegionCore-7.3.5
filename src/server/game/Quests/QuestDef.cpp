@@ -299,6 +299,9 @@ uint32 Quest::XPValue(Player* player) const
         else
             xp = 50 * ((xp + 25) / 50);
 
+        if (player->getLevel() >= GetMaxLevelForExpansion(CURRENT_EXPANSION - 1) && player->GetSession()->Expansion() == CURRENT_EXPANSION && Expansion >= 0 && Expansion < CURRENT_EXPANSION)
+            xp = uint32(xp / 9.0f);
+
         return xp;
     }
 

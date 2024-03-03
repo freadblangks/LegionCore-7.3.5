@@ -269,7 +269,12 @@ uint32 Quest::XPValue(Player* player) const
     if (player)
     {
         int32 playerLevel = std::min(uint32(player->getLevel()), uint32(MaxScalingLevel));
-        int32 questLevel = uint32(Level == -1 ? playerLevel : Level);
+        int32 questLevel = playerLevel;
+
+        // Make sure that quest level does not go below the minimum required level for the quest!
+        if (questLevel < Level && Level != -1)
+            questLevel = Level;
+
         auto xpentry = sQuestXPStore.LookupEntry(questLevel);
         if (!xpentry || RewardXPDifficulty >= 10)
             return 0;

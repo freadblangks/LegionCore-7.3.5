@@ -405,7 +405,8 @@ class Quest
         // table data accessors:
         uint32 GetQuestId() const { return Id; }
         QuestObjectives const& GetObjectives() const { return Objectives; };
-        uint32 MoneyValue(uint8 playerLVL) const;
+        uint32 MoneyValue(uint8 playerLevel) const;
+        uint32 GetScaledQuestLevel(uint8 playerLevel) const;
         uint32 GetRewMoneyMaxLevel() const; // use in XP calculation at client
         bool   IsRepeatable() const { return (SpecialFlags & QUEST_SPECIAL_FLAGS_REPEATABLE) != 0; }
         bool   IsAutoAccept() const;

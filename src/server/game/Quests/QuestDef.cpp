@@ -301,13 +301,24 @@ uint32 Quest::XPValue(Player* player) const
 
     return 0;
 }
-// fix this
-uint32 Quest::MoneyValue(uint8 playerLVL) const
+
+uint32 Quest::MoneyValue(uint8 playerLevel) const
 {
-    if (QuestMoneyRewardEntry const* money = sQuestMoneyRewardStore.LookupEntry(Level == -1 ? playerLVL : Level))
+    if (QuestMoneyRewardEntry const* money = sQuestMoneyRewardStore.LookupEntry(GetScaledQuestLevel(playerLevel)))
         return money->Difficulty[RewardMoneyDifficulty] * RewardMoneyMultiplier;
     
     return 0;
+}
+
+uint32 Quest::GetScaledQuestLevel(uint8 playerLevel) const
+{
+    uint32 scaledLevel = std::min(uint32(playerLevel), uint32(MaxScalingLevel));
+
+    // make sure that quest level does not go below the minimum required level for the quest!
+    if (scaledLevel < Level && Level != -1)
+        scaledLevel = Level;
+
+    return scaledLevel;
 }
 
 void Quest::BuildQuestRewards(WorldPackets::Quest::QuestRewards& rewards, Player* player) const

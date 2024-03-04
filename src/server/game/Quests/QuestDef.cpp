@@ -271,7 +271,7 @@ uint32 Quest::XPValue(Player* player) const
         int32 playerLevel = std::min(uint32(player->getLevel()), uint32(MaxScalingLevel));
         int32 questLevel = playerLevel;
 
-        // Make sure that quest level does not go below the minimum required level for the quest!
+        // make sure that quest level does not go below the minimum required level for the quest!
         if (questLevel < Level && Level != -1)
             questLevel = Level;
 
@@ -290,24 +290,17 @@ uint32 Quest::XPValue(Player* player) const
             diffFactor = 10;
 
         uint32 xp = diffFactor * xpentry->Difficulty[RewardXPDifficulty] * RewardXPMultiplier / 10 * multiplier;
-        if (xp <= 100)
-            xp = 5 * ((xp + 2) / 5);
-        else if (xp <= 500)
-            xp = 10 * ((xp + 5) / 10);
-        else if (xp <= 1000)
-            xp = 25 * ((xp + 12) / 25);
-        else
-            xp = 50 * ((xp + 25) / 50);
-
         if (player->getLevel() > GetMaxLevelForExpansion(player->GetMap()->GetEntry()->ExpansionID))
             xp = uint32(xp / 9.0f);
+
+        xp = RoundXPValue(xp);
 
         return xp;
     }
 
     return 0;
 }
-
+// fix this
 uint32 Quest::MoneyValue(uint8 playerLVL) const
 {
     if (QuestMoneyRewardEntry const* money = sQuestMoneyRewardStore.LookupEntry(Level == -1 ? playerLVL : Level))
@@ -423,4 +416,16 @@ void Quest::SetObjectiveBuggedState(uint32 objectiveId, bool working)
     for (QuestObjective& objective : Objectives)
         if (objective.ID == objectiveId)
             objective.Bugged = !working;
+}
+
+uint32 Quest::RoundXPValue(uint32 xp)
+{
+    if (xp <= 100)
+        return 5 * ((xp + 2) / 5);
+    else if (xp <= 500)
+        return 10 * ((xp + 5) / 10);
+    else if (xp <= 1000)
+        return 25 * ((xp + 12) / 25);
+    else
+        return 50 * ((xp + 25) / 50);
 }

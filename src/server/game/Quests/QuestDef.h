@@ -446,6 +446,8 @@ class Quest
 
         void BuildQuestRewards(WorldPackets::Quest::QuestRewards& rewards, Player* player) const;
 
+        static uint32 RoundXPValue(uint32 xp);
+
         PrevQuests prevQuests;
         PrevChainQuests prevChainQuests;
         QuestObjectives Objectives;

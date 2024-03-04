@@ -290,8 +290,9 @@ uint32 Quest::XPValue(Player* player) const
             diffFactor = 10;
 
         uint32 xp = diffFactor * xpentry->Difficulty[RewardXPDifficulty] * RewardXPMultiplier / 10 * multiplier;
-        if (player->getLevel() > GetMaxLevelForExpansion(player->GetMap()->GetEntry()->ExpansionID))
-            xp = uint32(xp / 9.0f);
+        if (!IsDaily())
+            if (player->getLevel() > GetMaxLevelForExpansion(player->GetMap()->GetEntry()->ExpansionID))
+                xp = uint32(xp / 9.0f);
 
         xp = RoundXPValue(xp);
 

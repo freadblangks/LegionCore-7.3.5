@@ -4805,7 +4805,7 @@ TempSummon* Map::SummonCreature(uint32 entry, Position const& pos, SummonPropert
     summon->SetUInt32Value(UNIT_FIELD_CREATED_BY_SPELL, spellId);
     if (summoner)
     {
-        summon->SetTratsport(summoner->GetTransport());
+        summon->SetTransport(summoner->GetTransport());
         summon->SetGuidValue(UNIT_FIELD_DEMON_CREATOR, summoner->GetGUID());
         if (properties && (properties->Flags & SUMMON_PROP_FLAG_PERSONAL_SPAWN) != 0)
             summon->AddPlayerInPersonnalVisibilityList(summoner->GetGUID());

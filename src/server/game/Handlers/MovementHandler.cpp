@@ -713,10 +713,9 @@ void WorldSession::RelocateMover(MovementInfo &movementInfo)
     }
 
     // handle water - client send swimming flag, we need update state on server and some checks it
-    if (plrMover)
+    if (plrMover && movementInfo.HasMovementFlag(MOVEMENTFLAG_SWIMMING) != plrMover->IsInWater())
     {
-        if (movementInfo.HasMovementFlag(MOVEMENTFLAG_SWIMMING) != plrMover->IsInWater())
-            plrMover->SetInWater(!plrMover->IsInWater() || map->IsUnderWater(G3D::Vector3(movementInfo.Pos.m_positionX, movementInfo.Pos.m_positionY, movementInfo.Pos.m_positionZ)));
+        plrMover->SetInWater(!plrMover->IsInWater() || map->IsUnderWater(G3D::Vector3(movementInfo.Pos.m_positionX, movementInfo.Pos.m_positionY, movementInfo.Pos.m_positionZ)));
     }
 
     // SERVER REAL RELOCATION

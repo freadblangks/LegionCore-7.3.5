@@ -5696,6 +5696,9 @@ void AuraEffect::HandleAuraModRangedAttackPower(AuraApplication const* aurApp, u
 
     if (Unit* target = aurApp->GetTarget())
     {
+        if ((target->getClassMask() & CLASSMASK_WAND_USERS) != 0)
+            return;
+
         if (Player* plr = target->ToPlayer())
         {
             plr->SendUpdateStat(USM_RANGE_AP);
@@ -5725,6 +5728,10 @@ void AuraEffect::HandleAuraModRangedAttackPowerPercent(AuraApplication const* au
         return;
 
     Unit* target = aurApp->GetTarget();
+
+    if ((target->getClassMask() & CLASSMASK_WAND_USERS) != 0)
+        return;
+
     if (target->ToPlayer())
         target->ToPlayer()->SendUpdateStat(USM_RANGE_AP);
 }

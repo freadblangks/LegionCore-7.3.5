@@ -38990,7 +38990,6 @@ uint32 Player::GetGroupUpdateFlag() const
 
 void Player::SetGroupUpdateFlag(uint32 flag)
 {
-    return; // Need find bugs with update it
     if (GetGroup()) m_groupUpdateMask |= flag;
 }
 

@@ -5153,7 +5153,7 @@ void Spell::EffectSummonObjectWild(SpellEffIndex effIndex)
         return;
     }
 
-    pGameObj->SetTransport(m_caster->GetTransport());
+    pGameObj->SetTratsport(m_caster->GetTransport());
 
     int32 duration = m_spellInfo->GetDuration(m_diffMode);
 
@@ -5204,7 +5204,7 @@ void Spell::EffectSummonObjectWild(SpellEffIndex effIndex)
         {
             linkedGO->SetRespawnTime(duration > 0 ? duration / IN_MILLISECONDS : 0);
             linkedGO->SetSpellId(m_spellInfo->Id);
-            linkedGO->SetTransport(m_caster->GetTransport());
+            linkedGO->SetTratsport(m_caster->GetTransport());
 
             ExecuteLogEffectSummonObject(effIndex, linkedGO);
 
@@ -5954,7 +5954,7 @@ void Spell::EffectDuel(SpellEffIndex effIndex)
         return;
     }
 
-    pGameObj->SetTransport(m_caster->GetTransport());
+    pGameObj->SetTratsport(m_caster->GetTransport());
     pGameObj->SetUInt32Value(GAMEOBJECT_FIELD_FACTION_TEMPLATE, m_caster->getFaction());
     pGameObj->SetUInt32Value(GAMEOBJECT_FIELD_LEVEL, m_caster->GetEffectiveLevel());
     int32 duration = m_spellInfo->GetDuration(m_diffMode);
@@ -6457,7 +6457,7 @@ void Spell::EffectSummonObject(SpellEffIndex effIndex)
         return;
     }
 
-    pGameObj->SetTransport(m_caster->GetTransport());
+    pGameObj->SetTratsport(m_caster->GetTransport());
     //pGameObj->SetUInt32Value(GAMEOBJECT_FIELD_LEVEL, m_caster->GetEffectiveLevel());
     int32 duration = m_spellInfo->GetDuration(m_diffMode);
     pGameObj->SetRespawnTime(duration > 0 ? duration / IN_MILLISECONDS : 0);
@@ -6532,7 +6532,7 @@ void Spell::EffectSurvey(SpellEffIndex /*effIndex*/)
         return;
     }
 
-    pGameObj->SetTransport(m_caster->GetTransport());
+    pGameObj->SetTratsport(m_caster->GetTransport());
     pGameObj->AddPlayerInPersonnalVisibilityList(player->GetGUID());
 
     pGameObj->SetRespawnTime(duration > 0 ? duration / IN_MILLISECONDS : 0);
@@ -7282,7 +7282,7 @@ void Spell::EffectTransmitted(SpellEffIndex effIndex)
         return;
     }
 
-    pGameObj->SetTransport(m_caster->GetTransport());
+    pGameObj->SetTratsport(m_caster->GetTransport());
     int32 duration = m_spellInfo->GetDuration(m_diffMode);
 
     switch (goinfo->type)
@@ -7381,7 +7381,7 @@ void Spell::EffectTransmitted(SpellEffIndex effIndex)
             linkedGO->SetSpellId(m_spellInfo->Id);
             linkedGO->SetOwnerGUID(m_caster->GetGUID());
 
-            linkedGO->SetTransport(m_caster->GetTransport());
+            linkedGO->SetTratsport(m_caster->GetTransport());
             ExecuteLogEffectSummonObject(effIndex, linkedGO);
 
             linkedGO->GetMap()->AddToMap(linkedGO);

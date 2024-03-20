@@ -2140,7 +2140,7 @@ class Player : public Unit, public GridObject<Player>
         /*********************************************************/
 
         uint8 unReadMails;
-        time_t m_nextMailDeliveryTime;
+        time_t m_nextMailDelivereTime;
 
         typedef std::unordered_map<ObjectGuid::LowType, Item*> ItemMap;
 

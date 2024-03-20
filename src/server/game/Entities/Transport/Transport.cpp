@@ -272,7 +272,7 @@ void Transport::AddPassenger(WorldObject* passenger)
 
             for (Unit::ControlList::const_iterator itr = plr->m_Controlled.begin(); itr != plr->m_Controlled.end(); ++itr)
                 if(Unit* unit = ObjectAccessor::GetUnit(*plr, *itr))
-                    unit->SetTransport(this, plr);
+                    unit->SetTratsport(this, plr);
 
             plr->GetCheatData()->OnTransport(plr, GetGUID());
         }
@@ -296,7 +296,7 @@ void Transport::RemovePassenger(WorldObject* passenger)
                 if(Unit* unit = ObjectAccessor::GetUnit(*plr, *itr))
                 {
                     RemovePassenger(unit);
-                    unit->SetTransport(nullptr, plr);
+                    unit->SetTratsport(nullptr, plr);
                 }
             }
         }

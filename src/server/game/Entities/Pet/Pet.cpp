@@ -219,7 +219,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
     CreatureTemplate const* cinfo = GetCreatureTemplate();
     if (cinfo->Type == CREATURE_TYPE_CRITTER)
     {
-        SetTransport(owner->GetTransport());
+        SetTratsport(owner->GetTransport());
         map->AddToMap(this->ToCreature());
         return true;
     }
@@ -291,7 +291,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber)
         SetPower(getPowerType(), savedmana > uint32(GetMaxPower(getPowerType())) ? GetMaxPower(getPowerType()) : savedmana);
     }
 
-    SetTransport(owner->GetTransport());
+    SetTratsport(owner->GetTransport());
 
     owner->SetMinion(this, true);
     map->AddToMap(this->ToCreature());

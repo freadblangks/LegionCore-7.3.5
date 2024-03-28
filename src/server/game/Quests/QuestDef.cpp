@@ -296,6 +296,8 @@ uint32 Quest::XPValue(Player* player) const
 
             switch (player->GetZoneId())
             {
+                // Mount Hyjal
+                case 616:
                 // Twilight Highlands
                 case 4922:
                 // Uldum

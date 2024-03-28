@@ -313,6 +313,8 @@ INSERT INTO `disables` (`sourceType`, `entry`, `flags`, `params_0`, `params_1`, 
 -- 23218 = Condensed Voidwalker Essence
 -- 23239 = Plump Buzzard Wing
 -- 23270 = Tainted Helboar Meat
+-- 23336 = Helboar Blood Sample
+-- 29476 = Crimson Crystal Shard
 -- 30157 = Cursed Talisman
 -- 56264 = Dark Iron Attack Plans
 -- 58202 = Stolen Powder Keg
@@ -334,6 +336,7 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -15 WHERE `item` = 3
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -15 WHERE `item` = 30157 AND `entry` = 19442;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -22 WHERE `item` = 23217 AND `entry` = 16933;
 
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -33 WHERE `item` = 23336;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -40 WHERE `item` = 2676;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` = 23239;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` = 30157 AND `entry` IN (16871, 16873, 16907, 19422, 19424);
@@ -341,6 +344,16 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -80 WHERE `item` = 2
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -85 WHERE `item` = 62914;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 23270 AND `entry` IN (16863, 16879, 16880);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3084, 3627, 10005, 56264, 58202, 60496, 62805, 62807, 62809, 62916, 63028, 63421);
+
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 29476;
+
+-- Fix "Hulking Helboar" drop table (which will fix the "Helboar Blood Sample" and "Tainted Helboar Meat" quest drops)
+
+DELETE FROM `creature_loot_template` WHERE `entry` = 16880 AND `item` IN (5760, 22573, 23965, 23979, 27674);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 82 WHERE `entry` = 16880 AND `item` = 3403;
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `entry` = 16880 AND `item` = 25440;  -- TODO: should be 1.5% but this will fix quest items!
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 0.3 WHERE `entry` = 16880 AND `item` = 25442;
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 16 WHERE `entry` = 16880 AND `item` = 44755;
 
 -- Fix battle pets that should not be green to you
 
@@ -417,6 +430,7 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -0.0187 WHERE `item`
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 29795 AND `entry` = 19298;
 
 -- Fix "Young Murk Thresher" drop table (which will fix the "Thresher Oil" quest drop)
+-- TODO Ajdust drop rate of quest item and other items here once the loot system is fixed
 
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -60 WHERE `entry` = 4388 AND `item` = 33126;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 10 WHERE `entry` = 4388 AND `item` = 2608;
@@ -435,6 +449,7 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN
 -- 6245 = Karnitol's Satchel
 -- 23588 = Kaliri Feather
 -- 23589 = Mag'har Ancestral Beads
+-- 42108 = Scourge Curio
 -- 56040 = Ram Haunch
 -- 56042 = Boulderslide Cheese
 -- 56187 = Sentinel's Glaive
@@ -444,6 +459,7 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN
 DELETE FROM `creature_loot_template` WHERE `item` = 23588 AND `entry` IN (16966, 16967, 17084);
 DELETE FROM `creature_loot_template` WHERE `item` = 23589 AND `entry` IN (16911, 16912);
 
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -33 WHERE `item` = 42108;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -35 WHERE `item` = 23588 AND `entry` IN (17035, 17039, 17053);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` IN (6245, 56042, 56223);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -55 WHERE `item` = 23588 AND `entry` = 17034;
@@ -513,6 +529,10 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 1
 -- Fix loot chance for the following game objects
 
 -- 20378 = Twilight Tablet Fragment
+
+DELETE FROM `gameobject_loot_template` WHERE `entry` = 180501 AND `item` = 20378;
+INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+(180501, 20378, -100, 1, 0, 1, 1);
 
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 20378;
 
@@ -1066,12 +1086,20 @@ UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `entry` = 3
 -- 4483 = Burning Key
 -- 4484 = Cresting Key
 -- 4485 = Thundering Key
+-- 11184 = Blue Power Crystal
+-- 11185 = Green Power Crystal
+-- 11186 = Red Power Crystal
+-- 11188 = Yellow Power Crystal
+-- 23217 = Ravager Egg
 -- 25638 = Eye of Veil Reskk
 -- 25642 = Eye of Veil Shienor
 -- 25745 = Olemba Seed
 -- 25841 = Draenei Vessel
 -- 25911 = Salvaged Wood (Alliance)
 -- 25912 = Salvaged Metal (Alliance)
+-- 28116 = Zeppelin Debris
+-- 28554 = Shredder Spare Parts
+-- 31795 = Draenei Prayer Beads
 -- 58205 = Mosh'Ogg Bounty
 -- 58281 = Fang of Shadra
 -- 59524 = Narkk's Handbombs
@@ -1081,7 +1109,8 @@ UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `entry` = 3
 -- 67419 = Salvaged Metal (Horde)
 -- 67420 = Salvaged Wood (Horde)
 
-UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (938, 4483, 4484, 4485, 25638, 25642, 25745, 25841, 25911, 25912, 58205, 58281, 59524, 60214, 60215, 60295, 67419, 67420);
+UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` IN (11184, 11185, 11186, 11188);
+UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (938, 4483, 4484, 4485, 23217, 25638, 25642, 25745, 25841, 25911, 25912, 28116, 28554, 31795, 58205, 58281, 59524, 60214, 60215, 60295, 67419, 67420);
 
 -- Remove duplicated quest
 
@@ -1097,8 +1126,13 @@ INSERT INTO `disables` (`sourceType`, `entry`, `flags`, `params_0`, `params_1`, 
 -- 4469 = Rod of Order
 -- 4473 = Eldritch Shackles
 -- 4482 = Sealed Folder
+-- 23338 = Eroded Leather Case
 
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` IN (3863);
+DELETE FROM `creature_loot_template` WHERE `item` = 23338 AND `entry` IN (16863, 16927, 16929);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 10 WHERE `entry` = 16857 AND `item` = 23338;
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 6 WHERE `entry` = 16968 AND `item` = 23338;
+
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` = 3863;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (4469, 4473, 4482);
 
 -- Fix creatures in Arathi Highlands, incorrect min/max levels

@@ -294,7 +294,7 @@ uint32 Quest::XPValue(Player* player) const
         {
             uint32 expLevel = GetMaxLevelForExpansion(player->GetMap()->GetEntry()->ExpansionID);
 
-            switch (player->GetMap()->GetZoneId())
+            switch (player->GetZoneId())
             {
                 // Vashj'ir
                 case 4815:  // Kelp'thar Forest

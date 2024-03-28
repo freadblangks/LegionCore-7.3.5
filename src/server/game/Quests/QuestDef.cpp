@@ -291,8 +291,30 @@ uint32 Quest::XPValue(Player* player) const
 
         uint32 xp = diffFactor * xpentry->Difficulty[RewardXPDifficulty] * RewardXPMultiplier / 10 * multiplier;
         if (!IsDaily())
-            if (player->getLevel() > GetMaxLevelForExpansion(player->GetMap()->GetEntry()->ExpansionID))
+        {
+            uint32 expLevel = GetMaxLevelForExpansion(player->GetMap()->GetEntry()->ExpansionID);
+
+            switch (player->GetZoneId())
+            {
+                // Mount Hyjal
+                case 616:
+                // Twilight Highlands
+                case 4922:
+                // Uldum
+                case 5034:
+                // Deepholm
+                case 5042:
+                // Vashj'ir
+                case 4815:  // Kelp'thar Forest
+                case 5144:  // Shimmering Expanse
+                case 5145:  // Abyssal Depths
+                    expLevel = GetMaxLevelForExpansion(Expansions::EXPANSION_CATACLYSM);
+                    break;
+            }
+
+            if (player->getLevel() > expLevel)
                 xp = uint32(xp / 9.0f);
+        }
 
         xp = RoundXPValue(xp);
 

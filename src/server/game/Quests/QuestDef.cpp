@@ -296,6 +296,12 @@ uint32 Quest::XPValue(Player* player) const
 
             switch (player->GetZoneId())
             {
+                // Twilight Highlands
+                case 4922:
+                // Uldum
+                case 5034:
+                // Deepholm
+                case 5042:
                 // Vashj'ir
                 case 4815:  // Kelp'thar Forest
                 case 5144:  // Shimmering Expanse

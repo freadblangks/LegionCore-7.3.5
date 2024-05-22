@@ -21,6 +21,13 @@ else()
   message("* Build with scripts     : No")
 endif()
 
+if( TOOLS )
+  message("* Build connection patcher   : Yes")
+  add_definitions(-DNO_CORE_FUNCS)
+else()
+  message("* Build connection patcher   : No  (default)")
+endif()
+
 if( USE_COREPCH )
   message("* Build core w/PCH       : Yes (default)")
 else()

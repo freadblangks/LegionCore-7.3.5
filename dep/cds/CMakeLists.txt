@@ -25,10 +25,6 @@ target_include_directories(cds
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR})
 
-  target_link_libraries(cds
-    PRIVATE
-      trinity-dependency-interface)
-
 set_target_properties(cds
     PROPERTIES
       FOLDER

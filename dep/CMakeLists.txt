@@ -29,6 +29,7 @@ if(SERVERS)
   add_subdirectory(rapidjson)
   add_subdirectory(cds)
   add_subdirectory(protobuf)
+  add_subdirectory(efsw)
 endif()
 
 if(TOOLS)

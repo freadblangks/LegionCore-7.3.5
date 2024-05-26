@@ -121,7 +121,7 @@ void WorldSession::HandleCharEnum(PreparedQueryResult result, bool isDeleted)
         WorldPackets::Character::EnumCharactersResult::RaceUnlock raceUnlock;
         raceUnlock.RaceID = requirement.first;
         raceUnlock.HasExpansion = GetAccountExpansion() >= requirement.second.Expansion;
-        raceUnlock.HasAchievement = requirement.second.AchievementId == 0 || HasAchievement(requirement.second.AchievementId);
+        raceUnlock.HasAchievement = requirement.second.AchievementId == 0/* || HasAchievement(requirement.second.AchievementId)*/;
         raceUnlock.HasHeritageArmor = true;
         charEnum.RaceUnlockData.push_back(raceUnlock);
     }

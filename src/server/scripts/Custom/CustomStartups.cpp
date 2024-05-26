@@ -1,7 +1,14 @@
 #include "Config.h"
+#include "Creature.h"
 #include "Chat.h"
 #include "Log.h"
 #include "ScriptMgr.h"
+#include "ObjectMgr.h"
+#include "Player.h"
+#include "QuestData.h"
+#include "ScriptedGossip.h"
+#include "World.h"
+#include "WorldSession.h"
 
 namespace {
 
@@ -36,7 +43,44 @@ public:
 	}
 };
 
+class OnMoPArrival : public PlayerScript
+{
+public:
+    OnMoPArrival() : PlayerScript("OnMoPArrival") { }
+
+    enum
+    {
+        QUEST_TO_PANDARIA_H = 49852,
+        QUEST_TO_PANDARIA_A = 49866
+    };
+
+    void OnLogin(Player* player, bool firstLogin) override
+    {
+        // Can happen in recovery cases
+        if (player->getLevel() >= 85 && firstLogin)
+            HandleMoPStart(player);
+    }
+
+    void OnLevelChanged(Player* player, uint8 oldLevel) override
+    {
+        if (oldLevel < 85 && player->getLevel() >= 85)
+            HandleMoPStart(player);
+    }
+
+    void HandleMoPStart(Player* player)
+    {
+
+        if (player->GetQuestStatus(QUEST_TO_PANDARIA_A) == QUEST_STATUS_NONE && player->GetQuestStatus(QUEST_TO_PANDARIA_H) == QUEST_STATUS_NONE)
+        {
+
+            if (const Quest* quest = sQuestDataStore->GetQuestTemplate(player->IsInAlliance() ? QUEST_TO_PANDARIA_A : QUEST_TO_PANDARIA_H))
+                player->AddQuest(quest, nullptr);
+        }
+    }
+};
+
 void AddSC_CustomStartups() {
     new OnNewCharFirstLogin();
     new OnWorldserverLoaded();
+    new OnMoPArrival();
 }

@@ -50,8 +50,8 @@ public:
 
     enum
     {
-        QUEST_TO_PANDARIA_H = 49852,
-        QUEST_TO_PANDARIA_A = 49866
+        QUEST_TO_PANDARIA_H = 29611,
+        QUEST_TO_PANDARIA_A = 29547
     };
 
     void OnLogin(Player* player, bool firstLogin) override

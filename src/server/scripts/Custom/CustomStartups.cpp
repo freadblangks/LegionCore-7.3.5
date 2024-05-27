@@ -86,7 +86,7 @@ public:
 
 	void OnUpdateArea(Player* player, uint32 NewArea)
 	{
-		if (NewArea == 5853 && player->GetQuestStatus(29548) == QUEST_STATUS_INCOMPLETE && player->GetTeam() == ALLIANCE)
+		if (NewArea == 5853 && player->GetQuestStatus(29548) == QUEST_STATUS_INCOMPLETE && player->IsInAlliance())
 		{
             Position pos;
             player->GetPosition(&pos);

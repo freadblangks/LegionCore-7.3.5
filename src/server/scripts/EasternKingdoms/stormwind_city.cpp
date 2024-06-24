@@ -87,7 +87,32 @@ public:
     }
 };
 
+// Rell Nightwind <SI:7> 55789
+class npc_rell_nightwind : public CreatureScript
+{
+public:
+    npc_rell_nightwind() : CreatureScript("npc_rell_nightwind") { }
+
+    struct npc_rell_nightwindAI : public ScriptedAI
+    {
+        npc_rell_nightwindAI(Creature* creature) : ScriptedAI(creature) { }
+    
+        void MoveInLineOfSight(Unit* who) override
+        {
+            if (Player* player = who->ToPlayer())
+                if (player->GetDistance(me) < 20.0f)
+                    player->KilledMonsterCredit(55567);
+        }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new npc_rell_nightwindAI(creature);
+    }
+};
+
 void AddSC_stormwind_city()
 {
     new npc_102585_jace_for_dh_questline();
+    new npc_rell_nightwind();
 }

@@ -24,7 +24,7 @@ add_library(cds STATIC ${CDS_FILES})
 target_include_directories(cds
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR})
-	
+
 set_target_properties(cds
     PROPERTIES
       FOLDER

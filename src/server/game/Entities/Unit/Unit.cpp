@@ -12530,7 +12530,7 @@ int32 Unit::HealBySpell(Unit* victim, SpellInfo const* spellInfo, uint32 addHeal
 
     float convertedAddHealth = static_cast<float>(addHealth);
     sScriptMgr->ModifyHealReceived(this, victim, convertedAddHealth);
-    addHealth = uint32(convertedAddHealth);
+    addHealth = static_cast<uint32>(convertedAddHealth);
 
     // calculate heal absorb and reduce healing
     CalcHealAbsorb(victim, spellInfo, addHealth, absorb);

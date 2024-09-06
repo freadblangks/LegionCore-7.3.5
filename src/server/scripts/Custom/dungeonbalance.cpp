@@ -104,9 +104,11 @@ class DungeonBalance_UnitScript : public UnitScript {
 public:
     DungeonBalance_UnitScript() : UnitScript("DungeonBalance_UnitScript") { }
 
-    void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage) override
+    void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage) override
     {
-        damage = _Modifier_DealDamage(target, attacker, damage);
+        uint32 convertedDamage = static_cast<uint32>(damage);
+        convertedDamage = _Modifier_DealDamage(target, attacker, damage);
+        damage = static_cast<float>(convertedDamage);
     }
 
     void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage) override
@@ -121,9 +123,11 @@ public:
         damage = _Modifier_DealDamage(target, attacker, damage);
     }
 
-    void ModifyHealReceived(Unit* target, Unit* attacker, uint32& amount) override
+    void ModifyHealReceived(Unit* target, Unit* attacker, float& amount) override
     {
-        amount = _Modifier_DealDamage(target, attacker, amount);
+        uint32 convertedAmount = static_cast<uint32>(amount);
+        convertedAmount = _Modifier_DealDamage(target, attacker, convertedAmount);
+        damage = static_cast<float>(convertedAmount);
     }
 
     uint32 _Modifier_DealDamage(Unit* target, Unit* attacker, uint32 damage)

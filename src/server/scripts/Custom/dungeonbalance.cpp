@@ -127,7 +127,7 @@ public:
     {
         uint32 convertedAmount = static_cast<uint32>(amount);
         convertedAmount = _Modifier_DealDamage(target, attacker, convertedAmount);
-        damage = static_cast<float>(convertedAmount);
+        amount = static_cast<float>(convertedAmount);
     }
 
     uint32 _Modifier_DealDamage(Unit* target, Unit* attacker, uint32 damage)

@@ -7853,11 +7853,6 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster, Spell
     uint32 damage = std::max(GetAmount(), 0.f);
     uint32 damageBeforeHit = 0;
 
-    // Script Hook For HandlePeriodicDamageAurasTick -- Allow scripts to change the Damage pre class mitigation calculations
-    float convertedDamage = static_cast<float>(damage);
-    sScriptMgr->ModifyPeriodicDamageAurasTick(target, caster, convertedDamage);
-    damage = static_cast<uint32>(convertedDamage);
-
     float crit_chance = 0.0f;
     bool crit = caster->isSpellCrit(target, m_spellInfo, m_spellInfo->GetSchoolMask(), BASE_ATTACK, crit_chance);
 
@@ -7967,6 +7962,9 @@ void AuraEffect::HandlePeriodicDamageAurasTick(Unit* target, Unit* caster, Spell
     }
 
     float dmg = damage;
+
+    // Script Hook For HandlePeriodicDamageAurasTick -- Allow scripts to change the Damage pre class mitigation calculations
+    sScriptMgr->ModifyPeriodicDamageAurasTick(target, caster, dmg);
 
     if (lastTick && !m_spellInfo->HasAttribute(SPELL_ATTR10_STACK_DAMAGE_OR_HEAL))
     {

@@ -1136,7 +1136,7 @@ class ScriptMgr
         void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage);
         void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage);
         void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage);
-        void ModifyHealReceived(Unit* target, Unit* attacker, uint32& addHealth);
+        void ModifyHealReceived(Unit* target, Unit* attacker, float& addHealth);
 
         /* Scheduled scripts */
         uint32 IncreaseScheduledScriptsCount() { return ++_scheduledScripts; }

@@ -737,7 +737,7 @@ void ScriptMgr::OnDamage(Unit* attacker, Unit* victim, uint32& damage)
     FOREACH_SCRIPT(UnitScript)->OnDamage(attacker, victim, damage);
 }
 
-void ScriptMgr::ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage)
+void ScriptMgr::ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage)
 {
     FOREACH_SCRIPT(UnitScript)->ModifyPeriodicDamageAurasTick(target, attacker, damage);
 }
@@ -752,7 +752,7 @@ void ScriptMgr::ModifySpellDamageTaken(Unit* target, Unit* attacker, float& dama
     FOREACH_SCRIPT(UnitScript)->ModifySpellDamageTaken(target, attacker, damage);
 }
 
-void ScriptMgr::ModifyHealReceived(Unit* target, Unit* attacker, uint32& amount)
+void ScriptMgr::ModifyHealReceived(Unit* target, Unit* attacker, float& amount)
 {
     FOREACH_SCRIPT(UnitScript)->ModifyHealReceived(target, attacker, amount);
 }

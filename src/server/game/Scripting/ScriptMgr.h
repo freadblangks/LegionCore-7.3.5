@@ -325,7 +325,7 @@ class UnitScript : public ScriptObject, public UpdatableScript<Unit>
         virtual void OnDamage(Unit* attacker, Unit* victim, uint32& damage) { }
 
         // Called when DoT's Tick Damage is being Dealt
-        virtual void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage) { }
+        virtual void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage) { }
 
         // Called when Melee Damage is being Dealt
         virtual void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage) { }
@@ -334,7 +334,7 @@ class UnitScript : public ScriptObject, public UpdatableScript<Unit>
         virtual void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage) { }
 
         // Called when heal is received
-        virtual void ModifyHealReceived(Unit* /*target*/, Unit* /*attacker*/, uint32& /*amount*/) { }
+        virtual void ModifyHealReceived(Unit* /*target*/, Unit* /*attacker*/, float& /*amount*/) { }
 };
 
 class CreatureScript : public ScriptObject, public UpdatableScript<Creature>

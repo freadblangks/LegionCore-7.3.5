@@ -26,6 +26,8 @@
 -- 49535 = Stolen Rifle
 -- 50473 = Mane of Thornmantle
 -- 60874 = Deathless Sinew
+-- 60875 = Ghostly Essence
+-- 60878 = Silverlaine's Enchanted Crystal
 -- 60880 = Springvale's Sharpening Stone
 
 DELETE FROM `creature_loot_template` WHERE `entry` = 16346 AND `item` = 22677;
@@ -33,10 +35,10 @@ DELETE FROM `creature_loot_template` WHERE `entry` IN (16348, 16469) AND `item` 
 DELETE FROM `creature_loot_template` WHERE `entry` = 16345 AND `item` = 23166;
 DELETE FROM `creature_loot_template` WHERE `entry` IN (16344, 16348) AND `item` = 23167;
 
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (4819, 20760, 22566, 22640, 22653, 22893, 22894, 23707, 49535, 50473, 60880);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (4819, 20760, 22566, 22640, 22653, 22893, 22894, 23707, 49535, 50473, 60878, 60880);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -80 WHERE `item` IN (22579, 22580, 22633, 22634, 22677, 23165, 23166, 23167);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -70 WHERE `item` = 22567;
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` IN (22639, 60874);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` IN (22639, 60874, 60875);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -20 WHERE `item` = 23191;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 23249;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 10 WHERE `item` = 22597;
@@ -57,6 +59,7 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 40 WHERE `entry` = 1
 -- 22598 = Stone of Light
 -- 22599 = Stone of Flame
 -- 22674 = Wavefront Medallion
+-- 60871 = Moontouched Wood
 -- 60872 = Moonsteel Ingots
 
-UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (22583, 22590, 22591, 22592, 22598, 22599, 22674, 60872);
+UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (22583, 22590, 22591, 22592, 22598, 22599, 22674, 60871, 60872);

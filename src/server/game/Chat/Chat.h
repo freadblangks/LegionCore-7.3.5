@@ -99,6 +99,7 @@ class ChatHandler
 
         void SendGlobalGMSysMessage(const char *str);
         Player*   getSelectedPlayer();
+        Player*   getPlayer();
         Creature* getSelectedCreature();
         Unit*     getSelectedUnit();
         WorldObject* getSelectedObject();

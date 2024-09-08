@@ -190,6 +190,11 @@ public:
         Player* player = handler->getSelectedPlayer();
         if (!player)
         {
+            player = handler->getPlayer();
+        }
+
+        if (!player)
+        {
             handler->SendSysMessage(LANG_NO_CHAR_SELECTED);
             handler->SetSentErrorMessage(true);
             return false;

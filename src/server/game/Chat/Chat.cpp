@@ -846,6 +846,14 @@ Player* ChatHandler::getSelectedPlayer()
     return ObjectAccessor::FindPlayer(guid);
 }
 
+Player* ChatHandler::getPlayer()
+{
+    if (!m_session)
+        return nullptr;
+
+    return m_session->GetPlayer();
+}
+
 Unit* ChatHandler::getSelectedUnit()
 {
     if (!m_session)

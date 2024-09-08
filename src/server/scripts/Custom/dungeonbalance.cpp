@@ -85,7 +85,7 @@ public:
 
                 uint16 maxPlayerCount = map->GetMapMaxPlayers();
 
-                if (maxPlayerCount == 10)
+                if (maxPlayerCount == 10 || maxPlayerCount == 0)
                     maxPlayerCount = 5;
 
                 float xpMult = float(map->GetPlayerCount()) / float(maxPlayerCount);

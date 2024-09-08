@@ -160,16 +160,16 @@ public:
         if (attacker->IsPlayer() || (attacker->IsControlledByPlayer() && (attacker->isHunterPet() || attacker->isPet() || attacker->isSummon())))
         {
             // Player
-            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, (int)(damage * float(maxPlayerCount / playerCount)), playerCount);
+            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, static_cast<uint32>(damage * float(maxPlayerCount / playerCount)), playerCount);
 
-            return damage * float(maxPlayerCount / playerCount);
+            return static_cast<uint32>(damage * float(maxPlayerCount / playerCount));
         }
         else
         {
             // Enemy
-            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, (int)(damage * float(playerCount / maxPlayerCount)), playerCount);
+            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, static_cast<uint32>(damage * float(playerCount / maxPlayerCount)), playerCount);
 
-            return damage * float(playerCount / maxPlayerCount);
+            return static_cast<uint32>(damage * float(playerCount / maxPlayerCount));
         }
     }
 };

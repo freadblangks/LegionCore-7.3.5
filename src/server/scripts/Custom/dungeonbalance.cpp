@@ -138,7 +138,7 @@ public:
         int8 maxPlayerCount = attacker->GetMap()->GetMapMaxPlayers();
         float playerCount = attacker->GetMap()->GetPlayerCount();
 
-        TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Initial maxPlayerCount is %s.", maxPlayerCount);
+        TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Initial maxPlayerCount is %u.", maxPlayerCount);
 
         if (maxPlayerCount == 10)
             maxPlayerCount = 5;

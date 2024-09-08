@@ -8760,6 +8760,25 @@ uint32 Player::TeamForRace(uint8 race)
     return ALLIANCE;
 }
 
+void Player::SwitchToOppositeTeam(bool apply)
+{
+    m_team = GetNativeTeam();
+
+    if (apply)
+        m_team = (m_team == ALLIANCE) ? HORDE : ALLIANCE;
+}
+
+uint32 Player::GetBgQueueTeam() const
+{
+    if (HasAura(SPELL_MERCENARY_CONTRACT_HORDE))
+        return HORDE;
+
+    if (HasAura(SPELL_MERCENARY_CONTRACT_ALLIANCE))
+        return ALLIANCE;
+
+    return GetTeam();
+}
+
 void Player::setFactionForRace(uint8 race)
 {
     m_team = TeamForRace(race);
@@ -36013,7 +36032,7 @@ bool Player::IsForbiddenMapForLevel(uint32 mapid, uint32 zone)
             break;
         case 870:
             if (getClass() != CLASS_MONK)
-                minLevel = 85;
+                minLevel = 80;
             break;
         case 1116: //Draenor
         case 1265: //Dark Portal

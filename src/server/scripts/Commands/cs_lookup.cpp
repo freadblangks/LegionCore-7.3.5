@@ -544,6 +544,10 @@ public:
 
         // can be NULL at console call
         Player* target = handler->getSelectedPlayer();
+        if (!target)
+        {
+            target = handler->getPlayer();
+        }
 
         std::string namePart = args;
         std::wstring wNamePart;

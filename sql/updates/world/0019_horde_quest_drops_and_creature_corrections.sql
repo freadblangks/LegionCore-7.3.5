@@ -1,10 +1,21 @@
 -- Fix loot chance for the following quest items
 
+-- 2855 = Putrid Claw
 -- 2858 = Darkhound Blood
+-- 3901 = Bloodscalp Tusk
 -- 3905 = Nezzliok's Head
+-- 3924 = Maury's Clubbed Foot
+-- 3935 = Smotts' Cutlass
+-- 4053 = Large River Crocolisk Skin
 -- 4435 = Mote of Myzrael
+-- 4440 = Sigil of Strom
 -- 4450 = Sigil Fragment
+-- 4510 = Befouled Bloodstone Orb
 -- 4512 = Highland Raptor Eye
+-- 4513 = Raptor Heart
+-- 4525 = Trelane's Wand of Invocation
+-- 4527 = Azure Agate
+-- 4551 = Or'Kalar's Head
 -- 4751 = Windfury Talon
 -- 4752 = Azure Feather
 -- 4753 = Bronze Feather
@@ -20,6 +31,9 @@
 -- 4888 = Crawler Mucus
 -- 5087 = Plainstrider Beak
 -- 5203 = Flatland Prowler Claw
+-- 5830 = Kenata's Head
+-- 5831 = Fardel's Head
+-- 5832 = Marcel's Head
 -- 20482 = Arcane Sliver
 -- 20483 = Tainted Arcane Sliver
 -- 20760 = Chieftain Zul'Marosh's Head
@@ -53,6 +67,7 @@
 -- 23167 = Shadowcaster Mace
 -- 23191 = Crystal Controlling Orb
 -- 23249 = Amani Invasion Plans
+-- 23679 = Bloodscalp Totem
 -- 23707 = Spindleweb Silk Gland
 -- 47038 = Slab of Venison
 -- 47039 = Scout's Orders
@@ -69,6 +84,12 @@
 -- 52564 = Burning Blade Spellscroll
 -- 57758 = Swine Belly
 -- 57879 = Horde Infantry Rations
+-- 59034 = Fitztittle's Ratcheting Torque Wrench
+-- 59035 = Ephram's Jeweled Mirror
+-- 59143 = Weather-Beaten Coin
+-- 60270 = Icon of Tsul'Kalu
+-- 60271 = Icon of Mahamba
+-- 60272 = Icon of Pogeyan
 -- 60874 = Deathless Sinew
 -- 60875 = Ghostly Essence
 -- 60878 = Silverlaine's Enchanted Crystal
@@ -87,14 +108,14 @@ DELETE FROM `creature_loot_template` WHERE `entry` IN (16344, 16348) AND `item` 
 DELETE FROM `creature_loot_template` WHERE `entry` = 3117 AND `item` = 47039;
 DELETE FROM `creature_loot_template` WHERE NOT `entry` IN (3195, 3196, 3197, 3198, 3199) AND `item` = 52564;
 
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3905, 4769, 4801, 4802, 4805, 4819, 20483, 20760, 20764, 20797, 20799, 21781, 21808, 22566, 22640, 22653, 22893, 22894, 23707, 49204, 49535, 49540, 49674, 50018, 50222, 50473, 52080, 57758, 57879, 60878, 60880, 64386, 72071, 87267);
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -90 WHERE `item` IN (4751, 4752, 4753);
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -80 WHERE `item` IN (4435, 4512, 4758, 4759, 4803, 4871, 4888, 5087, 5203, 22570, 22579, 22580, 22633, 22634, 22677, 23165, 23166, 23167, 49208, 52564, 82605);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3905, 3924, 4510, 4525, 4527, 4551, 4769, 4801, 4802, 4805, 4819, 5830, 5831, 5832, 20483, 20760, 20764, 20797, 20799, 21781, 21808, 22566, 22640, 22653, 22893, 22894, 23679, 23707, 49204, 49535, 49540, 49674, 50018, 50222, 50473, 52080, 57758, 57879, 59034, 59035, 60878, 60880, 64386, 72071, 87267);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -90 WHERE `item` IN (2855, 4751, 4752, 4753);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -80 WHERE `item` IN (3901, 4435, 4512, 4513, 4758, 4759, 4803, 4871, 4888, 5087, 5203, 22570, 22579, 22580, 22633, 22634, 22677, 23165, 23166, 23167, 49208, 52564, 82605);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -70 WHERE `item` IN (20482, 22567, 47038);
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` IN (20772, 21757, 21771, 22639, 60874, 60875);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` IN (4440, 4053, 20772, 21757, 21771, 22639, 60874, 60875);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -35 WHERE `item` IN (2858, 4450);
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -20 WHERE `item` IN (23191, 47039, 47819);
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 23249;
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -20 WHERE `item` IN (23191, 47039, 47819, 60270, 60271, 60272);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` IN (3935, 23249, 59143);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 10 WHERE `item` IN (21776, 22597);
 
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 50 WHERE `entry` = 16301 AND `item` = 22641;
@@ -106,6 +127,13 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 40 WHERE `entry` = 1
 
 -- Fix loot chance for the following game objects
 
+-- 3906 = Balia'mah Trophy
+-- 3907 = Ziata'jai Trophy
+-- 3920 = Bloodsail Charts
+-- 4492 = Elven Gem
+-- 4530 = Trelane's Phylactery
+-- 4531 = Trelane's Orb
+-- 4532 = Trelane's Ember Agate
 -- 4863 = Gnomish Tools
 -- 4918 = Sack of Supplies
 -- 5012 = Fungal Spores
@@ -130,6 +158,10 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 40 WHERE `entry` = 1
 -- 49094 = Keystone Shard
 -- 49207 = Azsharite Sample
 -- 52558 = Kul Tiras Treasure
+-- 58877 = Naga Icon
+-- 59145 = Bloodsail Orders
+-- 59151 = Bloodsail Cannonball
+-- 60386 = Pure Water
 -- 60871 = Moontouched Wood
 -- 60872 = Moonsteel Ingots
 -- 69919 = Plump Cockroach
@@ -137,7 +169,7 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 40 WHERE `entry` = 1
 
 DELETE FROM `creature_loot_template` WHERE `item` = 48128;
 
-UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (4863, 4918, 5012, 12708, 20743, 20771, 22413, 22414, 22583, 22590, 22591, 22592, 22598, 22599, 22674, 45004, 46742, 48128, 48525, 48921, 49062, 49094, 49207, 52558, 60871, 60872, 69919);
+UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3906, 3907, 3920, 4492, 4530, 4531, 4532, 4863, 4918, 5012, 12708, 20743, 20771, 22413, 22414, 22583, 22590, 22591, 22592, 22598, 22599, 22674, 45004, 46742, 48128, 48525, 48921, 49062, 49094, 49207, 52558, 58877, 59145, 59151, 60386, 60871, 60872, 69919);
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100, `mincountOrRef` = 5, `maxcount` = 5 WHERE `item` = 69988;
 
 -- Fix broken "Lily, Oh Lily" quest (can't loot the lillies)
@@ -146,3 +178,14 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 (4, 208833, 69917, 0, 0, 9, 0, 29332, 0, 0, 0, 0, '', '');
 
 UPDATE `gameobject_template` SET `type` = 3 WHERE `entry` = 208833;
+
+-- Fix loot chance for the following quest items (from fishing)
+
+-- 58951 = Giant Furious Pike
+-- 69901 = Severed Abomination Head
+
+UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `item` = 69901;
+
+-- Fix respawn time for chest restocking
+
+-- (TEST LATER) UPDATE `gameobject_template` SET `Data2` = 3 WHERE `questItem1` IN (3920);

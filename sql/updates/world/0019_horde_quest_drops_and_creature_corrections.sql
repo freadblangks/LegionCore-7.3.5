@@ -139,3 +139,10 @@ DELETE FROM `creature_loot_template` WHERE `item` = 48128;
 
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (4863, 4918, 5012, 12708, 20743, 20771, 22413, 22414, 22583, 22590, 22591, 22592, 22598, 22599, 22674, 45004, 46742, 48128, 48525, 48921, 49062, 49094, 49207, 52558, 60871, 60872, 69919);
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100, `mincountOrRef` = 5, `maxcount` = 5 WHERE `item` = 69988;
+
+-- Fix broken "Lily, Oh Lily" quest (can't loot the lillies)
+DELETE FROM `conditions` WHERE `SourceEntry` = 69917;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`, `ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES
+(4, 208833, 69917, 0, 0, 9, 0, 29332, 0, 0, 0, 0, '', '');
+
+UPDATE `gameobject_template` SET `type` = 3 WHERE `entry` = 208833;

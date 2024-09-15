@@ -544,7 +544,6 @@ DELETE FROM `creature_queststarter` WHERE `quest` = 28782;
 INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES
 (49537,28782);
 
-
 -- Fix Fel Reaver not pathing correctly in Hellfire Peninsula
 
 UPDATE `creature` SET `equipment_id` = 1, `spawndist` = 0, `MovementType` = 2 WHERE `id` = 18733;

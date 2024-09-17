@@ -662,7 +662,7 @@ void WorldSession::SendListInventory(ObjectGuid const& vendorGuid, uint32 entry)
                 item.PlayerConditionFailed = vendorItem->PlayerConditionID;
             item.Type = vendorItem->Type;
             item.Quantity = leftInStock;
-            item.StackCount = itemTemplate->VendorStackCount;
+            item.StackCount = itemTemplate->GetBuyCount();
             item.Price = price;
             item.Item.Initialize(vendorItem);
         }

@@ -88,7 +88,15 @@ public:
                 if (maxPlayerCount == 10 || maxPlayerCount == 0)
                     maxPlayerCount = 5;
 
-                float xpMult = float(map->GetPlayerCount()) / float(maxPlayerCount);
+                uint32 playerCount = map->GetPlayerCount();
+
+                // Adjust so that 1 or 2 player is not a ridiculous way to get XP
+                if (playerCount == 1)
+                    maxPlayerCount = 15;
+                else if (playerCount == 2)
+                    maxPlayerCount = 10;
+
+                float xpMult = float(playerCount) / float(maxPlayerCount);
                 uint32 newAmount = uint32(amount * xpMult);
                 
                 if (victim)
@@ -147,11 +155,11 @@ public:
         {
             switch (maxPlayerCount)
             {
-            case 5:
-                playerCount = 0.35f;
-                break;
-            default:
-                playerCount = 0.15f;
+                case 5:
+                    playerCount = 0.35f;
+                    break;
+                default:
+                    playerCount = 0.15f;
             }
         }
         else if (playerCount == 2 && maxPlayerCount == 5)

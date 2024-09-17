@@ -156,10 +156,10 @@ public:
             switch (maxPlayerCount)
             {
                 case 5:
-                    playerCount = 0.35f;
+                    playerCount = 0.5f;
                     break;
                 default:
-                    playerCount = 0.15f;
+                    playerCount = 0.25f;
             }
         }
         else if (playerCount == 2 && maxPlayerCount == 5)

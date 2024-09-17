@@ -6,6 +6,7 @@ INSERT INTO `taxi_nodes` (`ID`, `Name`, `PosX`, `PosY`, `PosZ`, `MountCreatureID
 (73, 'Cenarion Hold, Silithus', -6761.83, 772.03, 88.91, 0, 3837, 0, -0.005, 0, 0, 0, 1, 0, 73, 1, 0, 0),
 (602, 'Surwich, Blasted Lands', -12761.9, -2919.04, 7.04836, 0, 3837, -0.008, 0.005, 0, 0, 0, 0, 0, 110, 1, 0, 0);
 
+-- Reference for 'TableHash': https://github.com/TrinityCore/WowPacketParser/blob/master/WowPacketParser/Enums/DB2Hash.cs
 DELETE FROM `hotfix_data` WHERE `Id` IN (45, 72, 73, 602);
 INSERT INTO `hotfix_data` (`Id`, `TableHash`, `RecordID`, `Timestamp`, `Deleted`) VALUES
 (45, 1356405368, 45, 0, 0),

@@ -30700,7 +30700,7 @@ float Player::GetReputationPriceDiscount(Creature const* creature) const
 
     ReputationRank rank = GetReputationRank(vendor_faction->Faction);
 
-    if (GetPlayer()->HasSpell(69044))
+    if (Player::HasSpell(69044))
         rank = REP_EXALTED;
 
     if (rank <= REP_NEUTRAL)

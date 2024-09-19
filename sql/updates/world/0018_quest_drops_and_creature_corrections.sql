@@ -205,7 +205,10 @@ DELETE FROM `npc_spellclick_spells` WHERE spell_id IN (1, 3) AND `npc_entry` IN 
 -- 62510 = Shadowstout
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -65 WHERE `item` = 62510;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -75 WHERE `item` = 9237;
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3514, 4103);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 3514;
+
+-- TODO Fix later when loot system is fixed, should be negative!
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 4103;
 
 -- Fix loot chance for the following quest items
 -- 61313 = Mossflayer Eye

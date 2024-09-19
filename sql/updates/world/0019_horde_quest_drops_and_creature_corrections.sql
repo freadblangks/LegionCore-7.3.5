@@ -106,7 +106,7 @@ DELETE FROM `creature_loot_template` WHERE `entry` IN (16344, 16348) AND `item` 
 DELETE FROM `creature_loot_template` WHERE `entry` = 3117 AND `item` = 47039;
 DELETE FROM `creature_loot_template` WHERE NOT `entry` IN (3195, 3196, 3197, 3198, 3199) AND `item` = 52564;
 
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3905, 3924, 4510, 4525, 4527, 4551, 4769, 4801, 4802, 4805, 4819, 5830, 5831, 5832, 20483, 20760, 20764, 20797, 20799, 21781, 21808, 22566, 22640, 22653, 22893, 22894, 23679, 23707, 49204, 49535, 49540, 49674, 50018, 50222, 50473, 52080, 57758, 57879, 59034, 59035, 60878, 60880, 64386, 72071, 87267);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3905, 3924, 4510, 4525, 4527, 4551, 4769, 4801, 4802, 4805, 4819, 5830, 5831, 5832, 20483, 20760, 20764, 20797, 20799, 21781, 21808, 22566, 22640, 22653, 22893, 22894, 23679, 23707, 49204, 49535, 49540, 49674, 50018, 50222, 50473, 52080, 57758, 59034, 59035, 60878, 60880, 64386, 72071, 87267);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -90 WHERE `item` IN (2855, 4751, 4752, 4753);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -80 WHERE `item` IN (3901, 4435, 4512, 4513, 4758, 4759, 4803, 4871, 4888, 5087, 5203, 22570, 22579, 22580, 22633, 22634, 22677, 23165, 23166, 23167, 49208, 52564, 82605);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -70 WHERE `item` IN (20482, 22567, 47038);
@@ -122,6 +122,9 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 30 WHERE `entry` = 1
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 70 WHERE `entry` = 16305 AND `item` = 22642;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 20 WHERE `entry` = 16307 AND `item` = 22642;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 40 WHERE `entry` = 16308 AND `item` = 22642;
+
+-- TODO Fix when loot system is fixed!
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 57879;
 
 -- Fix loot chance for the following game objects
 -- 3906 = Balia'mah Trophy

@@ -4,7 +4,6 @@
 */
 
 -- Fix loot chance for the following quest items
-
 -- Most of these should be 100%
 -- 884 = Ghoul Rib
 -- 981 = Bernice's Necklace
@@ -44,21 +43,17 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 UPDATE `gameobject_template` SET `type` = 3, `castBarCaption` = 'Collecting', `Data8` = 27025, `Data14` = 19676, `VerifiedBuild` = 26124 WHERE `entry` = 205089;
 
 -- Fix bad quest POI point
-
 -- Mistmantle's Revenge
 -- Adjusted this one (OLD: 26674, 1, 0, -10512, -1301, 22908)
 UPDATE `quest_poi_points` SET `X` = -10382, `Y` = -1246, `VerifiedBuild` = 26124 WHERE `QuestID` = 26674 AND `Idx1` = 1;
 
 -- Fix creatures in Stranglethorn, previously wrong level and did not attack
-
 -- 52224 = Jungle Serpent
 -- 52604 = Digsite Zombie
-
 UPDATE `creature_template` SET `minlevel` = 24, `maxlevel` = 25, `ScaleLevelMin` = 25, `ScaleLevelMax` = 60, `faction` = 16, `unit_flags` = 0 WHERE `entry` = 52224;
 UPDATE `creature_template` SET `minlevel` = 31, `maxlevel` = 32, `ScaleLevelMin` = 30, `ScaleLevelMax` = 60, `faction` = 16, `unit_flags` = 0 WHERE `entry` = 52604;
 
 -- Fix loot chance for the following quest items
-
 -- 3897 = Dizzy's Eye
 -- 3910 = Snuff
 -- 3919 = Mistvale Giblets
@@ -70,7 +65,6 @@ UPDATE `creature_template` SET `minlevel` = 31, `maxlevel` = 32, `ScaleLevelMin`
 -- 58813 = Velvety Panther Fur
 -- 58901 = Zanzil's Formulation
 -- 60380 = Ironjaw Humour
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `item` = 3897;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 3897 AND `entry` = 2551;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3932, 58225, 58812, 58813, 60380);
@@ -86,37 +80,27 @@ INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `l
 (43152, 3897, -10, 0, 0, 1, 1, 0);
 
 -- Fix loot chance for the following quest items
-
 -- 46692 = Elune's Torch
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 46692;
 
 -- Fix loot chance for the following quest items
-
 -- 23677 = Moongraze Buck Hide
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -80 WHERE `item` = 23677;
 
 -- Fix "Stranglethorn Fever" quest, it should NOT be repeatable!
-
 UPDATE `quest_template_addon` SET `SpecialFlags` = 0 WHERE `id` = 26597;
 
 -- Fix creature in Stranglethorn, previously wrong level and did not attack
-
 -- 53011 = Hideaway Zombie
-
 UPDATE `creature_template` SET `minlevel` = 31, `maxlevel` = 32, `ScaleLevelMin` = 30, `ScaleLevelMax` = 60, `faction` = 16 WHERE `entry` = 53011;
 
 -- Fix loot chance for the following quest items
-
 -- 54855 = Gargantapid's Poison Gland
 -- 60851 = Side of Bear Meat
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -40 WHERE `item` = 60851;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 54855;
 
 -- Fix broken creatures
-
 -- 1783 = Skeletal Flayer (scale min/max not set)
 -- 1784 = Skeletal Sorcerer (scale min/max not set)
 -- 1847 = Foulmane (scale min/max not set)
@@ -124,21 +108,17 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 
 -- 108815 = Anguished Spectre (bad min/max level)
 -- 108830 = Risen Legionnaire (bad min/max level)
 -- 108847 = Disturbed Resident (bad min/max level)
-
 UPDATE `creature_template` SET `minlevel` = 35, `maxlevel` = 36, `mingold` = 163, `maxgold` = 163 WHERE `entry` IN (108815, 108830, 108847);
 UPDATE `creature_template` SET `ScaleLevelMin` = 35, `ScaleLevelMax` = 60 WHERE `entry` IN (1783, 1784, 1847, 108815, 108830, 108847);
 UPDATE `creature_template` SET `unit_flags` = 0 WHERE `entry` = 44473;
 
 -- Remove deprecated quest
-
 -- 24527 = Your Path Begins Here (Removed in 7.0.3 per Wowpedia)
-
 DELETE FROM `disables` WHERE `sourceType` = 1 AND `entry` = 24527;
 INSERT INTO `disables` (`sourceType`, `entry`, `flags`, `params_0`, `params_1`, `comment`) VALUES
 (1, 24527, 0, '', '', 'Deprecated quest: Your Path Begins Here');
 
 -- Fix loot chance for the following quest items
-
 -- 9371 = Gordunni Orb
 -- 9530 = Horn of Hatetalon (supposed to drop from more things AND be quest only!)
 -- 13157 = Fetid Skull
@@ -149,7 +129,6 @@ INSERT INTO `disables` (`sourceType`, `entry`, `flags`, `params_0`, `params_1`, 
 -- 60983 = Crypt Bile
 -- 60987 = Joseph's Hunting Blade
 -- 62028 = Browman's Wrappings
-
 DELETE FROM `creature_loot_template` WHERE `item` = 9530;
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `shared`) VALUES
 (5362, 9530, -100, 0, 0, 1, 1, 0),
@@ -166,25 +145,20 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN
 -- Fix quests that should NOT be repeatable!
 -- 27388 = Heroes of Darrowshire
 -- 28755 = Annals of the Silver Hand
-
 UPDATE `quest_template_addon` SET `SpecialFlags` = 0 WHERE `id` IN (27388, 28755);
 
 -- Fix loot chance for the following quest items
-
 -- 33085 = Bloodfen Feather
 -- 59057 = Poobah's Tiara
 -- 59058 = Poobah's Scepter
 -- 59059 = Poobah's Slippers
 -- 59060 = Poobah's Diary
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -33 WHERE `item` = 33085 AND `entry` IN (4356, 4357);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -25 WHERE `item` = 33085 AND `entry` = 23873;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` IN (59057, 59058, 59059, 59060);
 
 -- Fix quests that should NOT be repeatable!
-
 -- 2438 = The Emerald Dreamcatcher
-
 UPDATE `quest_template` SET `Flags` = 8, `VerifiedBuild` = 26124 WHERE `id` = 2438;
 UPDATE `quest_template_addon` SET `SpecialFlags` = 0 WHERE `id` = 2438;
 
@@ -203,57 +177,44 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 UPDATE `gameobject_template` SET `type` = 3, `VerifiedBuild` = 26124 WHERE `entry` = 205423;
 
 -- Fix duplicated NPCs
-
 -- 2502 = "Shaky" Phillipe
 -- 44100 = Goris
 -- 44391 = Innkeeper Shyria
-
 DELETE FROM `creature` WHERE `guid` IN (360237, 360149, 167921);
 UPDATE `creature` SET `position_x` = -14297.87, `position_y` = 508.75, `position_z` = 8.9645, `orientation` = 2.2568 WHERE `guid` = 4219;
 UPDATE `creature` SET `position_x` = -13616.18, `position_y` = -61.9, `position_z` = 35.239, `orientation` = 6.0715 WHERE `guid` = 3364;
 
 -- Fix battle pets that cannot be fought
-
 -- 61459 = Little Black Ram
 -- 62257 = Sand Kitten
-
 UPDATE `creature_template` SET `faction` = 188 WHERE `entry` IN (61459, 62257);
 
--- Fix battle pets that cannot be fought
-
--- The following cast recall spells when you try to fight them...
-
+-- Fix battle pets that cannot be fought, the following cast recall spells when you try to fight them...
 -- 7555 = Hawk Owl
 -- 61757 = Red-Tailed Chipmunk
 -- 62178 = Elfin Rabbit
 -- 69352 = Vampiric Cave Bat
 -- 99394 = Fetid Waveling
-
 UPDATE `creature_template` SET `faction` = 188, `unit_flags` = 0, `unit_flags2` = 0 WHERE `entry` IN (61757, 62178);
 DELETE FROM `npc_spellclick_spells` WHERE spell_id IN (1, 3) AND `npc_entry` IN (7555, 61757, 62178, 69352, 99394);
 
 -- Fix loot chance for the following quest items
-
 -- 3514 = Mor'Ladim's Skull
 -- 4103 = Shackle Key
 -- 9237 = Woodpaw Gnoll Mane
 -- 62510 = Shadowstout
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -65 WHERE `item` = 62510;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -75 WHERE `item` = 9237;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3514, 4103);
 
 -- Fix loot chance for the following quest items
-
 -- 61313 = Mossflayer Eye
 -- 62390 = Scalding Whelp Corpse
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -85 WHERE `item` = 61313;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -45 WHERE `item` = 61313 AND `entry` = 10822;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 62390;
 
 -- Fix loot chance for the following quest items
-
 -- 11114 = Dinosaur Bone
 -- 11477 = White Ravasaur Claw
 -- 11478 = Un'Goro Gorilla Pelt
@@ -265,7 +226,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 
 -- 51778 = Hyena Chunk
 -- 52281 = Meatface's Locked Chest
 -- 52282 = Turtle-Digested Key
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -25 WHERE `item` = 52282;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -30 WHERE `item` = 11114;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -35 WHERE `item` IN (11478, 11479, 11480);
@@ -274,37 +234,30 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -75 WHERE `item` = 5
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (11477, 11509, 50371, 52281);
 
 -- Fix loot chance for the following quest items
-
 -- 11510 = Lar'korwi's Head
 -- 50410 = Durrin's Archaeological Findings (should be negative)
 -- 63135 = Razor-Sharp Scorpid Barb
 -- 63136 = Ember Worg Hide
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` = 63135;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (11510, 50410, 63136);
 
 -- Fix battle pets that should not be green to you
-
 -- 61317 = Long-tailed Mole
 -- 62256 = Stinkbug
 -- 62258 = Silithid Hatchling
 -- 62364 = Ash Lizard
 -- 62370 = Spotted Bell Frog
-
 UPDATE `creature_template` SET `faction` = 188 WHERE `entry` IN (61317, 62256, 62258, 62364, 62370);
 
 -- Disable deprecated quests
-
 -- 24752 = "The Arts of a Mage" (Horde)
 -- 26198 = "The Arts of a Mage" (Alliance)
-
 DELETE FROM `disables` WHERE `sourceType` = 1 AND `entry` IN (24752, 26198);
 INSERT INTO `disables` (`sourceType`, `entry`, `flags`, `params_0`, `params_1`, `comment`) VALUES
 (1, 24752, 0, '', '', 'Deprecated quest: The Arts of a Mage (Horde)'),
 (1, 26198, 0, '', '', 'Deprecated quest: The Arts of a Mage (Alliance)');
 
 -- Fix loot chance for the following quest items
-
 -- 2676 = Shimmerweed
 -- 3084 = Gyromechanic Gear
 -- 3627 = Fang of Vagash
@@ -326,7 +279,6 @@ INSERT INTO `disables` (`sourceType`, `entry`, `flags`, `params_0`, `params_1`, 
 -- 62916 = Dark Iron Bullet
 -- 63028 = Rasha'krak's Bracers of Binding
 -- 63421 = Obsidian Ashes
-
 DELETE FROM `creature_loot_template` WHERE `item` = 23270 AND `entry` IN (16844, 16857);
 
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -1 WHERE `item` = 23217 AND `entry` = 16932;
@@ -348,7 +300,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 29476;
 
 -- Fix "Hulking Helboar" drop table (which will fix the "Helboar Blood Sample" and "Tainted Helboar Meat" quest drops)
-
 DELETE FROM `creature_loot_template` WHERE `entry` = 16880 AND `item` IN (5760, 22573, 23965, 23979, 27674);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 82 WHERE `entry` = 16880 AND `item` = 3403;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `entry` = 16880 AND `item` = 25440;  -- TODO: should be 1.5% but this will fix quest items!
@@ -356,14 +307,11 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 0.3 WHERE `entry` = 
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 16 WHERE `entry` = 16880 AND `item` = 44755;
 
 -- Fix battle pets that should not be green to you
-
 -- 61370 = Swamp Moth
 -- 61372 = Moccasin
-
 UPDATE `creature_template` SET `faction` = 188 WHERE `entry` IN (61370, 61372);
 
 -- Fix loot chance for the following quest items
-
 -- 2636 = Carved Stone Idol
 -- 55232 = Threshadon Chunk
 -- 57131 = Intact Crocolisk Jaw
@@ -373,14 +321,12 @@ UPDATE `creature_template` SET `faction` = 188 WHERE `entry` IN (61370, 61372);
 -- 60511 = Murloc Scent Gland
 -- 60754 = Glassy Hornet Wing
 -- 60755 = Fluffy Fox Tail
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -65 WHERE `item` IN (57131, 60511, 60754);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -75 WHERE `item` = 2636;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -90 WHERE `item` = 60497;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (55232, 60402, 60404, 60755);
 
 -- Fix loot chance for the following quest items
-
 -- 2629 = Intrepid Strongbox Key
 -- 3183 = Mangy Claw
 -- 3618 = Gobbler's Head
@@ -404,7 +350,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN
 -- 56089 = Horrorjaw's Hide
 -- 58779 = Shell of Shadra
 -- 60737 = Stabthistle Seed
-
 DELETE FROM `creature_loot_template` WHERE `item` = 28513 AND `entry` IN (18679, 18977, 19335);
 DELETE FROM `creature_loot_template` WHERE `item` = 30158 AND `entry` IN (16907, 19422, 19424);
 DELETE FROM `creature_loot_template` WHERE `item` = 31347 AND `entry` IN (16871, 16873, 16879, 16964, 19422, 19424);
@@ -430,22 +375,18 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -0.0187 WHERE `item`
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 29795 AND `entry` = 19298;
 
 -- Fix "Young Murk Thresher" drop table (which will fix the "Thresher Oil" quest drop)
--- TODO Ajdust drop rate of quest item and other items here once the loot system is fixed
-
+-- TODO Adjust drop rate of quest item and other items here once the loot system is fixed
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -60 WHERE `entry` = 4388 AND `item` = 33126;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 10 WHERE `entry` = 4388 AND `item` = 2608;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 22 WHERE `entry` = 4388 AND `item` = 5516;
 
 -- Fix loot chance for the following quest items
-
 -- 46768 = Sploder's Head
 -- 55239 = Cragjaw's Huge Tooth
 -- 55280 = Deepmoss Venom Sac
-
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (46768, 55239, 55280);
 
 -- Fix loot chance for the following quest items
-
 -- 6245 = Karnitol's Satchel
 -- 23588 = Kaliri Feather
 -- 23589 = Mag'har Ancestral Beads
@@ -455,7 +396,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN
 -- 56187 = Sentinel's Glaive
 -- 56223 = Black Dragon Whelp Filet
 -- 56224 = Blazing Heart of Fire
-
 DELETE FROM `creature_loot_template` WHERE `item` = 23588 AND `entry` IN (16966, 16967, 17084);
 DELETE FROM `creature_loot_template` WHERE `item` = 23589 AND `entry` IN (16911, 16912);
 
@@ -467,7 +407,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -75 WHERE `item` IN 
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 56187;
 
 -- Fix loot chance for the following quest items
-
 -- 24280 = Naga Claws
 -- 24372 = Diaphanous Wing
 -- 25448 = Blacksting's Stinger
@@ -476,7 +415,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 
 -- 44863 = Corrupted Tide Crawler Flesh
 -- 58236 = Umboda's Head
 -- Tablet of Shadra
-
 DELETE FROM `creature_loot_template` WHERE `item` = 24280 AND `entry` IN (18122, 18123, 18132, 18154, 18213, 20079, 20090);
 DELETE FROM `creature_loot_template` WHERE `item` = 24372 AND `entry` IN (18086, 18122, 18134, 18135);
 DELETE FROM `creature_loot_template` WHERE `item` = 25448 AND `entry` = 20270;
@@ -490,7 +428,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` = 2
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -45 WHERE `item` = 44863;
 
 -- Fix loot chance for the following quest items
-
 -- 12829 = Winterfall Crate
 -- 12842 = Crudely-Written Log
 -- 20385 = Deathclasp's Pincer
@@ -515,7 +452,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -45 WHERE `item` = 4
 -- 65903 = Winterwater
 -- 66052 = Mana-Addled Brain
 -- 74615 = Paint Soaked Brush
-
 DELETE FROM `creature_loot_template` WHERE `item` = 74615 AND NOT `entry` = 55601;
 
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (12829, 20385, 20394, 20395, 20396, 62918, 63088, 63279, 63522, 63687, 63695, 64441, 64463, 64465, 64586, 64587, 64664, 74615);
@@ -527,9 +463,7 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` = 6
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 12842;
 
 -- Fix loot chance for the following game objects
-
 -- 20378 = Twilight Tablet Fragment
-
 DELETE FROM `gameobject_loot_template` WHERE `entry` = 180501 AND `item` = 20378;
 INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
 (180501, 20378, -100, 1, 0, 1, 1);
@@ -537,15 +471,12 @@ INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, 
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` = 20378;
 
 -- Fix missing quest starter
-
 -- 28782 = A Bird of Legend (Winterspring)
-
 DELETE FROM `creature_queststarter` WHERE `quest` = 28782;
 INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES
 (49537,28782);
 
 -- Fix Fel Reaver not pathing correctly in Hellfire Peninsula
-
 UPDATE `creature` SET `equipment_id` = 1, `spawndist` = 0, `MovementType` = 2 WHERE `id` = 18733;
 UPDATE `creature` SET `position_x` = 509.511, `position_y` = 3036.76, `position_z` = 14.8954, `orientation` = 0.689235 WHERE `guid` = 20744;
 UPDATE `creature` SET `position_x` = -732.521, `position_y` = 2967.13, `position_z` = 21.6502, `orientation` = 4.7173 WHERE `guid` = 133539;
@@ -1034,7 +965,6 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (1335390,238,-766.563,2949.09,17.1086,0,0,0,0,0,0,100,0,0);
 
 -- Fix loot chance for the following quest items
-
 -- 10754 = Amulet of Sevine
 -- 10755 = Amulet of Allistarj
 -- 23580 = Avruu's Orb
@@ -1045,7 +975,6 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 -- 27861 = Lathrai's Stolen Goods
 -- 29588 = Burning Legion Missive
 -- 62919 = Claw of Tichondrius
-
 DELETE FROM `creature_loot_template` WHERE `entry` = 18461 AND `item` = 25891;
 DELETE FROM `creature_loot_template` WHERE `entry` = 18541 AND `item` = 27861;
 DELETE FROM `creature_loot_template` WHERE `entry` IN (17035, 17053) AND `item` = 23580;
@@ -1070,17 +999,14 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `entry` =
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -60 WHERE `entry` IN (18539, 18540, 18541, 18685) AND `item` = 25719;
 
 -- Fix fishing dailies
-
 -- "Stocking Up" fishing daily for Lake Whitefish (69912) in Darnassus has incorrect chance and extra record
 -- "Bait Bandits" Blackfin Darter (34865) is incorrectly not marked as a quest item
-
 DELETE FROM `fishing_loot_template` WHERE `entry` = 141 AND `item` = 69912;
 
 UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -40 WHERE `entry` = 1657 AND `item` = 69912;
 UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `entry` = 3519 AND `item` = 34865;
 
 -- Fix game object chance
-
 -- 938 = Muddy Journal Pages
 -- 4483 = Burning Key
 -- 4484 = Cresting Key
@@ -1107,27 +1033,23 @@ UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `entry` = 3
 -- 60295 = Bloodscalp Lore Tablet
 -- 67419 = Salvaged Metal (Horde)
 -- 67420 = Salvaged Wood (Horde)
-
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` IN (11184, 11185, 11186, 11188);
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (938, 4483, 4484, 4485, 23217, 25638, 25642, 25745, 25841, 25911, 25912, 28116, 28554, 31795, 58205, 58281, 59524, 60214, 60215, 60295, 67419, 67420);
 
 -- Remove duplicated quest
-
 -- 26782 = The Mosh'Ogg Bounty
-
 DELETE FROM `disables` WHERE `sourceType` = 1 AND `entry` = 26782;
 INSERT INTO `disables` (`sourceType`, `entry`, `flags`, `params_0`, `params_1`, `comment`) VALUES
 (1, 26782, 0, '', '', 'Duplicate quest: The Mosh''Ogg Bounty');
 
 -- Fix loot chance for the following quest items
-
 -- 3863 = Jungle Stalker Feather
 -- 4469 = Rod of Order
 -- 4473 = Eldritch Shackles
 -- 4482 = Sealed Folder
 -- 23338 = Eroded Leather Case
-
 DELETE FROM `creature_loot_template` WHERE `item` = 23338 AND `entry` IN (16863, 16927, 16929);
+
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 10 WHERE `entry` = 16857 AND `item` = 23338;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 6 WHERE `entry` = 16968 AND `item` = 23338;
 
@@ -1135,7 +1057,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` = 3
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (4469, 4473, 4482);
 
 -- Fix creatures in Arathi Highlands, incorrect min/max levels
-
 -- 2557 = Witherbark Shadow Hunter
 -- 2573 = Drywhisker Surveyor
 -- 2574 = Drywhisker Digger
@@ -1150,17 +1071,14 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN
 -- 51017 = Gezan
 -- 51018 = Zormus
 -- 51021 = Vorticus
-
 UPDATE `creature_template` SET `minlevel` = 27, `maxlevel` = 27, `ScaleLevelMin` = 25, `ScaleLevelMax` = 60 WHERE `entry` IN (2557, 2573, 2574, 2602, 2605, 2611, 2619);
 UPDATE `creature_template` SET `minlevel` = 35, `maxlevel` = 35, `ScaleLevelMin` = 35, `ScaleLevelMax` = 60 WHERE `entry` IN (5350, 14661);
 UPDATE `creature_template` SET `minlevel` = 40, `maxlevel` = 40, `ScaleLevelMin` = 40, `ScaleLevelMax` = 60 WHERE `entry` IN (5937, 51000, 51017, 51018, 51021);
 
 -- Fix faction on Vorticus
-
 UPDATE `creature_template` SET `faction` = 14 WHERE `entry` = 51021;
 
 -- Add missing rare spawns
-
 -- 51017 = Gezan
 -- 51018 = Zormus
 -- 51021 = Vorticus
@@ -1172,9 +1090,7 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `p
 (800002,51021,0,3,3,1,1,'',0,0,-6609.88,-2623.53,265.83,3.495167,300,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0);
 
 -- Fix Stonegazer location, spawn time, and pathing as well as smart script
-
 -- 18648 = Stonegazer
-
 UPDATE `creature` SET `position_x` = -1996.77, `position_y` = 3691.44, `position_z` = -55.336, `orientation` = 4.15348, `spawntimesecs` = 300, `MovementType` = 2 WHERE `id` = 18648;
 
 UPDATE `smart_scripts` SET `event_flags` = 0, `action_param2` = 0, `target_type` = 2 WHERE `entryorguid` = 18648;
@@ -1315,30 +1231,22 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (368650,128,-1988.06,3710.37,-41.9423,0,0,0,0,0,0,100,0,0);
 
 -- Fix quest that is incorrectly marked as Alliance
-
 -- 11597 = The Defense of Warsong Hold
 -- 26023 = The Forsaken Trollbane
-
 UPDATE `quest_template` SET `AllowableRaces` = 234881970 WHERE `ID` IN (11597, 26023);
 
 -- Update missing quest text
-
 -- 13826 = Nat Pagle, Angler Extreme
-
 UPDATE `quest_template` SET `LogDescription` = 'Well hello there, young $C. Either my memory is failing me, or I forgot to give you this last time we spoke...' WHERE `ID` = 13826;
 
 -- Fix quest previous quest requirement
-
 -- 11672 = Enlistment Day
-
 UPDATE `quest_template_addon` SET `PrevQuestID` = 0 WHERE `ID` = 11672;
 UPDATE `quest_template_addon` SET `NextQuestID` = 0 WHERE `ID` = 28709;  -- Hero's Call: Borean Tundra! (should NOT lead into the other quest)
 
 -- Fix broken creatures
-
 -- 24614 = Wooly Mammoth
 -- 25743 = Wooly Mammoth Bull (TONS wrong with it and it one shots you)
-
 UPDATE `creature_template` SET `npcflag` = 16777216, `unit_flags2` = 2048 WHERE `entry` = 25743;
 UPDATE `creature_template` SET `dynamicflags` = 0 WHERE `entry` = 24614;
 
@@ -1349,7 +1257,6 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (25743,0,2,0,28,0,100,0,0,0,0,0,41,1000,0,0,0,0,0,1,0,0,0,0,0,0,0,'Wooly Mammoth Bull - On Passenger Removed - Despawn');
 
 -- Add missing portals in Dalaran
-
 -- 191006 = Dalaran Portal to Darnassus
 -- 191007 = Dalaran Portal to Exodar
 -- 191008 = Dalaran Portal to Ironforge
@@ -1358,7 +1265,6 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 -- 191012 = Dalaran Portal to Undercity
 -- 191013 = Dalaran Portal to Shattrath (Alliance)
 -- 191014 = Dalaran Portal to Shattrath (Horde)
-
 DELETE FROM `gameobject` WHERE id IN (191006, 191007, 191008, 191010, 191011, 191012, 191013, 191014);
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `PhaseId`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `AiID`, `state`, `isActive`, `personal_size`) VALUES
 (800000, 191006, 571, 4395, 4740, 1, 1, '', 5706.16, 730.102, 641.745, -0.820303, 0, 0, 0, 1, 300, 100, 0, 1, 0, 0),

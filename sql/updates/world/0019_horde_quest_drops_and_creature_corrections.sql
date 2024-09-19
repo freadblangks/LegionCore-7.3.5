@@ -1,5 +1,4 @@
 -- Fix loot chance for the following quest items
-
 -- 2855 = Putrid Claw
 -- 2858 = Darkhound Blood
 -- 3901 = Bloodscalp Tusk
@@ -98,7 +97,6 @@
 -- 72071 = Stolen Training Supplies
 -- 82605 = Corrupted Insignia
 -- 87267 = Codex of the Crusade
-
 DELETE FROM `creature_loot_template` WHERE NOT `entry` = 2959 AND `item` = 4801;
 DELETE FROM `creature_loot_template` WHERE NOT `entry` = 2960 AND `item` = 4803;
 DELETE FROM `creature_loot_template` WHERE `entry` = 16346 AND `item` = 22677;
@@ -126,7 +124,6 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 20 WHERE `entry` = 1
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 40 WHERE `entry` = 16308 AND `item` = 22642;
 
 -- Fix loot chance for the following game objects
-
 -- 3906 = Balia'mah Trophy
 -- 3907 = Ziata'jai Trophy
 -- 3920 = Bloodsail Charts
@@ -167,14 +164,12 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 40 WHERE `entry` = 1
 -- 60872 = Moonsteel Ingots
 -- 69919 = Plump Cockroach
 -- 69988 = Pine Nut
-
 DELETE FROM `creature_loot_template` WHERE `item` IN (48128, 49642);
 
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3906, 3907, 3920, 4492, 4530, 4531, 4532, 4863, 4918, 5012, 12708, 20743, 20771, 22413, 22414, 22583, 22590, 22591, 22592, 22598, 22599, 22674, 45004, 46742, 48128, 48525, 48921, 49062, 49094, 49207, 49642, 52558, 58877, 59145, 59151, 60386, 60871, 60872, 69919);
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100, `mincountOrRef` = 5, `maxcount` = 5 WHERE `item` = 69988;
 
 -- Fix spawn times to be reasonable for groups
-
 UPDATE `gameobject` SET `position_x` = 3543.24, `position_y` = -5138.04, `position_z` = 88.5, `orientation` = 1.87, `spawntimesecs` = 3 WHERE `id` = 200298;
 
 -- Fix broken "Lily, Oh Lily" quest (can't loot the lillies)
@@ -185,10 +180,8 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 UPDATE `gameobject_template` SET `type` = 3 WHERE `entry` = 208833;
 
 -- Fix loot chance for the following quest items (from fishing)
-
 -- 58951 = Giant Furious Pike
 -- 69901 = Severed Abomination Head
-
 UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `item` = 69901;
 
 -- Fix respawn time for chest restocking

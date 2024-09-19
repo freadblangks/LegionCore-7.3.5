@@ -1,5 +1,4 @@
 -- Fix creature levels in Stormwind Stockade
-
 -- 1708 = Defias Inmate
 -- 1720 = Bruegal Ironknuckle
 -- 46248 = Riverpaw Basher
@@ -18,5 +17,29 @@
 -- 46381 = Shifty Thief
 -- 46382 = Petty Criminal
 -- 46383 = Randolph Moloch
-
 UPDATE `creature_template` SET `minlevel` = 20, `maxlevel` = 20, `ScaleLevelMin` = 20, `ScaleLevelMax` = 60 WHERE `entry` IN (1708, 1720, 46248, 46249, 46250, 46251, 46252, 46254, 46260, 46261, 46262, 46263, 46264, 46375, 46379, 46381, 46382, 46383);
+
+-- Fix creature levels in Gnomeregan
+-- 6206 = Caverndeep Burrower
+-- 6207 = Caverndeep Ambusher
+-- 6212 = Dark Iron Agent
+-- 6215 = Chomper
+-- 6218 = Irradiated Slime
+-- 6219 = Corrosive Lurker
+-- 6220 = Irradiated Horror
+-- 6222 = Leprous Technician
+-- 6223 = Leprous Defender
+-- 6225 = Mechano-Tank
+-- 6229 = Crowd Pummeler 9-60
+-- 6230 = Peacekeeper Security Suit
+-- 6232 = Arcane Nullifier X-21
+-- 6233 = Mechanized Sentry
+-- 6234 = Mechanized Guardian
+-- 6235 = Electrocutioner 6000
+-- 6329 = Irradiated Pillager
+-- 7079 = Viscous Fallout
+-- 7361 = Grubbis
+-- 7603 = Leprous Assistant
+-- 7800 = Mekgineer Thermaplugg
+-- 7849 = Mobile Alert System
+UPDATE `creature_template` SET `minlevel` = 24, `maxlevel` = 24, `ScaleLevelMin` = 24, `ScaleLevelMax` = 60 WHERE `entry` IN (6206, 6207, 6212, 6215, 6218, 6219, 6220, 6222, 6223, 6225, 6229, 6230, 6232, 6233, 6234, 6235, 6329, 7079, 7361, 7603, 7800, 7849);

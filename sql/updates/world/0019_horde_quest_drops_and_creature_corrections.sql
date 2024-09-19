@@ -185,5 +185,9 @@ UPDATE `gameobject_template` SET `type` = 3 WHERE `entry` = 208833;
 UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `item` = 69901;
 
 -- Fix respawn time for chest restocking
-
 -- (TEST LATER) UPDATE `gameobject_template` SET `Data2` = 3 WHERE `questItem1` IN (3920);
+
+-- Fix NPCs that incorrectly aggressively attack the player
+-- 44112 = Airwyn Bantamflax
+-- 44866 = Auctioneer Drezmit
+UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` IN (44112, 44866);

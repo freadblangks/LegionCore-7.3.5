@@ -43,3 +43,27 @@ UPDATE `creature_template` SET `minlevel` = 20, `maxlevel` = 20, `ScaleLevelMin`
 -- 7800 = Mekgineer Thermaplugg
 -- 7849 = Mobile Alert System
 UPDATE `creature_template` SET `minlevel` = 24, `maxlevel` = 24, `ScaleLevelMin` = 24, `ScaleLevelMax` = 60 WHERE `entry` IN (6206, 6207, 6212, 6215, 6218, 6219, 6220, 6222, 6223, 6225, 6229, 6230, 6232, 6233, 6234, 6235, 6329, 7079, 7361, 7603, 7800, 7849);
+
+-- Fix creature levels in Scarlet Halls
+-- 58632 = Armsmaster Harlan
+-- 58676 = Scarlet Defender
+-- 58683 = Scarlet Myrmidon
+-- 58684 = Scarlet Scourge Hewer
+-- 58685 = Scarlet Evangelist
+-- 58756 = Scarlet Evoker
+-- 58876 = Starving Hound
+-- 58898 = Vigilant Watchman
+-- 59150 = Flameweaver Koegler
+-- 59175 = Master Archer
+-- 59191 = Commander Lindon
+-- 59240 = Scarlet Hall Guardian
+-- 59241 = Scarlet Treasurer
+-- 59293 = Scarlet Cannoneer
+-- 59299 = Scarlet Guardian
+-- 59302 = Sergeant Verdone
+-- 59303 = Houndmaster Braun
+-- 59309 = Obedient Hound
+-- 59372 = Scarlet Scholar
+-- 59373 = Scarlet Pupil
+-- TODO For heroic may want to change these later to 29, 90, 26, 90 for values!
+UPDATE `creature_template` SET `minlevel` = 26, `maxlevel` = 26, `ScaleLevelMin` = 26, `ScaleLevelMax` = 60 WHERE `entry` IN (58632, 58676, 58683, 58684, 58685, 58756, 58876, 58898, 59150, 59175, 59191, 59240, 59241, 59299, 59302, 59303, 59309, 59372, 59373)

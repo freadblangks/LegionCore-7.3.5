@@ -66,4 +66,4 @@ UPDATE `creature_template` SET `minlevel` = 24, `maxlevel` = 24, `ScaleLevelMin`
 -- 59372 = Scarlet Scholar
 -- 59373 = Scarlet Pupil
 -- TODO For heroic may want to change these later to 29, 90, 26, 90 for values!
-UPDATE `creature_template` SET `minlevel` = 26, `maxlevel` = 26, `ScaleLevelMin` = 26, `ScaleLevelMax` = 60 WHERE `entry` IN (58632, 58676, 58683, 58684, 58685, 58756, 58876, 58898, 59150, 59175, 59191, 59240, 59241, 59299, 59302, 59303, 59309, 59372, 59373)
+UPDATE `creature_template` SET `minlevel` = 26, `maxlevel` = 26, `ScaleLevelMin` = 26, `ScaleLevelMax` = 60 WHERE `entry` IN (58632, 58676, 58683, 58684, 58685, 58756, 58876, 58898, 59150, 59175, 59191, 59240, 59241, 59299, 59302, 59303, 59309, 59372, 59373);

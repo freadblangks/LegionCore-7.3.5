@@ -194,3 +194,13 @@ UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `item` = 69
 -- 44112 = Airwyn Bantamflax
 -- 44866 = Auctioneer Drezmit
 UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` IN (44112, 44866);
+
+-- Fix creature level scaling
+-- 6118 = Varo'then's Ghost
+-- 17207 = Naias
+-- 35558 = Ectoplasmic Exhaust
+-- 36130 = Scalding Water Lord
+-- 36156 = Mutant Goblin
+-- 36822 = Lord Kassarus
+UPDATE `creature_template` SET `minlevel` = 25, `maxlevel` = 25, `ScaleLevelMin` = 25, `ScaleLevelMax` = 60 WHERE `entry` = 17207;
+UPDATE `creature_template` SET `minlevel` = 10, `maxlevel` = 10, `ScaleLevelMin` = 10, `ScaleLevelMax` = 60 WHERE `entry` IN (6118, 35558, 36130, 36156, 36822);

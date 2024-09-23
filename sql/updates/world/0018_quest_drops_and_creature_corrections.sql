@@ -1268,7 +1268,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 -- 191012 = Dalaran Portal to Undercity
 -- 191013 = Dalaran Portal to Shattrath (Alliance)
 -- 191014 = Dalaran Portal to Shattrath (Horde)
-DELETE FROM `gameobject` WHERE id IN (191006, 191007, 191008, 191010, 191011, 191012, 191013, 191014);
+DELETE FROM `gameobject` WHERE `id` IN (191006, 191007, 191008, 191010, 191011, 191012, 191013, 191014);
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `PhaseId`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `AiID`, `state`, `isActive`, `personal_size`) VALUES
 (800000, 191006, 571, 4395, 4740, 1, 1, '', 5706.16, 730.102, 641.745, -0.820303, 0, 0, 0, 1, 300, 100, 0, 1, 0, 0),
 (800001, 191007, 571, 4395, 4740, 1, 1, '', 5699.58, 735.469, 641.769, 2.02458, 0, 0, 0, 1, 300, 100, 0, 1, 0, 0),

@@ -28,6 +28,7 @@
 -- 4819 = Fizsprocket's Clipboard (Supposed to be quest only)
 -- 4871 = Searing Collar
 -- 4888 = Crawler Mucus
+-- 5084 = Cap'n Garvey's Head
 -- 5087 = Plainstrider Beak
 -- 5203 = Flatland Prowler Claw
 -- 5830 = Kenata's Head
@@ -68,11 +69,19 @@
 -- 23249 = Amani Invasion Plans
 -- 23679 = Bloodscalp Totem
 -- 23707 = Spindleweb Silk Gland
+-- 46850 = King Reaperclaw's Horn
 -- 47038 = Slab of Venison
 -- 47039 = Scout's Orders
 -- 47819 = Crystal Pendant
+-- 49068 = Pristine Thunderhead Feather
 -- 49204 = Secret Rocket Plans
 -- 49208 = Mutilated Mistwing Carcass
+-- 49356 = Amberwind's Journal
+-- 49359 = Attuned Runestone
+-- 49364 = Blackmaw Intelligence
+-- 49365 = Briaroot Brew (was positive)
+-- 49366 = Ambassador's Robes
+-- 49533 = Ironwrought Key
 -- 49535 = Stolen Rifle
 -- 49540 = Grunwald's Head
 -- 49674 = The Head of Jarrodenus
@@ -106,11 +115,12 @@ DELETE FROM `creature_loot_template` WHERE `entry` IN (16344, 16348) AND `item` 
 DELETE FROM `creature_loot_template` WHERE `entry` = 3117 AND `item` = 47039;
 DELETE FROM `creature_loot_template` WHERE NOT `entry` IN (3195, 3196, 3197, 3198, 3199) AND `item` = 52564;
 
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3905, 3924, 4510, 4525, 4527, 4551, 4769, 4801, 4802, 4805, 4819, 5830, 5831, 5832, 20483, 20760, 20764, 20797, 20799, 21781, 21808, 22566, 22640, 22653, 22893, 22894, 23679, 23707, 49204, 49535, 49540, 49674, 50018, 50222, 50473, 52080, 57758, 59034, 59035, 60878, 60880, 64386, 72071, 87267);
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -90 WHERE `item` IN (2855, 4751, 4752, 4753);
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -80 WHERE `item` IN (3901, 4435, 4512, 4513, 4758, 4759, 4803, 4871, 4888, 5087, 5203, 22570, 22579, 22580, 22633, 22634, 22677, 23165, 23166, 23167, 49208, 52564, 82605);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3905, 3924, 4510, 4525, 4527, 4551, 4769, 4801, 4802, 4805, 4819, 5084, 5830, 5831, 5832, 20483, 20760, 20764, 20797, 20799, 21781, 21808, 22566, 22640, 22653, 22893, 22894, 23679, 23707, 46850, 49204, 49356, 49366, 49535, 49540, 49674, 50018, 50222, 50473, 52080, 57758, 59034, 59035, 60878, 60880, 64386, 72071, 87267);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -90 WHERE `item` IN (2855, 4751, 4752, 4753, 49359);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -80 WHERE `item` IN (3901, 4435, 4512, 4513, 4758, 4759, 4803, 4871, 4888, 5087, 5203, 22570, 22579, 22580, 22633, 22634, 22677, 23165, 23166, 23167, 49068, 49208, 52564, 82605);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -70 WHERE `item` IN (20482, 22567, 47038);
-UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` IN (4440, 4053, 20772, 21757, 21771, 22639, 60874, 60875);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -50 WHERE `item` IN (4440, 4053, 20772, 21757, 21771, 22639, 49364, 49365, 60874, 60875);
+UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -40 WHERE `item` = 49533;
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -35 WHERE `item` IN (2858, 4450);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = -20 WHERE `item` IN (23191, 47039, 47819, 60270, 60271, 60272);
 UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` IN (3935, 23249, 59143);
@@ -154,9 +164,15 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 5
 -- 48128 = Mountainfoot Iron
 -- 48525 = Recovered Artifacts
 -- 48921 = Sarcen Stone
+-- 49012 = Abjurer's Manual
+-- 49036 = Animate Basalt
 -- 49062 = Goblin Mortar Shell
+-- 49082 = Living Ire Thyme
 -- 49094 = Keystone Shard
+-- 49162 = Kawphi Bean
 -- 49207 = Azsharite Sample
+-- 49365 = Briaroot Brew (was positive)
+-- 49367 = Blackmaw Meeting Agenda
 -- 49642 = Heart of Arkkoroc
 -- 52558 = Kul Tiras Treasure
 -- 58877 = Naga Icon
@@ -169,11 +185,8 @@ UPDATE `creature_loot_template` SET `ChanceOrQuestChance` = 100 WHERE `item` = 5
 -- 69988 = Pine Nut
 DELETE FROM `creature_loot_template` WHERE `item` IN (48128, 49642);
 
-UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3906, 3907, 3920, 4492, 4530, 4531, 4532, 4863, 4918, 5012, 12708, 20743, 20771, 22413, 22414, 22583, 22590, 22591, 22592, 22598, 22599, 22674, 45004, 46742, 48128, 48525, 48921, 49062, 49094, 49207, 49642, 52558, 58877, 59145, 59151, 60386, 60871, 60872, 69919);
+UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100 WHERE `item` IN (3906, 3907, 3920, 4492, 4530, 4531, 4532, 4863, 4918, 5012, 12708, 20743, 20771, 22413, 22414, 22583, 22590, 22591, 22592, 22598, 22599, 22674, 45004, 46742, 48128, 48525, 48921, 49012, 49036, 49062, 49082, 49094, 49162, 49207, 49365, 49367, 49642, 52558, 58877, 59145, 59151, 60386, 60871, 60872, 69919);
 UPDATE `gameobject_loot_template` SET `ChanceOrQuestChance` = -100, `mincountOrRef` = 5, `maxcount` = 5 WHERE `item` = 69988;
-
--- Fix spawn times to be reasonable for groups
-UPDATE `gameobject` SET `position_x` = 3543.24, `position_y` = -5138.04, `position_z` = 88.5, `orientation` = 1.87, `spawntimesecs` = 3 WHERE `id` = 200298;
 
 -- Fix broken "Lily, Oh Lily" quest (can't loot the lillies)
 DELETE FROM `conditions` WHERE `SourceEntry` = 69917;
@@ -186,9 +199,6 @@ UPDATE `gameobject_template` SET `type` = 3 WHERE `entry` = 208833;
 -- 58951 = Giant Furious Pike
 -- 69901 = Severed Abomination Head
 UPDATE `fishing_loot_template` SET `ChanceOrQuestChance` = -10 WHERE `item` = 69901;
-
--- Fix respawn time for chest restocking
--- (TEST LATER) UPDATE `gameobject_template` SET `Data2` = 3 WHERE `questItem1` IN (3920);
 
 -- Fix NPCs that incorrectly aggressively attack the player
 -- 44112 = Airwyn Bantamflax

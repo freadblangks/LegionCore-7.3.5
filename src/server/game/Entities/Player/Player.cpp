@@ -28323,11 +28323,7 @@ bool Player::BuyItemFromVendorSlot(ObjectGuid vendorguid, uint32 vendorslot, uin
         price = uint64(buyPricePerItem * count); // it should not exceed MAX_MONEY_AMOUNT
 
         // reputation discount
-        price *= double(GetReputationPriceDiscount(creature));
-
-        // reputation discount
         price = uint64(floor(price * GetReputationPriceDiscount(creature)));
-        price = pProto->GetBuyPrice() > 0 ? std::max(uint64(1), price) : price;
 
         if (int32 priceMod = GetTotalAuraModifier(SPELL_AURA_MOD_VENDOR_ITEMS_PRICES))
             price -= CalculatePct(price, priceMod);

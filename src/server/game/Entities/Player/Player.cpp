@@ -28306,10 +28306,13 @@ bool Player::BuyItemFromVendorSlot(ObjectGuid vendorguid, uint32 vendorslot, uin
         }
     }
 
+    uint64 extGold = crItem->Money;
     uint64 price = 0;
-    if (pProto->GetBuyPrice() > 0) // assume price cannot be negative (do not know why it is int32)
+    if (extGold || crItem->IsGoldRequired(pProto) && pProto->GetBuyPrice() > 0) // assume price cannot be negative (do not know why it is int32)
     {
-        double buyPricePerItem = double(pProto->GetBuyPrice()) / pProto->GetBuyCount();
+        extGold = (extGold ? extGold : pProto->GetBuyPrice());
+
+        double buyPricePerItem = double(extGold) / pProto->GetBuyCount();
         uint64 maxCount = MAX_MONEY_AMOUNT / buyPricePerItem;
         if ((uint64)count > maxCount)
         {

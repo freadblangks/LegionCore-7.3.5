@@ -6642,7 +6642,7 @@ void ObjectMgr::LoadDonateVendors()
     if (sWorld->getBoolConfig(CONFIG_DISABLE_DONATELOADING))
         return;
 
-    // donate venodrs for Tokens    
+    // donate vendors for Tokens    
     uint32 oldMSTime = getMSTime();
     m_donate_waite = true;
     std::lock_guard<std::recursive_mutex> guard(m_donate_lock);

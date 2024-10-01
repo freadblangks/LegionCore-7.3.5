@@ -3977,7 +3977,7 @@ void Player::InitTalentForLevel()
         ResetTalentSpecialization();
 
     uint8 talentPointsForLevel = CalculateTalentsPoints();
-    
+
     if (level < 15)
         ResetTalents(true);
     else
@@ -33237,8 +33237,6 @@ bool Player::LearnPvpTalent(uint16 talentID)
 
 void Player::ResetTalentSpecialization()
 {
-    return;
-
     uint32 class_ = getClass();
     for (uint8 t = 0; t < MAX_TALENT_TIERS; ++t)
         for (uint8 c = 0; c < MAX_TALENT_COLUMNS; ++c)

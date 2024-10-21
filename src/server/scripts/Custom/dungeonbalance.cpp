@@ -71,9 +71,13 @@ public:
 
     void OnGiveXP(Player* player, uint32& amount, Unit* victim) override
     {
+        TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Incoming XP.");
+
         if (dungeonScaleDownXP && player && victim)
         {
             Map* map = player->GetMap();
+
+            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Incoming XP of %u for player %s from killing %s.", amount, player->GetName(), victim->GetName());
             
             if (map->IsDungeon() || map->IsRaidOrHeroicDungeon())
             {
@@ -81,10 +85,18 @@ public:
 
                 uint16 maxPlayerCount = map->GetMapMaxPlayers();
 
-                if (maxPlayerCount == 10)
+                if (maxPlayerCount == 10 || maxPlayerCount == 0)
                     maxPlayerCount = 5;
 
-                float xpMult = float(map->GetPlayerCount()) / float(maxPlayerCount);
+                uint32 playerCount = map->GetPlayerCount();
+
+                // Adjust so that 1 or 2 player is not a ridiculous way to get XP
+                if (playerCount == 1)
+                    maxPlayerCount = 15;
+                else if (playerCount == 2)
+                    maxPlayerCount = 10;
+
+                float xpMult = float(playerCount) / float(maxPlayerCount);
                 uint32 newAmount = uint32(amount * xpMult);
                 
                 if (victim)
@@ -100,9 +112,11 @@ class DungeonBalance_UnitScript : public UnitScript {
 public:
     DungeonBalance_UnitScript() : UnitScript("DungeonBalance_UnitScript") { }
 
-    void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage) override
+    void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage) override
     {
-        damage = _Modifier_DealDamage(target, attacker, damage);
+        uint32 convertedDamage = static_cast<uint32>(damage);
+        convertedDamage = _Modifier_DealDamage(target, attacker, damage);
+        damage = static_cast<float>(convertedDamage);
     }
 
     void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage) override
@@ -117,9 +131,11 @@ public:
         damage = _Modifier_DealDamage(target, attacker, damage);
     }
 
-    void ModifyHealReceived(Unit* target, Unit* attacker, uint32& amount) override
+    void ModifyHealReceived(Unit* target, Unit* attacker, float& amount) override
     {
-        amount = _Modifier_DealDamage(target, attacker, amount);
+        uint32 convertedAmount = static_cast<uint32>(amount);
+        convertedAmount = _Modifier_DealDamage(target, attacker, convertedAmount);
+        amount = static_cast<float>(convertedAmount);
     }
 
     uint32 _Modifier_DealDamage(Unit* target, Unit* attacker, uint32 damage)
@@ -130,18 +146,20 @@ public:
         int8 maxPlayerCount = attacker->GetMap()->GetMapMaxPlayers();
         float playerCount = attacker->GetMap()->GetPlayerCount();
 
-        if (maxPlayerCount == 10)
+        //TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Initial maxPlayerCount is %u.", maxPlayerCount);
+
+        if (maxPlayerCount == 10 || maxPlayerCount == 0)
             maxPlayerCount = 5;
 
         if (playerCount == 1)
         {
             switch (maxPlayerCount)
             {
-            case 5:
-                playerCount = 0.35f;
-                break;
-            default:
-                playerCount = 0.15f;
+                case 5:
+                    playerCount = 0.5f;
+                    break;
+                default:
+                    playerCount = 0.25f;
             }
         }
         else if (playerCount == 2 && maxPlayerCount == 5)
@@ -152,16 +170,16 @@ public:
         if (attacker->IsPlayer() || (attacker->IsControlledByPlayer() && (attacker->isHunterPet() || attacker->isPet() || attacker->isSummon())))
         {
             // Player
-            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, (int)(damage * float(maxPlayerCount / playerCount)), playerCount);
+            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, static_cast<uint32>(damage * float(maxPlayerCount / playerCount)), playerCount);
 
-            return damage * float(maxPlayerCount / playerCount);
+            return static_cast<uint32>(damage * float(maxPlayerCount / playerCount));
         }
         else
         {
             // Enemy
-            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, (int)(damage * float(playerCount / maxPlayerCount)), playerCount);
+            TC_LOG_INFO(LOG_FILTER_DUNGEONBALANCE, "Damage dealt by %s updated for %s from %u to %u (player count of %.2f was used).", attacker->GetName(), target->GetName(), damage, static_cast<uint32>(damage * float(playerCount / maxPlayerCount)), playerCount);
 
-            return damage * float(playerCount / maxPlayerCount);
+            return static_cast<uint32>(damage * float(playerCount / maxPlayerCount));
         }
     }
 };

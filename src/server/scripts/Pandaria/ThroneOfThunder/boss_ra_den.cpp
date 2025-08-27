@@ -93,7 +93,7 @@ class boss_ra_den : public CreatureScript
                 me->RemoveAurasDueToSpell(SPELL_LINGERING_ENERGIES);
                 me->RemoveAurasDueToSpell(SPELL_IMBUED_WITH_VITA);
                 me->RemoveAurasDueToSpell(SPELL_IMBUED_WITH_ANIMA);
-				me->RemoveAurasDueToSpell(SPELL_RUIN);
+                me->RemoveAurasDueToSpell(SPELL_RUIN);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_REMOVE_CLIENT_CONTROL);
                 if (instance)
                     instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_UNLEASHED_ANIMA);
@@ -338,7 +338,10 @@ class npc_corrupted_sphere : public CreatureScript
 
             void Reset()
             {
-                newx, lastx, newy, lasty = 0;
+                newx = 0;
+                lastx = 0;
+                newy = 0;
+                lasty = 0;
                 events.RescheduleEvent(EVENT_MOVING, 1000);
             }
 

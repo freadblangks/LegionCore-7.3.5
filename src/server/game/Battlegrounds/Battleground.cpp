@@ -179,9 +179,11 @@ void Battleground::Update(uint32 diff)
                 //_ProcessPlayerPositionBroadcast(Milliseconds(diff));
                 _ProcessRessurect(diff);
                 if (sBattlegroundMgr->GetPrematureFinishTime() && 
-                ((GetPlayersCountByTeam(ALLIANCE) < GetMinPlayersPerTeam() || GetPlayersCountByTeam(HORDE) < GetMinPlayersPerTeam()) && GetMapId() != 1101 || // if one team has smaller players, that need and not DM
-                 GetMapId() == 1101 && GetBattlegroundScoreMap().size() < GetMinPlayersPerTeam()))   // or DM and summary players smaller that summary need
+                    (((GetPlayersCountByTeam(ALLIANCE) < GetMinPlayersPerTeam() || GetPlayersCountByTeam(HORDE) < GetMinPlayersPerTeam()) && GetMapId() != 1101) || // if one team has smaller players, that need and not DM
+                    (GetMapId() == 1101 && GetBattlegroundScoreMap().size() < GetMinPlayersPerTeam())))   // or DM and summary players smaller that summary need
+                {
                     _ProcessProgress(diff);
+                }
                 else if (m_PrematureCountDown)
                     m_PrematureCountDown = false;
             }
@@ -592,7 +594,7 @@ void Battleground::RewardReputationToTeam(uint32 factionIDAlliance, uint32 facti
     if (FactionEntry const* factionEntry = sFactionStore.LookupEntry(teamID == ALLIANCE ? factionIDAlliance : factionIDHorde))
     {
         for (auto const& itr : GetPlayers())
-		{
+        {
             if (Player* player = GetPlayerForTeam(teamID, itr, "RewardReputationToTeam"))
             {
                 if (!player)
@@ -604,7 +606,7 @@ void Battleground::RewardReputationToTeam(uint32 factionIDAlliance, uint32 facti
                 player->GetReputationMgr().ModifyReputation(factionEntry, reputation);
             }
         }
-	}
+    }
 }
 
 void Battleground::UpdateWorldState(uint32 variableID, uint32 value, bool hidden /*= false*/)

@@ -1216,7 +1216,7 @@ class WorldSession
 
         Warden* GetWarden() { return _warden; }
 
-        uint32 getDialogStatus(Player* player, Object* questgiver, uint32 defstatus);
+        uint32 GetDialogStatus(Player* player, Object* questgiver, uint32 defstatus);
 
         std::atomic<int32> m_timeOutTime;
 
@@ -1494,7 +1494,7 @@ class WorldSession
         void HandleQueryNPCText(WorldPackets::Query::QueryNPCText& packet);
         void HandleBinderActivate(WorldPackets::NPC::Hello& packet);
         void HandleRequestStabledPets(WorldPackets::NPC::RequestStabledPets& packet);
-        void HanleSetPetSlot(WorldPackets::PetPackets::SetPetSlot& packet);
+        void HandleSetPetSlot(WorldPackets::PetPackets::SetPetSlot& packet);
         void HandleStableChangeSlotCallback(PreparedQueryResult const& result, uint8 new_slot);
         void SendTrainerService(ObjectGuid guid, uint32 spellId, uint32 trainState);
 
@@ -1569,7 +1569,7 @@ class WorldSession
         void HandleLearnPvpTalents(WorldPackets::Talent::LearnPvpTalents& packet);
 
         void HandleQuestGiverStatusQuery(WorldPackets::Quest::QuestGiverStatusQuery& packet);
-        void HandleQuestgiverStatusMultipleQuery(WorldPackets::Quest::QuestGiverStatusMultipleQuery& packet);
+        void HandleQuestGiverStatusMultipleQuery(WorldPackets::Quest::QuestGiverStatusMultipleQuery& packet);
         void HandleRequestAreaPoiUpdate(WorldPackets::Quest::RequestAreaPoiUpdate& packet);
         void HandleQuestGiverHello(WorldPackets::Quest::QuestGiverHello& packet);
         void HandleQuestGiverAcceptQuest(WorldPackets::Quest::QuestGiverAcceptQuest& packet);
@@ -1580,7 +1580,7 @@ class WorldSession
         void HandleQueryTreasurePicker(WorldPackets::Quest::QueryTreasurePicker& packet);
         void HandleQuestLogRemoveQuest(WorldPackets::Quest::QuestLogRemoveQuest& packet);
         void HandleQuestConfirmAccept(WorldPackets::Quest::QuestConfirmAccept& packet);
-        void HandleQuestgiverCompleteQuest(WorldPackets::Quest::QuestGiverCompleteQuest& packet);
+        void HandleQuestGiverCompleteQuest(WorldPackets::Quest::QuestGiverCompleteQuest& packet);
         void HandlePushQuestToParty(WorldPackets::Quest::PushQuestToParty& packet);
         void HandleQuestPushResult(WorldPackets::Quest::QuestPushResult& packet);
         void HandleRequestWorldQuestUpdate(WorldPackets::Quest::RequestWorldQuestUpdate& packet);
@@ -1591,7 +1591,7 @@ class WorldSession
 
         void HandleTransmogrifyItems(WorldPackets::Transmogrification::TransmogrifyItems& transmogrifyItems);
 
-        void SendQuestgiverStatusMultipleQuery();
+        void SendQuestGiverStatusMultipleQuery();
 
         bool processChatmessageFurtherAfterSecurityChecks(std::string&, uint32);
         void HandleChatMessageOpcode(WorldPackets::Chat::ChatMessage& packet);
@@ -1828,7 +1828,7 @@ class WorldSession
         void HandleBattlePetDeletePetCheat(WorldPackets::BattlePet::BattlePetGuidRead& packet);
         void HandlePetBattleRequestPVP(WorldPackets::BattlePet::RequestPVP& packet);
         void HandleReplaceFrontPet(WorldPackets::BattlePet::ReplaceFrontPet& packet);
-        void HanldeQueueProposeMatchResult(WorldPackets::BattlePet::QueueProposeMatchResult& packet);
+        void HandleQueueProposeMatchResult(WorldPackets::BattlePet::QueueProposeMatchResult& packet);
         void HandleLeaveQueue(WorldPackets::BattlePet::LeaveQueue& packet);
         void SendBattlePetUpdates(BattlePet* pet = nullptr, bool add = false);
         void SendBattlePetTrapLevel();
@@ -2017,8 +2017,8 @@ class WorldSession
         void SetforceExit(bool force = true) { forceExit = force; }
         bool IsforceExit() { return forceExit; }
         
-		float GetPersonalXPRate() { return PersonalXPRate; }
-		void SetPersonalXPRate(float rate);
+        float GetPersonalXPRate() { return PersonalXPRate; }
+        void SetPersonalXPRate(float rate);
 
         void AddDelayedEvent(uint64 timeOffset, std::function<void()>&& function)
         {

@@ -359,8 +359,8 @@ bool WorldSession::Update(uint32 diff, Map* map)
                         break;
                     }
 
-                    // some auth opcodes can be recieved before STATUS_LOGGEDIN_OR_RECENTLY_LOGGOUT opcodes
-                    // however when we recieve CMSG_ENUM_CHARACTERS we are surely no longer during the logout process.
+                    // some auth opcodes can be received before STATUS_LOGGEDIN_OR_RECENTLY_LOGGOUT opcodes
+                    // however when we receive CMSG_ENUM_CHARACTERS we are surely no longer during the logout process.
                     if (packet->GetOpcode() == CMSG_ENUM_CHARACTERS)
                         m_playerRecentlyLogout = false;
 
@@ -911,8 +911,8 @@ void WorldSession::SetAccountData(AccountDataType type, time_t tm /*= time_t(0)*
 void WorldSession::SendSetTimeZoneInformation()
 {
     WorldPackets::System::SetTimeZoneInformation packet;
-    packet.ServerTimeTZ = sWorld->m_serverTimeTZ;    //RTL: Europe/Paris
-    packet.GameTimeTZ = sWorld->m_gameTimeTZ;      //RTL: Europe/Paris
+    packet.ServerTimeTZ = sWorld->m_serverTimeTZ;    //RTL: America/Chicago
+    packet.GameTimeTZ = sWorld->m_gameTimeTZ;      //RTL: America/Chicago
     SendPacket(packet.Write());
 }
 

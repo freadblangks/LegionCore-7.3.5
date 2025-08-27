@@ -98,7 +98,10 @@ class ChatHandler
         bool HasLowerSecurityAccount(WorldSession* target, uint32 account, bool strong = false);
 
         void SendGlobalGMSysMessage(const char *str);
+        Player*   getPlayer();
         Player*   getSelectedPlayer();
+        Player*   getSelectedPlayerOrSelf();
+        Unit*     getSelectedUnitOrPlayerOrSelf();
         Creature* getSelectedCreature();
         Unit*     getSelectedUnit();
         WorldObject* getSelectedObject();

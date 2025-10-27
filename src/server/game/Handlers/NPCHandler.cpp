@@ -299,6 +299,12 @@ void WorldSession::HandleGossipHelloOpcode(WorldPackets::NPC::Hello& packet)
     if (unit->isArmorer() || unit->isCivilian() || unit->isQuestGiver() || unit->isServiceProvider() || unit->isGuard())
         unit->StopMoving();
 
+    // Check if auto repair has been enabled
+    if (unit->isArmorer() && sWorld->getBoolConfig(CONFIG_AUTOREPAIRATVENDORS))
+    {
+        player->DurabilityRepairAll(true, player->GetReputationPriceDiscount(unit), false);
+    }
+
     if (unit->isSpiritGuide())
     {
         Battleground* bg = player->GetBattleground();

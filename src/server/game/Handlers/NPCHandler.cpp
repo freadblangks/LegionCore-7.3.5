@@ -726,7 +726,7 @@ void WorldSession::SendListInventory(ObjectGuid const& vendorGuid, uint32 entry)
                     info = Trinity::StringFormat("All items automatically repaired for %u gold.", gold);
             }
 
-            player->SendCustomMessage(info.c_str());
+            player->SendMessageToPlayer(info.c_str());
         }
     }
 

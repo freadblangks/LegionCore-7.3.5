@@ -1198,6 +1198,14 @@ BattlePet.AllowCageAll = 0
 SellJunkWhenLooted = 0
 
 #
+#   AutoRepairAtVendors
+#        Description: Setting this to 1 will automatically repair all of your gear when accessing an armorer.
+#                     NOTE: This will NOT repair unless you have at least 10 times the repair cost on you.
+#        Default:     0
+
+AutoRepairAtVendors = 0
+
+#
 ###################################################################################################
 
 ###################################################################################################

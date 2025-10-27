@@ -693,6 +693,43 @@ void WorldSession::SendListInventory(ObjectGuid const& vendorGuid, uint32 entry)
             break;
     }
 
+    // Check if auto repair has been enabled
+    if (vendor->isArmorer() && sWorld->getBoolConfig(CONFIG_AUTOREPAIRATVENDORS))
+    {
+        uint32 totalCost = player->DurabilityRepairAll(true, discountMod, false);
+
+        if (totalCost > 0)
+        {
+            uint32 gold = totalCost / GOLD;
+            uint32 silver = (totalCost % GOLD) / SILVER;
+            uint32 copper = (totalCost % GOLD) % SILVER;
+
+            std::string info;
+            if (totalCost < SILVER)
+                info = Trinity::StringFormat("All items automatically repaired for %u copper.", copper);
+            else if (totalCost < GOLD)
+            {
+                if (copper > 0)
+                    info = Trinity::StringFormat("All items automatically repaired for %u silver and %u copper.", silver, copper);
+                else
+                    info = Trinity::StringFormat("All items automatically repaired for %u silver.", silver);
+            }
+            else
+            {
+                if (copper > 0 && silver > 0)
+                    info = Trinity::StringFormat("All items automatically repaired for %u gold, %u silver and %u copper.", gold, silver, copper);
+                else if (copper > 0)
+                    info = Trinity::StringFormat("All items automatically repaired for %u gold and %u copper.", gold, copper);
+                else if (silver > 0)
+                    info = Trinity::StringFormat("All items automatically repaired for %u gold and %u silver.", gold, silver);
+                else
+                    info = Trinity::StringFormat("All items automatically repaired for %u gold.", gold);
+            }
+
+            player->SendCustomMessage(info.c_str());
+        }
+    }
+
     packet.Items.resize(realCount);
     SendPacket(packet.Write());
 }

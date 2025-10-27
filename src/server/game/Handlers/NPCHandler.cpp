@@ -299,9 +299,13 @@ void WorldSession::HandleGossipHelloOpcode(WorldPackets::NPC::Hello& packet)
     if (unit->isArmorer() || unit->isCivilian() || unit->isQuestGiver() || unit->isServiceProvider() || unit->isGuard())
         unit->StopMoving();
 
+
+    TC_LOG_DEBUG(LOG_FILTER_DUNGEONBALANCE, "Checking if auto repair is enabled!");
+
     // Check if auto repair has been enabled
     if (unit->isArmorer() && sWorld->getBoolConfig(CONFIG_AUTOREPAIRATVENDORS))
     {
+        TC_LOG_DEBUG(LOG_FILTER_DUNGEONBALANCE, "Auto repair enabled, repairing all gear!");
         player->DurabilityRepairAll(true, player->GetReputationPriceDiscount(unit), false);
     }
 

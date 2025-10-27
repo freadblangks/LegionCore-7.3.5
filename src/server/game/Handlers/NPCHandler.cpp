@@ -299,15 +299,6 @@ void WorldSession::HandleGossipHelloOpcode(WorldPackets::NPC::Hello& packet)
     if (unit->isArmorer() || unit->isCivilian() || unit->isQuestGiver() || unit->isServiceProvider() || unit->isGuard())
         unit->StopMoving();
 
-    TC_LOG_ERROR(LOG_FILTER_DUNGEONBALANCE, "Checking if auto repair is enabled!");
-
-    // Check if auto repair has been enabled
-    if (unit->isArmorer() && sWorld->getBoolConfig(CONFIG_AUTOREPAIRATVENDORS))
-    {
-        TC_LOG_ERROR(LOG_FILTER_DUNGEONBALANCE, "Auto repair enabled, repairing all gear!");
-        player->DurabilityRepairAll(true, player->GetReputationPriceDiscount(unit), false);
-    }
-
     if (unit->isSpiritGuide())
     {
         Battleground* bg = player->GetBattleground();
@@ -700,6 +691,15 @@ void WorldSession::SendListInventory(ObjectGuid const& vendorGuid, uint32 entry)
 
         if (++realCount >= MAX_VENDOR_ITEMS)
             break;
+    }
+
+    TC_LOG_ERROR(LOG_FILTER_DUNGEONBALANCE, "Checking if auto repair is enabled!");
+
+    // Check if auto repair has been enabled
+    if (vendor->isArmorer() && sWorld->getBoolConfig(CONFIG_AUTOREPAIRATVENDORS))
+    {
+        TC_LOG_ERROR(LOG_FILTER_DUNGEONBALANCE, "Auto repair enabled, repairing all gear!");
+        player->DurabilityRepairAll(true, player->GetReputationPriceDiscount(vendor), false);
     }
 
     packet.Items.resize(realCount);

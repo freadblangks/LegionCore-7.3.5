@@ -17,6 +17,7 @@
  */
 
 #include "Common.h"
+#include "Chat.h"
 #include "Language.h"
 #include "DatabaseEnv.h"
 #include "WorldPacket.h"
@@ -726,7 +727,7 @@ void WorldSession::SendListInventory(ObjectGuid const& vendorGuid, uint32 entry)
                     info = Trinity::StringFormat("All items automatically repaired for %u gold.", gold);
             }
 
-            player->SendMessageToPlayer(info.c_str());
+            ChatHandler(this).PSendSysMessage(info.c_str());
         }
     }
 

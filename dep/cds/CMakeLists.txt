@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2008-2016 TrinityCore <https://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -24,7 +24,11 @@ add_library(cds STATIC ${CDS_FILES})
 target_include_directories(cds
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR})
-	
+
+  target_link_libraries(cds
+    PRIVATE
+      trinity-dependency-interface)
+
 set_target_properties(cds
     PROPERTIES
       FOLDER

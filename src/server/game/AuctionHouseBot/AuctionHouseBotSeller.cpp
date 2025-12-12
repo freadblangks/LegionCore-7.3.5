@@ -12,7 +12,7 @@
  * more details.
  *
  * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "AuctionHouseBotSeller.h"
@@ -140,7 +140,7 @@ bool AuctionBotSeller::Initialize()
                 if (!sAuctionBotConfig->GetConfig(CONFIG_AHBOT_BIND_PICKUP))
                     continue;
                 break;
-            case BIND_WHEN_EQUIPED:
+            case BIND_WHEN_EQUIPPED:
                 if (!sAuctionBotConfig->GetConfig(CONFIG_AHBOT_BIND_EQUIP))
                     continue;
                 break;

@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2008-2012 TrinityCore <https://www.trinitycore.org/>
+ * Copyright (C) 2005-2009 MaNGOS <https://www.getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -13,10 +13,11 @@
  * more details.
  *
  * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "Common.h"
+#include "Chat.h"
 #include "Language.h"
 #include "DatabaseEnv.h"
 #include "WorldPacket.h"
@@ -691,6 +692,43 @@ void WorldSession::SendListInventory(ObjectGuid const& vendorGuid, uint32 entry)
 
         if (++realCount >= MAX_VENDOR_ITEMS)
             break;
+    }
+
+    // Check if auto repair has been enabled
+    if (vendor->isArmorer() && sWorld->getBoolConfig(CONFIG_AUTOREPAIRATVENDORS))
+    {
+        uint32 totalCost = player->DurabilityRepairAll(true, discountMod, false);
+
+        if (totalCost > 0)
+        {
+            uint32 gold = totalCost / GOLD;
+            uint32 silver = (totalCost % GOLD) / SILVER;
+            uint32 copper = (totalCost % GOLD) % SILVER;
+
+            std::string info;
+            if (totalCost < SILVER)
+                info = Trinity::StringFormat("All items automatically repaired for %u copper.", copper);
+            else if (totalCost < GOLD)
+            {
+                if (copper > 0)
+                    info = Trinity::StringFormat("All items automatically repaired for %u silver and %u copper.", silver, copper);
+                else
+                    info = Trinity::StringFormat("All items automatically repaired for %u silver.", silver);
+            }
+            else
+            {
+                if (copper > 0 && silver > 0)
+                    info = Trinity::StringFormat("All items automatically repaired for %u gold, %u silver and %u copper.", gold, silver, copper);
+                else if (copper > 0)
+                    info = Trinity::StringFormat("All items automatically repaired for %u gold and %u copper.", gold, copper);
+                else if (silver > 0)
+                    info = Trinity::StringFormat("All items automatically repaired for %u gold and %u silver.", gold, silver);
+                else
+                    info = Trinity::StringFormat("All items automatically repaired for %u gold.", gold);
+            }
+
+            ChatHandler(this).PSendSysMessage(info.c_str());
+        }
     }
 
     packet.Items.resize(realCount);

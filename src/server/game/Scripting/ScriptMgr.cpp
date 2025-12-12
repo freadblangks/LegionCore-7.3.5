@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2008-2012 TrinityCore <https://www.trinitycore.org/>
+ * Copyright (C) 2005-2009 MaNGOS <https://www.getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -13,7 +13,7 @@
  * more details.
  *
  * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "AreaTrigger.h"
@@ -317,7 +317,7 @@ void ScriptMgr::Unload()
     SCR_CLEAR(AreaTriggerScript);
     SCR_CLEAR(SceneTriggerScript);
     SCR_CLEAR(BattlegroundScript);
-    SCR_CLEAR(OutdoorPvPScript);
+    SCR_CLEAR(OutdoorPvpScript);
     SCR_CLEAR(CommandScript);
     SCR_CLEAR(WeatherScript);
     SCR_CLEAR(AuctionHouseScript);
@@ -737,9 +737,9 @@ void ScriptMgr::OnDamage(Unit* attacker, Unit* victim, uint32& damage)
     FOREACH_SCRIPT(UnitScript)->OnDamage(attacker, victim, damage);
 }
 
-void ScriptMgr::ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage)
+void ScriptMgr::ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo)
 {
-    FOREACH_SCRIPT(UnitScript)->ModifyPeriodicDamageAurasTick(target, attacker, damage);
+    FOREACH_SCRIPT(UnitScript)->ModifyPeriodicDamageAurasTick(target, attacker, damage, spellInfo);
 }
 
 void ScriptMgr::ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage)
@@ -747,14 +747,14 @@ void ScriptMgr::ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage)
     FOREACH_SCRIPT(UnitScript)->ModifyMeleeDamage(target, attacker, damage);
 }
 
-void ScriptMgr::ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage)
+void ScriptMgr::ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo)
 {
-    FOREACH_SCRIPT(UnitScript)->ModifySpellDamageTaken(target, attacker, damage);
+    FOREACH_SCRIPT(UnitScript)->ModifySpellDamageTaken(target, attacker, damage, spellInfo);
 }
 
-void ScriptMgr::ModifyHealReceived(Unit* target, Unit* attacker, float& amount)
+void ScriptMgr::ModifyHealReceived(Unit* target, Unit* attacker, float& amount, SpellInfo const* spellInfo)
 {
-    FOREACH_SCRIPT(UnitScript)->ModifyHealReceived(target, attacker, amount);
+    FOREACH_SCRIPT(UnitScript)->ModifyHealReceived(target, attacker, amount, spellInfo);
 }
 
 bool ScriptMgr::OnDummyEffect(Unit* caster, uint32 spellId, SpellEffIndex effIndex, Creature* target)
@@ -1026,12 +1026,12 @@ Battleground* ScriptMgr::CreateBattleground(uint16 /*typeId*/)
     return nullptr;
 }
 
-OutdoorPvP* ScriptMgr::CreateOutdoorPvP(OutdoorPvPData const* data)
+OutdoorPvp* ScriptMgr::CreateOutdoorPvp(OutdoorPvpData const* data)
 {
     ASSERT(data);
 
-    GET_SCRIPT_RET(OutdoorPvPScript, data->ScriptId, tmpscript, NULL);
-    return tmpscript->GetOutdoorPvP();
+    GET_SCRIPT_RET(OutdoorPvpScript, data->ScriptId, tmpscript, NULL);
+    return tmpscript->GetOutdoorPvp();
 }
 
 std::vector<ChatCommand> ScriptMgr::GetChatCommands()
@@ -1231,9 +1231,9 @@ uint32 ScriptMgr::OnSelectItemReward(AchievementReward const* data, Player* sour
 }
 
 // Player
-void ScriptMgr::OnPVPKill(Player* killer, Player* killed)
+void ScriptMgr::OnPvpKill(Player* killer, Player* killed)
 {
-    FOREACH_SCRIPT(PlayerScript)->OnPVPKill(killer, killed);
+    FOREACH_SCRIPT(PlayerScript)->OnPvpKill(killer, killed);
 }
 
 void ScriptMgr::OnCreatureKill(Player* killer, Creature* killed)
@@ -1618,9 +1618,9 @@ BattlegroundScript::BattlegroundScript(std::string name) : ScriptObject(name)
     ScriptRegistry<BattlegroundScript>::AddScript(this);
 }
 
-OutdoorPvPScript::OutdoorPvPScript(std::string name) : ScriptObject(name)
+OutdoorPvpScript::OutdoorPvpScript(std::string name) : ScriptObject(name)
 {
-    ScriptRegistry<OutdoorPvPScript>::AddScript(this);
+    ScriptRegistry<OutdoorPvpScript>::AddScript(this);
 }
 
 CommandScript::CommandScript(std::string name) : ScriptObject(name)
@@ -1728,7 +1728,7 @@ template class ScriptRegistry<GuildScript>;
 template class ScriptRegistry<InstanceMapScript>;
 template class ScriptRegistry<ItemScript>;
 template class ScriptRegistry<UnitScript>;
-template class ScriptRegistry<OutdoorPvPScript>;
+template class ScriptRegistry<OutdoorPvpScript>;
 template class ScriptRegistry<PlayerScript>;
 template class ScriptRegistry<SceneTriggerScript>;
 template class ScriptRegistry<SessionScript>;

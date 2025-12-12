@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2008-2016 TrinityCore <https://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -49,10 +49,6 @@ list(APPEND PRIVATE_SOURCES
 
 if (USE_SCRIPTPCH)
   set(PRIVATE_PCH_HEADER PrecompiledHeaders/ScriptPCH.h)
-  set(PRIVATE_PCH_SOURCE PrecompiledHeaders/ScriptPCH.cpp)
-  if (MSVC)
-    list(INSERT PRIVATE_SOURCES 0 PrecompiledHeaders/ScriptPCH.cpp)
-  endif (MSVC)
 endif ()
 
 GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
@@ -68,6 +64,8 @@ target_include_directories(scripts
     ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(scripts
+    PRIVATE
+      trinity-core-interface
   PUBLIC
     game)
 
@@ -78,5 +76,5 @@ set_target_properties(scripts
 
 # Generate precompiled header
 if (USE_SCRIPTPCH)
-  add_cxx_pch(scripts ${PRIVATE_PCH_HEADER} ${PRIVATE_PCH_SOURCE})
+  add_cxx_pch(scripts ${PRIVATE_PCH_HEADER})
 endif()

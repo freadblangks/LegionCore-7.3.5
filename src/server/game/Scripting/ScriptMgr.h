@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2008-2017 TrinityCore <https://www.trinitycore.org/>
+ * Copyright (C) 2005-2009 MaNGOS <https://www.getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -13,7 +13,7 @@
  * more details.
  *
  * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #ifndef SC_SCRIPTMGR_H
@@ -21,12 +21,13 @@
 
 #include <atomic>
 #include "Common.h"
+#include "ObjectMgr.h"
 #include "Player.h"
 #include "SharedDefines.h"
+#include "SpellInfo.h"
 #include "Unit.h"
-#include "World.h"
 #include "Weather.h"
-#include "ObjectMgr.h"
+#include "World.h"
 
 class AreaTriggerAI;
 class AuctionHouseObject;
@@ -49,7 +50,7 @@ class InstanceMap;
 class InstanceScript;
 class Item;
 class Map;
-class OutdoorPvP;
+class OutdoorPvp;
 class Player;
 class Quest;
 class ScriptMgr;
@@ -69,7 +70,7 @@ struct AuctionEntry;
 struct ConditionSourceInfo;
 struct Condition;
 struct ItemTemplate;
-struct OutdoorPvPData;
+struct OutdoorPvpData;
 
 #define VISIBLE_RANGE       166.0f                          //MAX visible range (size of grid)
 
@@ -325,16 +326,16 @@ class UnitScript : public ScriptObject, public UpdatableScript<Unit>
         virtual void OnDamage(Unit* attacker, Unit* victim, uint32& damage) { }
 
         // Called when DoT's Tick Damage is being Dealt
-        virtual void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage) { }
+        virtual void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo) { }
 
         // Called when Melee Damage is being Dealt
         virtual void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage) { }
 
         // Called when Spell Damage is being Dealt
-        virtual void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage) { }
+        virtual void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo) { }
 
         // Called when heal is received
-        virtual void ModifyHealReceived(Unit* /*target*/, Unit* /*attacker*/, float& /*amount*/) { }
+        virtual void ModifyHealReceived(Unit* /*target*/, Unit* /*attacker*/, float& /*amount*/, SpellInfo const* /*spellInfo*/) {}
 };
 
 class CreatureScript : public ScriptObject, public UpdatableScript<Creature>
@@ -378,7 +379,7 @@ class CreatureScript : public ScriptObject, public UpdatableScript<Creature>
         virtual CreatureAI* GetAI(Creature* /*creature*/) const { return nullptr; }
 
         // Called when heal is received
-        virtual void ModifyHealReceived(Unit* target, Unit* attacker, uint32& amount) { }
+        virtual void ModifyHealReceived(Unit* target, Unit* attacker, uint32& amount, SpellInfo const* spellInfo) { }
 };
 
 template<class AI>
@@ -497,18 +498,18 @@ class BattlegroundScript : public ScriptObject
         virtual Battleground* GetBattleground() const = 0;
 };
 
-class OutdoorPvPScript : public ScriptObject
+class OutdoorPvpScript : public ScriptObject
 {
     protected:
 
-        OutdoorPvPScript(std::string name);
+        OutdoorPvpScript(std::string name);
 
     public:
 
         bool IsDatabaseBound() const override { return true; }
 
-        // Should return a fully valid OutdoorPvP object for the type ID.
-        virtual OutdoorPvP* GetOutdoorPvP() const = 0;
+        // Should return a fully valid OutdoorPvp object for the type ID.
+        virtual OutdoorPvp* GetOutdoorPvp() const = 0;
 };
 
 class CommandScript : public ScriptObject
@@ -672,38 +673,38 @@ class PlayerScript : public ScriptObject
     public:
 
         // Called when a player kills another player
-		virtual void OnPVPKill(Player* killer, Player* killed)
-		{
-			uint32 killerlvl = killer->getLevel();
-			uint32 killedlvl = killed->getLevel();
-			int32 diff = killerlvl - killedlvl;
-			uint32 XPLow = (killedlvl * 5 + 45)*(1 + 0.05*diff);
-			uint32 XPHigh = (killedlvl * 5 + 45)*(1 + 0.05*diff);
-			uint32 minusgold = killer->GetMoney() - (diff * 10000);
-			uint32 plusgold = killed->GetMoney() + (diff * 10000);
-			uint32 killergold = killer->GetMoney();
-			uint32 killedgold = killed->GetMoney();
-			uint32 plusgold2 = killedgold + killergold;
+        virtual void OnPvpKill(Player* killer, Player* killed)
+        {
+            uint32 killerlvl = killer->getLevel();
+            uint32 killedlvl = killed->getLevel();
+            int32 diff = killerlvl - killedlvl;
+            uint32 XPLow = (killedlvl * 5 + 45)*(1 + 0.05*diff);
+            uint32 XPHigh = (killedlvl * 5 + 45)*(1 + 0.05*diff);
+            uint32 minusgold = killer->GetMoney() - (diff * 10000);
+            uint32 plusgold = killed->GetMoney() + (diff * 10000);
+            uint32 killergold = killer->GetMoney();
+            uint32 killedgold = killed->GetMoney();
+            uint32 plusgold2 = killedgold + killergold;
 
-			if (killerlvl < killedlvl + 1)
-				killer->GiveXP(XPHigh, killed);
-			else
-				if (diff > 10)
-					if (killergold > minusgold)
-					{
-						killer->SetMoney(minusgold);
-						killed->SetMoney(plusgold);
-					}
-					else
-					{
-						killed->SetMoney(plusgold2);
-						killer->SetMoney(0);
-					}
-				else
-					if (0 < diff && diff < 10)
-						killer->GiveXP(XPLow, killed);
-			return;
-		}
+            if (killerlvl < killedlvl + 1)
+                killer->GiveXP(XPHigh, killed);
+            else
+                if (diff > 10)
+                    if (killergold > minusgold)
+                    {
+                        killer->SetMoney(minusgold);
+                        killed->SetMoney(plusgold);
+                    }
+                    else
+                    {
+                        killed->SetMoney(plusgold2);
+                        killer->SetMoney(0);
+                    }
+                else
+                    if (0 < diff && diff < 10)
+                        killer->GiveXP(XPLow, killed);
+            return;
+        }
 
         // Called when a player kills a creature
         virtual void OnCreatureKill(Player* /*killer*/, Creature* /*killed*/) { }
@@ -794,7 +795,7 @@ class PlayerScript : public ScriptObject
         virtual void OnQuestReward(Player* player, Quest const* quest) {}
 
         virtual void OnEnterCombat(Player* player, Unit* target) {}
-		
+        
         //After looting item
         virtual void OnLootItem(Player* player, Item* item, uint32 count) { }
 
@@ -1027,8 +1028,8 @@ class ScriptMgr
         /* BattlegroundScript */
         Battleground* CreateBattleground(uint16 typeId);
 
-        /* OutdoorPvPScript */
-        OutdoorPvP* CreateOutdoorPvP(OutdoorPvPData const* data);
+        /* OutdoorPvpScript */
+        OutdoorPvp* CreateOutdoorPvp(OutdoorPvpData const* data);
 
         /* CommandScript */
         std::vector<ChatCommand> GetChatCommands();
@@ -1069,7 +1070,7 @@ class ScriptMgr
         uint32 OnSelectItemReward(AchievementReward const* data, Player* source);
 
         /* PlayerScript */
-        void OnPVPKill(Player* killer, Player* killed);
+        void OnPvpKill(Player* killer, Player* killed);
         void OnCreatureKill(Player* killer, Creature* killed);
         void OnPlayerKilledByCreature(Creature* killer, Player* killed);
         void OnPlayerLevelChanged(Player* player, uint8 oldLevel);
@@ -1133,10 +1134,10 @@ class ScriptMgr
         /* UnitScript */
         void OnHeal(Unit* healer, Unit* receiver, uint32& gain);
         void OnDamage(Unit* attacker, Unit* victim, uint32& damage);
-        void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage);
+        void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo);
         void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage);
-        void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage);
-        void ModifyHealReceived(Unit* target, Unit* attacker, float& addHealth);
+        void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo);
+        void ModifyHealReceived(Unit* target, Unit* attacker, float& addHealth, SpellInfo const* spellInfo);
 
         /* Scheduled scripts */
         uint32 IncreaseScheduledScriptsCount() { return ++_scheduledScripts; }

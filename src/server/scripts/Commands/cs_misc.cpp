@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2012 TrinityCore <https://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -12,7 +12,7 @@
  * more details.
  *
  * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "AccountMgr.h"
@@ -2634,7 +2634,7 @@ public:
         std::string subject = msgSubject;
         std::string text    = msgText;
 
-        // from console show not existed sender
+        // from console show non-existent sender
         MailSender sender(MAIL_NORMAL, handler->GetSession() ? handler->GetSession()->GetPlayer()->GetGUID().GetGUIDLow() : 0, MAIL_STATIONERY_GM);
 
         //- TODO: Fix poor design
@@ -2732,7 +2732,7 @@ public:
             }
         }
 
-        // from console show not existed sender
+        // from console show non-existent sender
         MailSender sender(MAIL_NORMAL, handler->GetSession() ? handler->GetSession()->GetPlayer()->GetGUID().GetGUIDLow() : 0, MAIL_STATIONERY_GM);
 
         // fill mail
@@ -2792,7 +2792,7 @@ public:
         std::string subject = msgSubject;
         std::string text    = msgText;
 
-        // from console show not existed sender
+        // from console show non-existent sender
         MailSender sender(MAIL_NORMAL, handler->GetSession() ? handler->GetSession()->GetPlayer()->GetGUID().GetGUIDLow() : 0, MAIL_STATIONERY_GM);
 
         SQLTransaction trans = CharacterDatabase.BeginTransaction();

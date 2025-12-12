@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2008-2012 TrinityCore <https://www.trinitycore.org/>
+ * Copyright (C) 2005-2009 MaNGOS <https://www.getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -13,7 +13,7 @@
  * more details.
  *
  * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 #include "BattlegroundMgr.h"
@@ -762,7 +762,7 @@ bool Creature::UpdateEntry(uint32 entry, uint32 team, const CreatureData* data)
     SetUInt32Value(UNIT_FIELD_FLAGS, unit_flags);
     SetUInt32Value(UNIT_FIELD_FLAGS_2, cInfo->unit_flags2);
     SetUInt32Value(UNIT_FIELD_FLAGS_3, unit_flags3);
-	
+    
     if (IsMirrorImage())
         new MirrorImageUpdate(this);
 
@@ -800,9 +800,9 @@ bool Creature::UpdateEntry(uint32 entry, uint32 team, const CreatureData* data)
     if (FactionTemplateEntry const* factionTemplate = sFactionTemplateStore.LookupEntry(cInfo->faction))
     {
         if (factionTemplate->Flags & FACTION_TEMPLATE_FLAG_PVP)
-            SetPvP(true);
+            SetPvp(true);
         else
-            SetPvP(false);
+            SetPvp(false);
     }
 
     // trigger creature is always not selectable and can not be attacked
@@ -1392,7 +1392,7 @@ void Creature::SetReactState(ReactStates st, uint32 delay /*= 0*/)
     {
         AddDelayedCombat(delay, [this, st] () -> void
         {
-            if (this && isInCombat())
+            if (isInCombat())
                 m_reactState = st;
         });
     }
@@ -1829,7 +1829,7 @@ void Creature::SelectLevel(const CreatureTemplate* cInfo)
     SetModifierValue(UNIT_MOD_HEALTH, BASE_VALUE, static_cast<float>(health));
     SetModifierValue(UNIT_MOD_MANA, BASE_VALUE, static_cast<float>(mana));
 
-    //damage
+    // damage
     float maxDmgMod = 1.5f;
     if (GetMap() && GetMap()->GetDifficultyID() == DIFFICULTY_MYTHIC_KEYSTONE)
         maxDmgMod = 1.2f;
@@ -2698,7 +2698,7 @@ void Creature::ForcedDespawn(uint32 timeMSToDespawn /*= 0*/, Seconds const& forc
 
 void Creature::DespawnOrUnsummon(uint32 msTimeToDespawn /*= 0*/, Seconds const& forceRespawnTimer /*= 0*/)
 {
-    if (!this || m_despawn || !IsInWorld())
+    if (m_despawn || !IsInWorld())
         return;
 
     if (TempSummon* summon = this->ToTempSummon())
@@ -2853,7 +2853,7 @@ SpellInfo const* Creature::reachWithSpellCure(Unit* victim)
             if (spellInfo->EffectMask < uint32(1 << j))
                 break;
 
-            if ((spellInfo->Effects[j]->Effect == SPELL_EFFECT_HEAL))
+            if (spellInfo->Effects[j]->Effect == SPELL_EFFECT_HEAL)
             {
                 bcontinue = false;
                 break;

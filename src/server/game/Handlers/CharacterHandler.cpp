@@ -779,9 +779,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 
     AddDelayedEvent(100, [=]() -> void
     {
-        if (!this)
-            return;
-
         auto player = GetPlayer();
         if (!player)
             return;
@@ -799,7 +796,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         artifactKnowledgeFishingPole.KnowledgeLevel = 0;
         SendPacket(artifactKnowledgeFishingPole.Write());
 
-        //Show cinematic at the first time that player login
+        // Show cinematic at the first time that player login
         bool firstLogin = !player->getCinematic(); // it's needed below
         if (!player->getCinematic())
         {
@@ -828,10 +825,9 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
                     if (!sWorld->GetNewCharString().empty())
                         chatHandler.PSendSysMessage("%s", sWorld->GetNewCharString().c_str());
                 }
-            
         }
 
-        if (!player->GetMap()->AddPlayerToMap(player) || !player->GetMap()->IsGarrison() && !player->CheckInstanceLoginValid())
+        if (!player->GetMap()->AddPlayerToMap(player) || (!player->GetMap()->IsGarrison() && !player->CheckInstanceLoginValid()))
         {
             if (AreaTriggerStruct const* at = sAreaTriggerDataStore->GetGoBackTrigger(player->GetMapId()))
                 player->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, player->GetOrientation());
@@ -1315,7 +1311,7 @@ void WorldSession::HandleCharCustomizeCallback(std::shared_ptr<WorldPackets::Cha
 
     PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARACTER_NAME);
     stmt->setUInt64(0, lowGuid);
-    if (result = CharacterDatabase.Query(stmt))
+    if ((result = CharacterDatabase.Query(stmt)))
         TC_LOG_INFO(LOG_FILTER_CHARACTER, "Account: %d (IP: %s), Character[%s] (guid:%u) Customized to: %s", GetAccountId(), GetRemoteAddress().c_str(), result->Fetch()[0].GetString().c_str(), lowGuid, customizeInfo->CharName.c_str());
 
     SQLTransaction trans = CharacterDatabase.BeginTransaction();
@@ -1654,7 +1650,7 @@ void WorldSession::HandleCharRaceOrFactionChange(WorldPackets::Character::CharRa
             // Reset guild
             stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_GUILD_MEMBER);
             stmt->setUInt64(0, lowGuid);
-            if (result = CharacterDatabase.Query(stmt))
+            if ((result = CharacterDatabase.Query(stmt)))
                 if (Guild* guild = sGuildMgr->GetGuildById((result->Fetch()[0]).GetUInt64()))
                     guild->DeleteMember(ObjectGuid::Create<HighGuid::Player>(lowGuid));
         }
@@ -2034,20 +2030,26 @@ void WorldSession::HandleLogoutRequest(WorldPackets::Character::LogoutRequest& /
     if (!lguid.IsEmpty())
         DoLootRelease(lguid);
 
+    //instant logout in taverns/cities or on taxi or for admins, gm's, mod's if its enabled in worldserver.conf
+    bool instantLogout = player->HasFlag(PLAYER_FIELD_PLAYER_FLAGS, PLAYER_FLAGS_RESTING) || player->isInFlight() ||
+        GetSecurity() >= AccountTypes(sWorld->getIntConfig(CONFIG_INSTANT_LOGOUT)) || player->GetMapId() == 1179;//duel zone
+
+    bool preventAfkSanctuaryLogout = sWorld->getIntConfig(CONFIG_AFK_PREVENT_LOGOUT) == 1
+        && GetPlayer()->isAFK() && sAreaTableStore.LookupEntry(GetPlayer()->GetAreaId())->IsSanctuary();
+
+    bool preventAfkLogout = sWorld->getIntConfig(CONFIG_AFK_PREVENT_LOGOUT) == 2
+        && GetPlayer()->isAFK();
+
     uint32 reason = 0;
     if (player->isInCombat())
         reason = 1;
     else if (player->m_movementInfo.HasMovementFlag(MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR))
         reason = 3;                                         // is jumping or falling
-    else if (player->duel || player->HasAura(9454)) // is dueling or frozen by GM via freeze command
+    else if (preventAfkSanctuaryLogout || preventAfkLogout || player->duel || player->HasAura(9454)) // is dueling or frozen by GM via freeze command
         reason = 2;                                         // FIXME - Need the correct value
     else if (auto instance = player->GetInstanceScript())
         if (!player->isGameMaster() && instance->IsEncounterInProgress()) // Don`t res if instance in progress
             reason = 1;
-
-    //instant logout in taverns/cities or on taxi or for admins, gm's, mod's if its enabled in worldserver.conf
-    bool instantLogout = player->HasFlag(PLAYER_FIELD_PLAYER_FLAGS, PLAYER_FLAGS_RESTING) || player->isInFlight() ||
-        GetSecurity() >= AccountTypes(sWorld->getIntConfig(CONFIG_INSTANT_LOGOUT)) || player->GetMapId() == 1179;//duel zone
 
     WorldPackets::Character::LogoutResponse logoutResponse;
     logoutResponse.LogoutResult = reason;

@@ -21,11 +21,13 @@
 
 #include <atomic>
 #include "Common.h"
+#include "ObjectMgr.h"
 #include "Player.h"
 #include "SharedDefines.h"
-#include "World.h"
+#include "SpellInfo.h"
+#include "Unit.h"
 #include "Weather.h"
-#include "ObjectMgr.h"
+#include "World.h"
 
 class AreaTriggerAI;
 class AuctionHouseObject;
@@ -183,6 +185,21 @@ class FormulaScript : public ScriptObject
         virtual void OnGroupRateCalculation(float& /*rate*/, uint32 /*count*/, bool /*isRaid*/) { }
 };
 
+class AllMapScript : public ScriptObject
+{
+protected:
+
+    AllMapScript(std::string name);
+
+public:
+
+    // Called when a player enters any Map
+    virtual void OnPlayerEnterAll(Map* /*map*/, Player* /*player*/) { }
+
+    // Called when a player leave any Map
+    virtual void OnPlayerLeaveAll(Map* /*map*/, Player* /*player*/) { }
+};
+
 namespace Battlepay
 {
     struct Product;
@@ -294,6 +311,33 @@ class ItemScript : public ScriptObject
         virtual bool OnCreate(Player* /*player*/, Item* /*item*/) { return false; }
 };
 
+class UnitScript : public ScriptObject, public UpdatableScript<Unit>
+{
+    protected:
+
+        UnitScript(std::string name);
+
+    public:
+
+        // Called when a unit deals healing to another unit
+        virtual void OnHeal(Unit* healer, Unit* receiver, uint32& gain) { }
+
+        // Called when a unit deals damage to another unit
+        virtual void OnDamage(Unit* attacker, Unit* victim, uint32& damage) { }
+
+        // Called when DoT's Tick Damage is being Dealt
+        virtual void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo) { }
+
+        // Called when Melee Damage is being Dealt
+        virtual void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage) { }
+
+        // Called when Spell Damage is being Dealt
+        virtual void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo) { }
+
+        // Called when heal is received
+        virtual void ModifyHealReceived(Unit* /*target*/, Unit* /*attacker*/, float& /*amount*/, SpellInfo const* /*spellInfo*/) {}
+};
+
 class CreatureScript : public ScriptObject, public UpdatableScript<Creature>
 {
     protected:
@@ -333,6 +377,9 @@ class CreatureScript : public ScriptObject, public UpdatableScript<Creature>
 
         // Called when a CreatureAI object is needed for the creature.
         virtual CreatureAI* GetAI(Creature* /*creature*/) const { return nullptr; }
+
+        // Called when heal is received
+        virtual void ModifyHealReceived(Unit* target, Unit* attacker, uint32& amount, SpellInfo const* spellInfo) { }
 };
 
 template<class AI>
@@ -626,38 +673,38 @@ class PlayerScript : public ScriptObject
     public:
 
         // Called when a player kills another player
-		virtual void OnPVPKill(Player* killer, Player* killed)
-		{
-			uint32 killerlvl = killer->getLevel();
-			uint32 killedlvl = killed->getLevel();
-			int32 diff = killerlvl - killedlvl;
-			uint32 XPLow = (killedlvl * 5 + 45)*(1 + 0.05*diff);
-			uint32 XPHigh = (killedlvl * 5 + 45)*(1 + 0.05*diff);
-			uint32 minusgold = killer->GetMoney() - (diff * 10000);
-			uint32 plusgold = killed->GetMoney() + (diff * 10000);
-			uint32 killergold = killer->GetMoney();
-			uint32 killedgold = killed->GetMoney();
-			uint32 plusgold2 = killedgold + killergold;
+        virtual void OnPVPKill(Player* killer, Player* killed)
+        {
+            uint32 killerlvl = killer->getLevel();
+            uint32 killedlvl = killed->getLevel();
+            int32 diff = killerlvl - killedlvl;
+            uint32 XPLow = (killedlvl * 5 + 45)*(1 + 0.05*diff);
+            uint32 XPHigh = (killedlvl * 5 + 45)*(1 + 0.05*diff);
+            uint32 minusgold = killer->GetMoney() - (diff * 10000);
+            uint32 plusgold = killed->GetMoney() + (diff * 10000);
+            uint32 killergold = killer->GetMoney();
+            uint32 killedgold = killed->GetMoney();
+            uint32 plusgold2 = killedgold + killergold;
 
-			if (killerlvl < killedlvl + 1)
-				killer->GiveXP(XPHigh, killed);
-			else
-				if (diff > 10)
-					if (killergold > minusgold)
-					{
-						killer->SetMoney(minusgold);
-						killed->SetMoney(plusgold);
-					}
-					else
-					{
-						killed->SetMoney(plusgold2);
-						killer->SetMoney(0);
-					}
-				else
-					if (0 < diff && diff < 10)
-						killer->GiveXP(XPLow, killed);
-			return;
-		}
+            if (killerlvl < killedlvl + 1)
+                killer->GiveXP(XPHigh, killed);
+            else
+                if (diff > 10)
+                    if (killergold > minusgold)
+                    {
+                        killer->SetMoney(minusgold);
+                        killed->SetMoney(plusgold);
+                    }
+                    else
+                    {
+                        killed->SetMoney(plusgold2);
+                        killer->SetMoney(0);
+                    }
+                else
+                    if (0 < diff && diff < 10)
+                        killer->GiveXP(XPLow, killed);
+            return;
+        }
 
         // Called when a player kills a creature
         virtual void OnCreatureKill(Player* /*killer*/, Creature* /*killed*/) { }
@@ -748,7 +795,7 @@ class PlayerScript : public ScriptObject
         virtual void OnQuestReward(Player* player, Quest const* quest) {}
 
         virtual void OnEnterCombat(Player* player, Unit* target) {}
-		
+        
         //After looting item
         virtual void OnLootItem(Player* player, Item* item, uint32 count) { }
 
@@ -919,6 +966,10 @@ class ScriptMgr
         void OnGainCalculation(uint32& gain, Player* player, Unit* unit);
         void OnGroupRateCalculation(float& rate, uint32 count, bool isRaid);
 
+        /* AllScript */
+        void OnPlayerEnterMapAll(Map* map, Player* player);
+        void OnPlayerLeaveMapAll(Map* map, Player* player);
+
         /* MapScript */
         void OnCreateMap(Map* map);
         void OnDestroyMap(Map* map);
@@ -1079,6 +1130,14 @@ class ScriptMgr
         void OnGroupRemoveMember(Group* group, ObjectGuid const& guid, RemoveMethod method, ObjectGuid const& kicker, const char* reason);
         void OnGroupChangeLeader(Group* group, ObjectGuid const& newLeaderGuid, ObjectGuid const& oldLeaderGuid);
         void OnGroupDisband(Group* group);
+
+        /* UnitScript */
+        void OnHeal(Unit* healer, Unit* receiver, uint32& gain);
+        void OnDamage(Unit* attacker, Unit* victim, uint32& damage);
+        void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo);
+        void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage);
+        void ModifySpellDamageTaken(Unit* target, Unit* attacker, float& damage, SpellInfo const* spellInfo);
+        void ModifyHealReceived(Unit* target, Unit* attacker, float& addHealth, SpellInfo const* spellInfo);
 
         /* Scheduled scripts */
         uint32 IncreaseScheduledScriptsCount() { return ++_scheduledScripts; }

@@ -123,10 +123,10 @@ enum SpellModType
 enum PlayerUnderwaterState
 {
     UNDERWATER_NONE                     = 0x00,
-    UNDERWATER_INWATER                  = 0x01,             // terrain type is water and player is afflicted by it
-    UNDERWATER_INLAVA                   = 0x02,             // terrain type is lava and player is afflicted by it
-    UNDERWATER_INSLIME                  = 0x04,             // terrain type is lava and player is afflicted by it
-    UNDERWARER_INDARKWATER              = 0x08,             // terrain type is dark water and player is afflicted by it
+    UNDERWATER_INWATER                  = 0x01,             // terrain type is water and player is affected by it
+    UNDERWATER_INLAVA                   = 0x02,             // terrain type is lava and player is affected by it
+    UNDERWATER_INSLIME                  = 0x04,             // terrain type is slime and player is affected by it
+    UNDERWARER_INDARKWATER              = 0x08,             // terrain type is dark water and player is affected by it
 
     UNDERWATER_EXIST_TIMERS             = 0x10
 };
@@ -1388,7 +1388,7 @@ struct WorldQuestInfo
 
 struct DeathMatchScore
 {
-	DeathMatchScore() : kills(0), deaths(0), damage(0), rating(0), matches(0), needSave(false), totalKills(0), selectedMorph(0){};
+    DeathMatchScore() : kills(0), deaths(0), damage(0), rating(0), matches(0), needSave(false), totalKills(0), selectedMorph(0){};
     uint32 kills;
     uint32 deaths;
     uint64 damage;
@@ -1771,7 +1771,7 @@ class Player : public Unit, public GridObject<Player>
         void ModifyCurrencyFlag(uint32 id, uint8 flag);
         void ModifyCurrency(uint32 id, int32 count, bool sendInChat = false, bool ignoreMultipliers = false, bool modifyWeek = true, bool modifySeason = true, bool sendToast = false, bool refund = false);
         uint32 GetTotalCurrencyCap(uint32 currencyID);
-        void ModCurrnecyCap(uint32 currencyID, uint32 value);
+        void ModCurrencyCap(uint32 currencyID, uint32 value);
         void ModifyExcludeCasterAuraSpell(uint32 auraId, bool apply);
 
         /*********************************************************/
@@ -1836,6 +1836,7 @@ class Player : public Unit, public GridObject<Player>
         void DestroyItem(uint8 bag, uint8 slot, bool update);
         void DestroyItemCount(uint32 item, uint32 count, bool update, bool unequip_check = false);
         void DestroyItemCount(Item* item, uint32& count, bool update);
+        void DestroyAllOfItem(uint32 item, bool update, bool unequip_check = false);
         void DestroyConjuredItems(bool update);
         void DestroyZoneLimitedItem(bool update, uint32 new_zone);
         void SplitItem(uint16 src, uint16 dst, uint32 count);
@@ -1851,7 +1852,7 @@ class Player : public Unit, public GridObject<Player>
         void AddArmorProficiency(uint32 newflag) { m_ArmorProficiency |= newflag; }
         uint32 GetWeaponProficiency() const { return m_WeaponProficiency; }
         uint32 GetArmorProficiency() const { return m_ArmorProficiency; }
-        bool IsUseEquipedWeapon(bool mainhand) const
+        bool IsUseEquippedWeapon(bool mainhand) const
         {
             // disarm applied only to mainhand weapon
             return !IsInFeralForm() && (!mainhand || !HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISARMED));
@@ -1989,7 +1990,7 @@ class Player : public Unit, public GridObject<Player>
         void SetSpecialCriteriaComplete(uint16 slot, uint8 StorageIndex);
 
         void SetQuestCompletedBit(uint32 questBit, bool completed);
-        bool IsQuestBitFlaged(uint32 questBit) const;
+        bool IsQuestBitFlagged(uint32 questBit) const;
 
         uint16 GetReqKillOrCastCurrentCount(uint32 quest_id, int32 entry);
         void AreaExploredOrEventHappens(uint32 questId);
@@ -2342,9 +2343,9 @@ class Player : public Unit, public GridObject<Player>
 
         void SetResurrectRequestData(Unit* caster, uint64 health, uint32 mana, uint32 appliedAura, SpellInfo const* resSpell = nullptr);
         void ClearResurrectRequestData();
-        bool IsRessurectRequestedBy(ObjectGuid guid) const;
-        bool IsRessurectRequested() const;
-        void ResurectUsingRequestData();
+        bool IsResurrectRequestedBy(ObjectGuid guid) const;
+        bool IsResurrectRequested() const;
+        void ResurrectUsingRequestData();
 
         uint8 getCinematic()
         {
@@ -2370,7 +2371,7 @@ class Player : public Unit, public GridObject<Player>
         void UpdatePvP(bool state, bool override=false);
         void UpdateZone(uint32 newZone, uint32 newArea);
         void UpdateArea(uint32 newArea);
-        void ChaeckSeamlessTeleport(uint32 newZoneOrArea, bool isArea = false);
+        void CheckSeamlessTeleport(uint32 newZoneOrArea, bool isArea = false);
         void ZoneTeleport(uint32 zoneId);
         bool InFFAPvPArea();
 
@@ -3231,7 +3232,7 @@ class Player : public Unit, public GridObject<Player>
         void SetAdvancedCombatLogging(bool enabled) { _advancedCombatLoggingEnabled = enabled; }
 
         // client version server check and helpers
-        void SendVersionMismatchWarinings();
+        void SendVersionMismatchWarnings();
 
         uint32 GetGoVisualQuestData(GameObject const* go, uint32 field) const;
 
@@ -3570,9 +3571,9 @@ class Player : public Unit, public GridObject<Player>
         uint32 GetBattlePetCombatSize();
         void UpdateBattlePetCombatTeam();
         BattlePetMap _battlePets;
-        bool AddBattlePetWithSpeciesId(BattlePetSpeciesEntry const* entry, uint16 flags = 0, bool sendUpdate = true, bool sendDiliveryUpdate = false);
+        bool AddBattlePetWithSpeciesId(BattlePetSpeciesEntry const* entry, uint16 flags = 0, bool sendUpdate = true, bool sendDeliveryUpdate = false);
         bool AddBattlePet(uint32 spellID, uint16 flags = 0, bool sendUpdate = true);
-        bool AddBattlePetByCreatureId(uint32 creatureId, bool sendUpdate = true, bool sendDiliveryUpdate = false);
+        bool AddBattlePetByCreatureId(uint32 creatureId, bool sendUpdate = true, bool sendDeliveryUpdate = false);
 
         uint32 GetTimeSync() const;
         uint32 GetTimeSyncClient() const;

@@ -455,7 +455,7 @@ bool Condition::Meets(ConditionSourceInfo& sourceInfo)
         {
             if (Player* player = object->ToPlayer())
                 if (Garrison* garr = player->GetGarrisonPtr())
-                    condMeets = garr->hasTallent(ConditionValue1);
+                    condMeets = garr->hasTalent(ConditionValue1);
             break;
         }
         case CONDITION_CURRENCY:
@@ -857,20 +857,20 @@ uint32 Condition::GetSearcherTypeMaskForCondition()
 
 bool ConditionMgr::IsObjectMeetingSmartEventConditions(int64 entryOrGuid, uint32 eventId, uint32 sourceType, Unit* unit, WorldObject* baseObject) const
 {
-	SmartEventConditionContainer::const_iterator itr = SmartEventConditionStore.find(std::make_pair(entryOrGuid, sourceType));
-	if (itr != SmartEventConditionStore.end())
-	{
-		ConditionTypeContainer::const_iterator i = (*itr).second.find(eventId);
-		if (i != itr->second.end())
-		{
-			TC_LOG_DEBUG(LOG_FILTER_CONDITIONSYS, "condition", "GetConditionsForSmartEvent: found conditions for Smart Event entry or guid " SI64FMTD " eventId %u", entryOrGuid, eventId);
-			ConditionSourceInfo sourceInfo(unit, baseObject);
-			//SPP NEED FIX
-			//return IsObjectMeetToConditions(sourceInfo, i->second.end);
-			return true;
-		}
-	}
-	return true;
+    SmartEventConditionContainer::const_iterator itr = SmartEventConditionStore.find(std::make_pair(entryOrGuid, sourceType));
+    if (itr != SmartEventConditionStore.end())
+    {
+        ConditionTypeContainer::const_iterator i = (*itr).second.find(eventId);
+        if (i != itr->second.end())
+        {
+            TC_LOG_DEBUG(LOG_FILTER_CONDITIONSYS, "condition", "GetConditionsForSmartEvent: found conditions for Smart Event entry or guid " SI64FMTD " eventId %u", entryOrGuid, eventId);
+            ConditionSourceInfo sourceInfo(unit, baseObject);
+            //SPP NEED FIX
+            //return IsObjectMeetToConditions(sourceInfo, i->second.end);
+            return true;
+        }
+    }
+    return true;
 }
 
 bool Condition::isLoaded() const
@@ -2570,7 +2570,7 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
         }
         case CONDITION_SPAWNMASK:
             {
-                if (cond->ConditionValue1 >= (UI64LIT(1) << MAX_DIFFICULTY))
+                if ((uint64)cond->ConditionValue1 >= (UI64LIT(1) << MAX_DIFFICULTY))
                 {
                     TC_LOG_ERROR(LOG_FILTER_SQL, "Map Difficulty condition has non existing map difficulty in value1 (%u), skipped", cond->ConditionValue1);
                     return false;
@@ -3183,8 +3183,8 @@ bool ConditionMgr::IsPlayerMeetingCondition(Unit* unit, PlayerConditionEntry con
             // return false;
     // }
 
-    if (player && condition->MinExpansionLevel != -1 && condition->MinExpansionTier != -1 && !player->isGameMaster()
-        && ((condition->MinExpansionLevel == CURRENT_EXPANSION) && condition->MinExpansionTier > 0) || condition->MinExpansionLevel > CURRENT_EXPANSION)
+    if ((player && condition->MinExpansionLevel != -1 && condition->MinExpansionTier != -1 && !player->isGameMaster()
+        && ((condition->MinExpansionLevel == CURRENT_EXPANSION) && condition->MinExpansionTier > 0)) || condition->MinExpansionLevel > CURRENT_EXPANSION)
         return false;
 
     if (condition->PhaseID && !unit->HasPhaseId(condition->PhaseID))
